@@ -13,9 +13,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "linter:check": "npx eslint \"**/*.{ts,tsx}\"",
-    "linter:fix": "npx eslint \"**/*.{ts,tsx}\" --fix",
+    "check": "npx eslint \"**/*.{ts,tsx}\"",
+    "fix": "npx eslint \"**/*.{ts,tsx}\" --fix",
     "prettier": "npx prettier . --write",
     "prepare": "husky install"
   },
