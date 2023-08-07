@@ -1,6 +1,6 @@
 ## Project Title
 
-eCommerce single-page application application: "Blossom"
+ECommerce single-page application application: "Blossom"
 
 ## Table of Content:
 
@@ -10,7 +10,7 @@ eCommerce single-page application application: "Blossom"
 - [Development mode](#development-mode)
 - [Build mode](#build-mode)
 - [Testing](#testing)
-- [Es lint](#es-lint)
+- [Eslint](#eslint)
 - [Prettier](#prettier)
 
 ## About The App
@@ -22,7 +22,7 @@ eCommerce single-page application application: "Blossom"
 - React
 - React Testing Library
 - TypeScript
-- Es lint
+- Eslint
 - Prettier
 - Husky
 - Commerce Tools API
@@ -32,15 +32,16 @@ eCommerce single-page application application: "Blossom"
 - download or clone the repository
 - run `npm install`
 
-## development-mode
+## Development mode
 
 To run the project in development mode, run the following command in your terminal:
 
 - run `npm start`
 
-## build-mode
+## Build mode
 
 To build the project, run the following command in your terminal:
+
 -run `npm run build`
 
 The built project will be saved in the dist directory.
@@ -51,18 +52,18 @@ To run the project's tests, run the following command in your terminal:
 
 - run `npm test`
 
-## Es lint
+## Eslint
 
-es lint is a tool that helps you write better code by enforcing a set of coding conventions. To run es lint check on the project, run the following command in your terminal:
+Eslint is a tool that helps you write better code by enforcing a set of coding conventions. To run eslint check on the project, run the following command in your terminal:
 
 - run `npm run check`
 
-To fix es-lint errors, run the following command in your terminal:
+To fix eslint errors, run the following command in your terminal:
 
 - run `npm run fix`;
 
 ## Prettier
 
-prettier is a tool that formats your code in a consistent style. To run prettier on the project, run the following command in your terminal:
+Prettier is a tool that formats your code in a consistent style. To run prettier on the project, run the following command in your terminal:
 
 - run `npm run prettier`
