@@ -6,7 +6,7 @@ on:
   push:
     branches: ['actions-configuration']
   pull_request:
-    branches: ['develop']
+    branches: ['develop', 'release/login-registration-main']
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
