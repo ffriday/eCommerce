@@ -12,4 +12,11 @@
   &:disabled {
     background: $button-disabled-color
   }
+  @include hoverEffect();
+}
+
+@mixin hoverEffect() {
+  &:hover {
+    opacity: 0.9;
+  }
 }

@@ -1,4 +1,5 @@
 @import '../../styles/variables.scss'
+@import '../../styles/mixins.scss'
   
 .slider__button
   display: flex
@@ -23,5 +24,6 @@
   .active
     background: $button-enabled-color
     color: $button-enabled-text-color
+    @include hoverEffect
 
   
