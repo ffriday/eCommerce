@@ -7,7 +7,7 @@ interface ISubmitButton {
   className?: string,
 }
 
-export const SubmitButton: FC<ISubmitButton> = ({ text, disabled, className }) => {
+const SubmitButton: FC<ISubmitButton> = ({ text, disabled, className }) => {
   const defaultClassName = 'submit__button';
   const classNames = className ? `${defaultClassName} ${className}` : defaultClassName;
 
@@ -20,3 +20,5 @@ export const SubmitButton: FC<ISubmitButton> = ({ text, disabled, className }) =
     </button>
   );
 };
+
+export default SubmitButton;
