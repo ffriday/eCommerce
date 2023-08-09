@@ -1,5 +1,15 @@
-// Colors
-$buttonEnabledColor: #5CA182;
-$buttonDisabledColor: #CCCCCC;
-$buttonEnabledTextColor: #FFFFFF;
-$sliderButtonBackground: #E0EBE6;
+// Font
+$font-family-button: 'Inter', sans-serif;
+$font-size-button: 14px;
+
+// Color
+$primary-green: #5CA182;
+$primary-black: #030B08;
+$primary-white: #FFFFFF;
+$secondary-light-green: #E0EBE6;
+$secondary-gray: #CCCCCC;
+
+$button-enabled-color: $primary-green;
+$button-disabled-color: $secondary-gray;
+$button-enabled-text-color: $primary-white;
+$slider-button-background: $secondary-light-green;
