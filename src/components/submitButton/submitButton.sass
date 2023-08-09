@@ -1,13 +1,5 @@
 @import '../../styles/variables.scss'
+@import '../../styles/mixins.scss'
 
 .submit__button
-  background: $button-enabled-color
-  width: 320px
-  height: 57px
-  border-radius: 5px
-  color: $button-enabled-text-color
-  font-family: $font-family-button
-  font-size: $font-size-button
-  font-weight: 400
-  &:disabled
-    background: $button-disabled-color
+  @include submitButton(320px, 57px)
