@@ -1,1 +1,14 @@
-@import "./variables.scss";
+@import './variables.scss';
+
+@mixin inputForm($width, $height) {
+  width: $width;
+  height: $height;
+  padding: $inputFormPaddingTopBottom $inputFormPaddingRightLeft;
+  align-items: center;
+  background: $input-color;
+  border-bottom: $input-border-size solid $input-border-color;
+  font-family: $font-family-input;
+  font-size: $font-size-input;
+  font-style: normal;
+  font-weight: 300;
+}
