@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import './sliderButton.sass';
+import './sliderButton.scss';
 
 interface ISliderButton {
   text: {first: string, second: string},
