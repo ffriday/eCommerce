@@ -23,7 +23,7 @@
   font-size: $font-size-button;
   font-weight: 400;
   &:disabled {
-    background: $button-disabled-color
+    background: $button-disabled-color;
   }
   @include hoverEffect();
 }
@@ -32,4 +32,17 @@
   &:hover {
     opacity: 0.9;
   }
+}
+
+@mixin checkboxBackground($checkbox-image) {
+  background-image: $checkbox-image;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+@mixin checkboxFont($checkbox-font-color) {
+  color: $checkbox-font-color;
+  font-family: $font-family-checkbox;
+  font-size: $font-size-checkbox;
+  font-style: normal;
+  font-weight: $font-weight-input;
 }
