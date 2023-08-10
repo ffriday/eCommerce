@@ -12,3 +12,24 @@
   font-style: normal;
   font-weight: 300;
 }
+
+@mixin submitButton($width, $height) {
+  background: $button-enabled-color;
+  width: $width;
+  height: $height;
+  border-radius: $submit-button-radius;
+  color: $button-enabled-text-color;
+  font-family: $font-family-button;
+  font-size: $font-size-button;
+  font-weight: 400;
+  &:disabled {
+    background: $button-disabled-color
+  }
+  @include hoverEffect();
+}
+
+@mixin hoverEffect() {
+  &:hover {
+    opacity: 0.9;
+  }
+}
