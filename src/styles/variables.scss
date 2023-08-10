@@ -1,0 +1,23 @@
+// Font
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+
+$font-family-button: 'Inter', sans-serif;
+$font-size-button: 14px;
+
+// Color
+$primary-green: #5CA182;
+$primary-black: #030B08;
+$primary-white: #FFFFFF;
+$secondary-light-green: #E0EBE6;
+$secondary-gray: #CCCCCC;
+
+$button-enabled-color: $primary-green;
+$button-disabled-color: $secondary-gray;
+$button-enabled-text-color: $primary-white;
+$slider-button-background: $secondary-light-green;
+
+// Dimensions
+$submit-button-radius: 5px;
+$slider-button-width: 226px;
+$slider-button-height: 36px;
+$slider-button-delta: 3px;
