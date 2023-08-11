@@ -7,7 +7,13 @@ export default function App() {
     <>
       <h1 className='app'>Blossom</h1>
       <InputForm name='password' id='input-password' placeholder='Введите пароль' />
-      <Checkbox id='checkbox' isSelected={false} title='Запомнить меня' link={{ path: '#', text: 'Забыли пароль' }} />
+      <Checkbox
+        id='checkbox'
+        handler={() =>'test'}
+        isSelected={false}
+        title='Запомнить меня'
+        link={{ path: '#', text: 'Забыли пароль' }}
+      />
     </>
   );
 }
