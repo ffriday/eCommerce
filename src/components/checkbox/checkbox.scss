@@ -7,6 +7,7 @@
   &__wrapper {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
   }
   & + label {
     display: inline-flex;
@@ -14,6 +15,7 @@
     user-select: none;
     cursor: pointer;
     @include checkboxFont($checkbox-label-color);
+    margin-right: $checkbox-label--margine-right;
   }
   // default
   &__label::before {
@@ -43,7 +45,7 @@
     &--disable {
       display: none;
     }
-    margin-left: 92px;
+
     @include checkboxFont($checkbox-link-color);
   }
 }

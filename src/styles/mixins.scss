@@ -1,6 +1,19 @@
 @import './variables.scss';
 
 @mixin inputForm($width, $height) {
+  &__wrapper {
+    position: relative;
+  }
+  &__label {
+    position: absolute;
+    font-size: 10px;
+    top: 10px;
+    left: 20px;
+    color: $input-label-color;
+  }
+  &::placeholder {
+    color: $input-text-color;
+  }
   width: $width;
   height: $height;
   padding: $inputFormPaddingTopBottom $inputFormPaddingRightLeft;
@@ -11,6 +24,7 @@
   font-size: $font-size-input;
   font-style: normal;
   font-weight: 300;
+  color: $input-text-color;
 }
 
 @mixin submitButton($width, $height) {

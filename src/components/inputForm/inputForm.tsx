@@ -1,27 +1,41 @@
 import './inputForm.scss';
+import { useState } from 'react';
 
 interface IInputForm {
   name: string;
+  type: string;
   id: string;
-  // isValid:()=>boolean;
   placeholder: string;
-  className?: string;
+  inputClassName?: string;
+  labelClassName?: string;
+  labelInfo?: string;
 }
 
 const InputForm = (props: IInputForm) => {
-  // const validation = props.isValid();
-  const defaultClass = 'inputForm';
-  // const inValidClass = 'inputForm--invaild';
-  // const inputClassName = validation?defaultClass:defaultClass+inValidClass;
+  const defaultInputClass = 'inputForm';
+  const defaultLabelClass = 'inputForm__label';
+  const labelClass = props.labelClassName ? `${defaultLabelClass} ${props.labelClassName}` : `${defaultLabelClass}`;
+  const [labelInfo, setLabelInfo] = useState('');
+  const handler: React.FormEventHandler<HTMLInputElement> = (event) => {
+    const inputElement = event.target as HTMLInputElement;
+    if (inputElement.value) {
+      setLabelInfo(props.labelInfo || props.placeholder);
+    } else {
+      setLabelInfo('');
+    }
+  };
   return (
-    <input
-      type='text'
-      id={props.id}
-      // isValid = { props.isValid}
-      className={props.className ? `${defaultClass} ${props.className}` : `${defaultClass}`}
-      name={props.name}
-      placeholder={props.placeholder}
-    />
+    <div className='inputForm__wrapper'>
+      <input
+        type={props.type}
+        id={props.id}
+        className={props.inputClassName ? `${defaultInputClass} ${props.inputClassName}` : `${defaultInputClass}`}
+        name={props.name}
+        placeholder={props.placeholder}
+        onInput={handler}
+      />
+      <label htmlFor={props.id} className={`${labelClass}`}>{`${labelInfo}`}</label>
+    </div>
   );
 };
 
