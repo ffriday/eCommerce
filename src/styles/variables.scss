@@ -1,5 +1,3 @@
-// Font
-@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
 
 $font-family-button: 'Inter', sans-serif;
 $font-size-button: 14px;
@@ -10,6 +8,8 @@ $primary-black: #030B08;
 $primary-white: #FFFFFF;
 $secondary-light-green: #E0EBE6;
 $secondary-gray: #CCCCCC;
+$gray: #4C4E4D;
+$gray2: #ADADAD;
 
 $button-enabled-color: $primary-green;
 $button-disabled-color: $secondary-gray;
@@ -21,3 +21,11 @@ $submit-button-radius: 5px;
 $slider-button-width: 226px;
 $slider-button-height: 36px;
 $slider-button-delta: 3px;
+
+// Effects
+$transition: all .3s ease;
+$transform-button-pressed: scale(.95);
+
+// Header
+$header-links-gap: 34px;
+$tabs-color: $gray;

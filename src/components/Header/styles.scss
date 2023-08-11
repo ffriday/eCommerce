@@ -1,0 +1,73 @@
+@import "../../styles/variables.scss";
+@import "../../styles/templates.scss";
+
+.header {
+  &__body {
+    padding: 20px 0 20px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.navigation {
+  padding: 20px 0;
+
+  &__pages {
+    display: flex;
+    justify-content: space-between;
+    column-gap: $header-links-gap;
+    min-width: 228px;
+  }
+
+  &__page {
+    font-size: 14px;
+    line-height: normal;
+    color: $primary-black;
+    transition: $transition;
+
+    @extend %buttonHover;
+    @extend %buttonActive;
+  }
+
+  &__logo {
+    @extend %buttonHover;
+    @extend %buttonActive;
+  }
+}
+
+.menu {
+  display: flex;
+  justify-content: flex-end;
+  column-gap: $header-links-gap;
+  min-width: 228px;
+
+  &__item {
+    @extend %buttonHover;
+    @extend %buttonActive;
+  }
+}
+
+.tabs {
+  padding: 20px 0;
+  display: flex;
+  justify-content: center;
+  column-gap: 50px;
+  text-transform: uppercase;
+  border-top: 1px solid $gray2;
+
+  &__tab {
+    color: $tabs-color;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: normal;
+
+    @extend %buttonHover;
+    @extend %buttonActive;
+  }
+}
