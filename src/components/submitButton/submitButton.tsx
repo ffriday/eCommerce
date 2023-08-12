@@ -2,9 +2,9 @@ import { FC } from 'react';
 import './submitButton.scss';
 
 interface ISubmitButton {
-  text: string,
-  disabled: boolean,
-  className?: string,
+  text: string;
+  disabled: boolean;
+  className?: string;
 }
 
 const SubmitButton: FC<ISubmitButton> = ({ text, disabled, className }) => {
@@ -12,11 +12,8 @@ const SubmitButton: FC<ISubmitButton> = ({ text, disabled, className }) => {
   const classNames = className ? `${defaultClassName} ${className}` : defaultClassName;
 
   return (
-    <button
-      className={ classNames }
-      type='submit'
-      disabled={ disabled }>
-      { text }
+    <button className={classNames} type='submit' disabled={disabled}>
+      {text}
     </button>
   );
 };

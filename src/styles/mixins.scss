@@ -1,4 +1,31 @@
-@import "./variables.scss";
+@import './variables.scss';
+
+@mixin inputForm($width, $height) {
+  &__wrapper {
+    position: relative;
+  }
+  &__label {
+    position: absolute;
+    font-size: 10px;
+    top: 10px;
+    left: 20px;
+    color: $input-label-color;
+  }
+  &::placeholder {
+    color: $input-text-color;
+  }
+  width: $width;
+  height: $height;
+  padding: $inputFormPaddingTopBottom $inputFormPaddingRightLeft;
+  align-items: center;
+  background: $input-color;
+  border-bottom: $input-border-size solid $input-border-color;
+  font-family: $font-family-input;
+  font-size: $font-size-input;
+  font-style: normal;
+  font-weight: 300;
+  color: $input-text-color;
+}
 
 @mixin submitButton($width, $height) {
   background: $button-enabled-color;
@@ -10,7 +37,7 @@
   font-size: $font-size-button;
   font-weight: 400;
   &:disabled {
-    background: $button-disabled-color
+    background: $button-disabled-color;
   }
   @include hoverEffect();
 }
@@ -19,4 +46,17 @@
   &:hover {
     opacity: 0.9;
   }
+}
+
+@mixin checkboxBackground($checkbox-image) {
+  background-image: $checkbox-image;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+@mixin checkboxFont($checkbox-font-color) {
+  color: $checkbox-font-color;
+  font-family: $font-family-checkbox;
+  font-size: $font-size-checkbox;
+  font-style: normal;
+  font-weight: $font-weight-input;
 }

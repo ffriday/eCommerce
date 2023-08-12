@@ -1,6 +1,6 @@
 @import '../../styles/variables.scss';
 @import '../../styles/mixins.scss';
-  
+
 .slider__button {
   display: flex;
   flex-direction: row;
@@ -9,7 +9,7 @@
   width: $slider-button-width;
   height: $slider-button-height;
   background: $slider-button-background;
-  border-radius: calc( #{$slider-button-width} / 2 );
+  border-radius: calc(#{$slider-button-width} / 2);
   font-family: $font-family-button;
   font-size: $font-size-button;
   cursor: pointer;
@@ -18,9 +18,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: calc( (#{$slider-button-width} / 2) - #{$slider-button-delta} );
-    height: calc( #{$slider-button-height} - #{$slider-button-delta} * 2 );
-    border-radius: calc( (#{$slider-button-width} - #{$slider-button-delta}) / 2 );
+    width: calc((#{$slider-button-width} / 2) - #{$slider-button-delta});
+    height: calc(#{$slider-button-height} - #{$slider-button-delta} * 2);
+    border-radius: calc((#{$slider-button-width} - #{$slider-button-delta}) / 2);
   }
   .active {
     background: $button-enabled-color;
@@ -28,4 +28,3 @@
     @include hoverEffect;
   }
 }
-  
