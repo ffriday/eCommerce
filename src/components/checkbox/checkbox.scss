@@ -42,10 +42,9 @@
   }
 
   &__link {
-    &--disable {
-      display: none;
-    }
-
     @include checkboxFont($checkbox-link-color);
   }
+}
+.disable {
+  display: none;
 }

@@ -8,18 +8,17 @@ interface IInputForm {
   placeholder: string;
   inputClassName?: string;
   labelClassName?: string;
-  labelInfo?: string;
+  propLabelInfo?: string;
 }
-
-const InputForm = (props: IInputForm) => {
+const InputForm = ({ name, type, id, placeholder, inputClassName = '', labelClassName = '', propLabelInfo = '' }: IInputForm) => {
   const defaultInputClass = 'inputForm';
   const defaultLabelClass = 'inputForm__label';
-  const labelClass = props.labelClassName ? `${defaultLabelClass} ${props.labelClassName}` : `${defaultLabelClass}`;
+  const labelClass = `${defaultLabelClass} ${labelClassName ?? ''}`;
   const [labelInfo, setLabelInfo] = useState('');
   const handler: React.FormEventHandler<HTMLInputElement> = (event) => {
     const inputElement = event.target as HTMLInputElement;
     if (inputElement.value) {
-      setLabelInfo(props.labelInfo || props.placeholder);
+      setLabelInfo(propLabelInfo || placeholder);
     } else {
       setLabelInfo('');
     }
@@ -27,14 +26,16 @@ const InputForm = (props: IInputForm) => {
   return (
     <div className='inputForm__wrapper'>
       <input
-        type={props.type}
-        id={props.id}
-        className={props.inputClassName ? `${defaultInputClass} ${props.inputClassName}` : `${defaultInputClass}`}
-        name={props.name}
-        placeholder={props.placeholder}
+        type={type}
+        id={id}
+        className={inputClassName ? `${defaultInputClass} ${inputClassName}` : `${defaultInputClass}`}
+        name={name}
+        placeholder={placeholder}
         onInput={handler}
       />
-      <label htmlFor={props.id} className={`${labelClass}`}>{`${labelInfo}`}</label>
+      <label htmlFor={id} className={labelClass}>
+        {labelInfo}
+      </label>
     </div>
   );
 };

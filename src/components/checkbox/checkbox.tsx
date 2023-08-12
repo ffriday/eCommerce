@@ -4,7 +4,6 @@ import { useState } from 'react';
 interface ICheckbox {
   id: string;
   handler: () => void;
-  isSelected: boolean;
   title: string;
   className?: string;
   link?: {
@@ -14,10 +13,10 @@ interface ICheckbox {
 }
 
 const Checkbox = (props: ICheckbox) => {
-  const linkClass = props.link ? 'checkbox__link' : 'checkbox__link--disable';
-  const [state, setState] = useState(false);
+  const linkClass = props.link ? 'checkbox__link' : 'disable';
+  const [isSelected, setIsSelected] = useState(false);
   const action = () => {
-    setState(!state);
+    setIsSelected(!isSelected);
     props.handler();
   };
 
@@ -27,15 +26,15 @@ const Checkbox = (props: ICheckbox) => {
         type='checkbox'
         id={props.id}
         onChange={action}
-        defaultChecked={props.isSelected}
+        defaultChecked={isSelected}
         data-testid='checkbox'
-        className={props.className ? `checkbox ${props.className}` : 'checkbox'}
+        className={`checkbox ${props.className ?? ''}`}
       />
       <label className='checkbox__label' htmlFor={props.id}>
         {props.title}
       </label>
 
-      <a className={linkClass} href={props.link?.path ?? '#'}>
+      <a className={linkClass} href={props.link?.path || '#'}>
         {props.link?.text}
       </a>
     </div>
