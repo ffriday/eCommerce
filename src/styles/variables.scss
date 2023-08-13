@@ -1,13 +1,50 @@
+// Font
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
 
+// input font
+$font-family-input: Inter;
+$font-size-input: 15px;
+$font-weight-input: 300;
+
+// input color
+$input-color: #fff;
+$input-border-color: #b7b7b7;
+$input-text-color: #222;
+$input-label-color: #686868;
+
+// input dimensions
+$inputFormPaddingTopBottom: 10px;
+$inputFormPaddingRightLeft: 20px;
+$input-border-size: 1px;
+
+// checkbox font
+$font-family-checkbox: Inter;
+$font-size-checkbox: 13px;
+
+// checkbox color
+$checkbox-label-color: #000;
+$checkbox-link-color: #5ca182;
+
+// checkbox dimensions
+$checkbox-width: 18px;
+$checkbox-height: 18px;
+$checkbox-margine-right: 6px;
+$checkbox-label--margine-right: 92px;
+
+$checkbox-default-img: url('../../assets/checkboxDefault.svg');
+$checkbox-default-img: url('../../assets/checkboxHover.svg');
+$checkbox-checked-img: url('../../assets/checkboxselected.svg');
+
+// Font
 $font-family-button: 'Inter', sans-serif;
 $font-size-button: 14px;
 
 // Color
-$primary-green: #5CA182;
-$primary-black: #030B08;
-$primary-white: #FFFFFF;
-$secondary-light-green: #E0EBE6;
-$secondary-gray: #CCCCCC;
+$primary-green: #5ca182;
+$primary-black: #030b08;
+$primary-white: #ffffff;
+$secondary-light-green: #e0ebe6;
+$secondary-gray: #cccccc;
 $gray: #4C4E4D;
 $gray2: #ADADAD;
 
