@@ -36,7 +36,7 @@ export const Header: FC = () => {
   ];
 
   return (
-    <header className='header'>
+    <header className='header' data-testid='header'>
       <div className='header__container container'>
         <div className='header__body'>
           <nav className='header__navigation navigation'>
