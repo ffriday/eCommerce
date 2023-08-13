@@ -1,1 +1,21 @@
 @import './variables.scss';
+@import './variables.scss';
+
+%buttonHover {
+  transition: $transition;
+
+  &:hover {
+    cursor: pointer;
+    opacity: 0.6;
+    transition: $transition;
+  }
+}
+
+%buttonActive {
+  transition: $transition;
+
+  &:active {
+    transition: $transition;
+    transform: $transform-button-pressed;
+  }
+}

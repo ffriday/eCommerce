@@ -1,4 +1,6 @@
+// Font
 @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+
 // input font
 $font-family-input: Inter;
 $font-size-input: 15px;
@@ -34,7 +36,6 @@ $checkbox-default-img: url('../../assets/checkboxHover.svg');
 $checkbox-checked-img: url('../../assets/checkboxselected.svg');
 
 // Font
-
 $font-family-button: 'Inter', sans-serif;
 $font-size-button: 14px;
 
@@ -44,6 +45,8 @@ $primary-black: #030b08;
 $primary-white: #ffffff;
 $secondary-light-green: #e0ebe6;
 $secondary-gray: #cccccc;
+$gray: #4c4e4d;
+$gray2: #adadad;
 
 $button-enabled-color: $primary-green;
 $button-disabled-color: $secondary-gray;
@@ -55,3 +58,11 @@ $submit-button-radius: 5px;
 $slider-button-width: 226px;
 $slider-button-height: 36px;
 $slider-button-delta: 3px;
+
+// Effects
+$transition: all 0.3s ease;
+$transform-button-pressed: scale(0.95);
+
+// Header
+$header-links-gap: 34px;
+$tabs-color: $gray;
