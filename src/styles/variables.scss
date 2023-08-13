@@ -45,8 +45,8 @@ $primary-black: #030b08;
 $primary-white: #ffffff;
 $secondary-light-green: #e0ebe6;
 $secondary-gray: #cccccc;
-$gray: #4C4E4D;
-$gray2: #ADADAD;
+$gray: #4c4e4d;
+$gray2: #adadad;
 
 $button-enabled-color: $primary-green;
 $button-disabled-color: $secondary-gray;
@@ -60,8 +60,8 @@ $slider-button-height: 36px;
 $slider-button-delta: 3px;
 
 // Effects
-$transition: all .3s ease;
-$transform-button-pressed: scale(.95);
+$transition: all 0.3s ease;
+$transform-button-pressed: scale(0.95);
 
 // Header
 $header-links-gap: 34px;

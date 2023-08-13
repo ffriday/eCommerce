@@ -1,13 +1,12 @@
-@import "./variables.scss";
-@import "./variables.scss";
-
+@import './variables.scss';
+@import './variables.scss';
 
 %buttonHover {
   transition: $transition;
 
   &:hover {
     cursor: pointer;
-    opacity: .6;
+    opacity: 0.6;
     transition: $transition;
   }
 }
@@ -19,5 +18,4 @@
     transition: $transition;
     transform: $transform-button-pressed;
   }
-
 }
