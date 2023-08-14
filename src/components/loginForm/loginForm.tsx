@@ -15,30 +15,20 @@ interface IInputLabel {
   labelInfo: string;
   labelClassNameInvailid: string;
 }
-interface IInputPlaceholder {
-  placeholderInfo: string;
-  placeholderClassNameInvailid: string;
-}
 const LoginForm = () => {
-  const [emailPlaceholder, setEmailPlaceholder] = useState<IInputPlaceholder>({
-    placeholderInfo: 'Ваш e-mail',
-    placeholderClassNameInvailid: '',
-  });
-  const [passwordPlaceholder, setPasswordPlaceholder] = useState<IInputPlaceholder>({
-    placeholderInfo: 'Ваш пароль',
-    placeholderClassNameInvailid: '',
-  });
+  const [isButtonDisable, setIsButtonDisable] = useState(true);
+  const [passwordPlaceholder, setPasswordPlaceholder] = useState<IInputLabel>({ labelInfo: 'Ваш пароль', labelClassNameInvailid: '' });
   const [emailLabel, setEmailLabel] = useState<IInputLabel>({ labelInfo: '', labelClassNameInvailid: '' });
+  const [passwordLabel, setPasswordLabel] = useState<IInputLabel>({ labelInfo: '', labelClassNameInvailid: '' });
   const valiadation = (formData: IformData) => {
     const formErrors: IFormErrors = {};
     if (!formData.email) {
       formErrors.email = 'Необходимо ввести email';
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)) {
+      formErrors.email = 'введите корректный email';
     }
-    // else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)) {
-    //   formErrors.email = formErrorsInfo.emailInvalid;
-    // }
     if (!formData.password) {
-      formErrors.password = 'Необходимо ввести email';
+      formErrors.password = 'Необходимо ввести пароль';
     }
     return formErrors;
   };
@@ -50,20 +40,37 @@ const LoginForm = () => {
       password: new FormData(target).get('password') as string,
     };
     const errorsData: IFormErrors = valiadation(formData);
-    if (errorsData.email) {
-      setEmailPlaceholder({ placeholderInfo: errorsData.email, placeholderClassNameInvailid: 'invailid' });
-      // setEmailLabel({ labelInfo: errorsData.email, labelClassNameInvailid: 'invailid' });
-    }
     if (errorsData.password) {
-      setPasswordPlaceholder({ placeholderInfo: errorsData.password, placeholderClassNameInvailid: 'invailid' });
+      setPasswordPlaceholder({ labelInfo: errorsData.password, labelClassNameInvailid: 'invailid' });
     }
   };
-  function actionEmail() {
-    setEmailPlaceholder({ placeholderInfo: 'Ваш e-mail', placeholderClassNameInvailid: '' });
-    setEmailLabel({ labelInfo: '', labelClassNameInvailid: '' });
-  }
-  function actionPassword() {
-    setPasswordPlaceholder({ placeholderInfo: 'Ваш пароль', placeholderClassNameInvailid: '' });
+
+  const inputValidation = (event: React.FormEvent<HTMLInputElement>) => {
+    const target = event.target as HTMLFormElement;
+    const formData: IformData = {
+      email: target.id === 'email' ? (target.value as string) : '',
+      password: target.id === 'password' ? (target.value as string) : '',
+    };
+    const errorsData: IFormErrors = valiadation(formData);
+    if (!target.value) {
+      setEmailLabel({ labelInfo: target.id === 'email' ? '' : '', labelClassNameInvailid: 'disable' });
+      setPasswordLabel({ labelInfo: target.id === 'password' ? '' : '', labelClassNameInvailid: 'disable' });
+    }
+    if (target.value) {
+      setEmailLabel({ labelInfo: target.id === 'email' ? 'Ваш email' : '', labelClassNameInvailid: '' });
+      setPasswordLabel({ labelInfo: target.id === 'password' ? 'Ваш пароль' : '', labelClassNameInvailid: '' });
+    }
+    if (errorsData.email === 'введите корректный email') {
+      setEmailLabel({ labelInfo: errorsData.email, labelClassNameInvailid: 'invailid-label' });
+    }
+    if (!errorsData.email) {
+      setEmailLabel({ labelInfo: 'email корректный', labelClassNameInvailid: 'vailid-label' });
+    }
+    setIsButtonDisable(false);
+  };
+
+  function onChangeHandler(event: React.FormEvent<HTMLInputElement>) {
+    inputValidation(event);
   }
   return (
     <div className='login'>
@@ -72,11 +79,11 @@ const LoginForm = () => {
         <p className='login__subtitle'>Введите данные, чтобы войти в личный кабинет</p>
         <InputForm
           name='email'
-          type='email'
+          type='text'
           id='email'
-          placeholder={emailPlaceholder.placeholderInfo}
-          action={actionEmail}
-          inputClassName={`login__email ${emailPlaceholder.placeholderClassNameInvailid}`}
+          placeholder={'Ваш email'}
+          handler={onChangeHandler}
+          inputClassName={'login__email'}
           labelClassName={emailLabel.labelClassNameInvailid}
           propLabelInfo={emailLabel.labelInfo}
         />
@@ -84,9 +91,11 @@ const LoginForm = () => {
           name='password'
           type='password'
           id='password'
-          placeholder={passwordPlaceholder.placeholderInfo}
-          action={actionPassword}
-          inputClassName={`login__password ${passwordPlaceholder.placeholderClassNameInvailid}`}
+          placeholder={passwordPlaceholder.labelInfo}
+          handler={onChangeHandler}
+          inputClassName={`login__password ${passwordPlaceholder.labelClassNameInvailid}`}
+          labelClassName={passwordLabel.labelClassNameInvailid}
+          propLabelInfo={passwordLabel.labelInfo}
         />
         <Checkbox
           id='checkbox'
@@ -95,7 +104,7 @@ const LoginForm = () => {
           title='Запомнить меня'
           link={{ path: '#', text: 'Забыли пароль?' }}
         />
-        <SubmitButton text='Войти' disabled={false} />
+        <SubmitButton text='Войти' disabled={isButtonDisable} />
         <span className='login__link-label'>
           Нет аккаунта?<a className='login__link'>Создать новый аккаунт</a>
         </span>
