@@ -4,3 +4,8 @@
 .inputForm {
   @include inputForm(320px, 60px);
 }
+.invailid {
+  &::placeholder {
+    color: red;
+  }
+}

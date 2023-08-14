@@ -1,0 +1,49 @@
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+
+.login {
+  margin-bottom: $loging-padding-top-bottom $loging-padding-rigt-left;
+  &__form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  &__heading {
+    @include loginHeading($login-heading-size);
+    margin-bottom: $login-heading-margin-bottom;
+  }
+  &__subtitle {
+    @include loginSubtitle($login-subtitle-size);
+    margin-bottom: $login-subtitle-margin-bottom;
+  }
+  &__email {
+    margin-bottom: $login-email-margin-bottom;
+  }
+  &__password {
+    margin-bottom: $login-password-margin-bottom;
+  }
+  &__checkbox {
+    margin-bottom: $login-checkbox-margin-bottom;
+  }
+  &__link {
+    margin-left: $login-link-margin-left;
+    @include labelLinkFont($checkbox-link-color);
+  }
+  &__link-label {
+    margin-top: $login-link-margin-top;
+    @include labelLinkFont($checkbox-label-color);
+  }
+}
+
+@media only screen and (max-width: 715px) {
+  .login {
+    margin-left: $loging-padding-left-right-mobile;
+    margin-right: $loging-padding-left-right-mobile;
+    &__heading {
+      @include loginHeading($login-heading-size-mobile);
+    }
+    &__subtitle {
+      @include loginSubtitle($login-subtitle-size-mobile);
+    }
+  }
+}
