@@ -1,11 +1,12 @@
 import './inputForm.scss';
+import { IInputhandler } from '../../constants/types';
 
 interface IInputForm {
   name: string;
   type: string;
   id: string;
   placeholder: string;
-  handler?: (event: React.FormEvent<HTMLInputElement>) => void;
+  handler?: IInputhandler;
   inputClassName?: string;
   labelClassName?: string;
   propLabelInfo?: string;
