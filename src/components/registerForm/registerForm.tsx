@@ -10,8 +10,6 @@ const RegisterForm = () => {
     setFirstPage(!firstPage);
   };
 
-  const validateEmail = (str: string) => str; //placeholder
-
   const emailFormProps: IInputForm = {
     name: 'email',
     type: 'email',
