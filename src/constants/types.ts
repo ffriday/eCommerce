@@ -13,3 +13,4 @@ export interface IMenuLink extends IRoute {
   alt: string;
   icon: string;
 }
+export type IInputhandler = (event: React.FormEvent<HTMLInputElement>) => void;

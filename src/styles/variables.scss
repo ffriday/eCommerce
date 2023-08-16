@@ -29,11 +29,14 @@ $checkbox-link-color: #5ca182;
 $checkbox-width: 18px;
 $checkbox-height: 18px;
 $checkbox-margine-right: 6px;
-$checkbox-label--margine-right: 92px;
+$checkbox-label-margine-right: 92px;
 
 $checkbox-default-img: url('../../assets/checkboxDefault.svg');
 $checkbox-default-img: url('../../assets/checkboxHover.svg');
 $checkbox-checked-img: url('../../assets/checkboxselected.svg');
+
+// checkbox dimensions mobile adaptive
+$checkbox-label-margine-right-mobile: 70px;
 
 // Font
 $font-family-button: 'Inter', sans-serif;
@@ -66,3 +69,32 @@ $transform-button-pressed: scale(0.95);
 // Header
 $header-links-gap: 34px;
 $tabs-color: $gray;
+
+//login-form-heading font
+$font-family-login-heading: 'Inter';
+$login-heading-size: 45px;
+$font-weight-login-heading: 400;
+$font-color-login-heading: #030b08;
+
+//login-form-subtitle font
+$font-family-login-subtitle: 'Inter';
+$login-subtitle-size: 16px;
+$font-weight-login-subtitle: 300;
+$font-color-login-subtitle: #030b08;
+
+// login-dimensions
+$loging-padding-top-bottom: 60px;
+$loging-padding-rigt-left: 140px;
+$login-heading-margin-bottom: 15px;
+$login-subtitle-margin-bottom: 35px;
+$login-email-margin-bottom: 12px;
+$login-password-margin-bottom: 20px;
+$login-checkbox-margin-bottom: 40px;
+$login-link-margin-top: 20px;
+$login-link-margin-left: 9px;
+
+//login-form-subtitle font-mobile-adaptive
+$login-heading-size-mobile: 35px;
+$login-subtitle-size-mobile: 13px;
+// login-dimensions-mobile-adaptive
+$loging-padding-left-right-mobile: 5px;

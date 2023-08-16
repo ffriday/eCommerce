@@ -53,10 +53,30 @@
   background-repeat: no-repeat;
   background-position: center center;
 }
-@mixin checkboxFont($checkbox-font-color) {
+@mixin labelLinkFont($checkbox-font-color) {
   color: $checkbox-font-color;
   font-family: $font-family-checkbox;
   font-size: $font-size-checkbox;
   font-style: normal;
   font-weight: $font-weight-input;
+}
+
+@mixin loginHeading($login-heading-size) {
+  color: $font-color-login-heading;
+  font-family: $font-family-login-heading;
+  font-size: $login-heading-size;
+  font-style: normal;
+  text-align: center;
+  font-weight: $font-weight-login-heading;
+  line-height: normal;
+}
+
+@mixin loginSubtitle($login-subtitle-size) {
+  color: $font-color-login-subtitle;
+  font-family: $font-family-login-subtitle;
+  font-size: $login-subtitle-size;
+  font-style: normal;
+  text-align: center;
+  font-weight: $font-weight-login-subtitle;
+  line-height: normal;
 }

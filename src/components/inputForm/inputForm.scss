@@ -4,3 +4,15 @@
 .inputForm {
   @include inputForm(320px, 60px);
 }
+.invailid {
+  &::placeholder {
+    color: red;
+  }
+}
+
+.invailid-label {
+  color: red;
+}
+.vailid-label {
+  color: green;
+}
