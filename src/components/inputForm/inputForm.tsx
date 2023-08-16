@@ -1,7 +1,12 @@
 import './inputForm.scss';
 import { useState } from 'react';
 
-interface IInputForm {
+export interface IInputAutocomplete {
+  listName: string;
+  dataList: string[];
+}
+
+export interface IInputForm {
   name: string;
   type: string;
   id: string;
@@ -9,8 +14,10 @@ interface IInputForm {
   inputClassName?: string;
   labelClassName?: string;
   propLabelInfo?: string;
+  autocomplete?: IInputAutocomplete;
 }
-const InputForm = ({ name, type, id, placeholder, inputClassName = '', labelClassName = '', propLabelInfo = '' }: IInputForm) => {
+
+const InputForm = ({ name, type, id, placeholder, inputClassName = '', labelClassName = '', propLabelInfo = '', autocomplete }: IInputForm) => {
   const defaultInputClass = 'inputForm';
   const defaultLabelClass = 'inputForm__label';
   const labelClass = `${defaultLabelClass} ${labelClassName ?? ''}`;
@@ -24,7 +31,7 @@ const InputForm = ({ name, type, id, placeholder, inputClassName = '', labelClas
     }
   };
   return (
-    <div className='inputForm__wrapper'>
+    <div className='inputForm__wrappers'>
       <input
         type={type}
         id={id}
@@ -32,7 +39,15 @@ const InputForm = ({ name, type, id, placeholder, inputClassName = '', labelClas
         name={name}
         placeholder={placeholder}
         onInput={handler}
+        {...(autocomplete !== undefined ? { list: autocomplete.listName, autoComplete: autocomplete.listName } : {})}
       />
+      {autocomplete !== undefined ? (
+        <datalist id={autocomplete.listName}>
+          {autocomplete.dataList.map((element, i) => (
+            <option key={`${autocomplete.listName}-${i}`}>{element}</option>
+          ))}
+        </datalist>
+      ) : null}
       <label htmlFor={id} className={labelClass}>
         {labelInfo}
       </label>
