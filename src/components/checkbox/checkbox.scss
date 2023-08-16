@@ -14,8 +14,8 @@
     align-items: center;
     user-select: none;
     cursor: pointer;
-    @include checkboxFont($checkbox-label-color);
-    margin-right: $checkbox-label--margine-right;
+    @include labelLinkFont($checkbox-label-color);
+    margin-right: $checkbox-label-margine-right;
   }
   // default
   &__label::before {
@@ -42,9 +42,17 @@
   }
 
   &__link {
-    @include checkboxFont($checkbox-link-color);
+    @include labelLinkFont($checkbox-link-color);
   }
 }
 .disable {
   display: none;
+}
+
+@media only screen and (max-width: 715px) {
+  .checkbox {
+    & + label {
+      margin-right: $checkbox-label-margine-right-mobile;
+    }
+  }
 }

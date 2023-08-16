@@ -1,5 +1,5 @@
 import './inputForm.scss';
-import { useState } from 'react';
+import { IInputhandler } from '../../constants/types';
 
 export interface IInputAutocomplete {
   listName: string;
@@ -11,25 +11,26 @@ export interface IInputForm {
   type: string;
   id: string;
   placeholder: string;
+  handler?: IInputhandler;
   inputClassName?: string;
   labelClassName?: string;
   propLabelInfo?: string;
   autocomplete?: IInputAutocomplete;
 }
-
-const InputForm = ({ name, type, id, placeholder, inputClassName = '', labelClassName = '', propLabelInfo = '', autocomplete }: IInputForm) => {
+const InputForm = ({
+  name,
+  type,
+  id,
+  placeholder,
+  handler,
+  inputClassName = '',
+  labelClassName = '',
+  propLabelInfo = '',
+  autocomplete,
+}: IInputForm) => {
   const defaultInputClass = 'inputForm';
   const defaultLabelClass = 'inputForm__label';
   const labelClass = `${defaultLabelClass} ${labelClassName ?? ''}`;
-  const [labelInfo, setLabelInfo] = useState('');
-  const handler: React.FormEventHandler<HTMLInputElement> = (event) => {
-    const inputElement = event.target as HTMLInputElement;
-    if (inputElement.value) {
-      setLabelInfo(propLabelInfo || placeholder);
-    } else {
-      setLabelInfo('');
-    }
-  };
   return (
     <div className='inputForm__wrappers'>
       <input
@@ -49,7 +50,7 @@ const InputForm = ({ name, type, id, placeholder, inputClassName = '', labelClas
         </datalist>
       ) : null}
       <label htmlFor={id} className={labelClass}>
-        {labelInfo}
+        {propLabelInfo}
       </label>
     </div>
   );

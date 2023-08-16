@@ -6,6 +6,7 @@ interface ICheckbox {
   handler: () => void;
   title: string;
   className?: string;
+  classNameWrapper?: string;
   link?: {
     path: string;
     text: string;
@@ -21,7 +22,7 @@ const Checkbox = (props: ICheckbox) => {
   };
 
   return (
-    <div className='checkbox__wrapper'>
+    <div className={`checkbox__wrapper  ${props.classNameWrapper ?? ''}`}>
       <input
         type='checkbox'
         id={props.id}
