@@ -20,7 +20,7 @@
     "prepare": "husky install"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": "npx run fix",
+    "*.{js,jsx,ts,tsx}": "npm run fix",
     "*.{js,jsx,ts,tsx,html,scss}": "npm run prettier"
   },
   "eslintConfig": {
