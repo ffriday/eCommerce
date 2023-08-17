@@ -61,6 +61,14 @@
   font-weight: $font-weight-input;
 }
 
+@mixin labelLinkTextFont($font-color) {
+  color: $font-color;
+  font-family: $font-family-checkbox;
+  font-size: $font-size-checkbox;
+  font-style: normal;
+  font-weight: $font-weight-input;
+}
+
 @mixin loginHeading($login-heading-size) {
   color: $font-color-login-heading;
   font-family: $font-family-login-heading;
