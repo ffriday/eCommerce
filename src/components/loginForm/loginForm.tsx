@@ -43,25 +43,22 @@ const LoginForm = () => {
     if (!formData.password) {
       formErrors.password = PasswordErrors.missing;
     } else {
-      const passwordLength = formData.password.length;
-
-      if (!/^[A-Za-z].*/.test(formData.password)) {
-        formErrors.password = PasswordErrors.notInLatin;
-      } else if (passwordLength < 8) {
-        formErrors.password = PasswordErrors.tooShort;
-      } else if (!/[A-Z]/.test(formData.password)) {
-        formErrors.password = PasswordErrors.missingUppercase;
-      } else if (!/[a-z]/.test(formData.password)) {
-        formErrors.password = PasswordErrors.missingLowercase;
-      } else if (!/[0-9]/.test(formData.password)) {
-        formErrors.password = PasswordErrors.missingDigit;
-      } else if (!/[!@#$%^&*]/.test(formData.password)) {
-        formErrors.password = PasswordErrors.missingSpecialChar;
-      } else if (formData.password !== formData.password.trim()) {
-        formErrors.password = PasswordErrors.leadingTrailingSpace;
+      const passwordValidationRules = [
+        { pattern: /^(?!(\s|\S*\s$))\S+$/, error: PasswordErrors.leadingTrailingSpace },
+        { pattern: /[A-Za-z].*/, error: PasswordErrors.notInLatin },
+        { pattern: /^(?=.{8,})/, error: PasswordErrors.tooShort },
+        { pattern: /[A-Z]/, error: PasswordErrors.missingUppercase },
+        { pattern: /[a-z]/, error: PasswordErrors.missingLowercase },
+        { pattern: /[0-9]/, error: PasswordErrors.missingDigit },
+        { pattern: /[!@#$%^&*]/, error: PasswordErrors.missingSpecialChar },
+      ];
+      for (const { pattern, error } of passwordValidationRules) {
+        if (!pattern.test(formData.password)) {
+          formErrors.password = error;
+          break; // stop on first error
+        }
       }
     }
-
     return formErrors;
   };
   const handleSubmit = (event: React.FormEvent) => {
@@ -98,9 +95,15 @@ const LoginForm = () => {
       setPassword(target.value);
     }
     if (
+      // in the code below, the conditions under which both login form inputs are valid and then the submit button becomes active
       ((!errorsData.password || errorsData.password === PasswordErrors.missingSpecialChar) &&
         ((errorsData.email === EmailErrors.missing && email) || !errorsData.email)) ||
+      // If there's no password error or the error is about missing a special character,
+      // and (there's no email error and email is not empty, or there's no email error at all)
+      // OR
       (!errorsData.email && ((errorsData.password === PasswordErrors.missing && password) || !errorsData.password))
+      // If there's no email error and (there's no password error or the error is about a missing password),
+      // and (the password is not empty)
     ) {
       setIsButtonDisable(false);
     } else {

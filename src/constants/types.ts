@@ -29,5 +29,5 @@ export enum PasswordErrors {
   missingLowercase = 'Отсутствует строчная буква',
   missingDigit = 'Отсутствует цифра',
   missingSpecialChar = 'Рекомендуется использовать специальный символ',
-  leadingTrailingSpace = 'Начальные или конечные пробелы',
+  leadingTrailingSpace = 'Не должно быть начальных или конечных пробелов',
 }
