@@ -15,6 +15,7 @@ export interface IMenuLink extends IRoute {
 }
 export type IInputhandler = (event: React.FormEvent<HTMLInputElement>) => void;
 export enum EmailErrors {
+  notInLatin = 'Email должен быть на латинице',
   missing = 'Введите email',
   invalidFormat = 'Неверный формат',
   noTopLevelDomain = 'Отсутствует символ "@"',

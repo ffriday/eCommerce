@@ -33,7 +33,9 @@ const LoginForm = () => {
     } else {
       if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)) {
         formErrors.email = EmailErrors.invalidFormat;
-        if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+$/i.test(formData.email)) {
+        if (/[^A-Za-z0-9._%+-@]/.test(formData.email)) {
+          formErrors.email = EmailErrors.notInLatin;
+        } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+$/i.test(formData.email)) {
           formErrors.email = EmailErrors.noTopLevelDomain;
         } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.\w{2,4}$/i.test(formData.email)) {
           formErrors.email = EmailErrors.shortDomain;
