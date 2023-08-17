@@ -17,6 +17,7 @@ export interface IInputForm {
   propLabelInfo?: string;
   autocomplete?: IInputAutocomplete;
 }
+
 const InputForm = ({
   name,
   type,
@@ -32,7 +33,7 @@ const InputForm = ({
   const defaultLabelClass = 'inputForm__label';
   const labelClass = `${defaultLabelClass} ${labelClassName ?? ''}`;
   return (
-    <div className='inputForm__wrappers'>
+    <div className='inputForm__wrapper'>
       <input
         type={type}
         id={id}
