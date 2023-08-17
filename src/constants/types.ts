@@ -14,3 +14,20 @@ export interface IMenuLink extends IRoute {
   icon: string;
 }
 export type IInputhandler = (event: React.FormEvent<HTMLInputElement>) => void;
+export enum EmailErrors {
+  missing = 'Введите email',
+  invalidFormat = 'Неверный формат',
+  noTopLevelDomain = 'Отсутствует символ "@"',
+  shortDomain = 'Слишком короткое имя домена',
+}
+
+export enum PasswordErrors {
+  notInLatin = 'Пароль должен быть на латинице',
+  missing = 'Пароль не введен',
+  tooShort = 'Слишком короткий пароль',
+  missingUppercase = 'Отсутствует заглавная буква',
+  missingLowercase = 'Отсутствует строчная буква',
+  missingDigit = 'Отсутствует цифра',
+  missingSpecialChar = 'Рекомендуется использовать специальный символ',
+  leadingTrailingSpace = 'Начальные или конечные пробелы',
+}

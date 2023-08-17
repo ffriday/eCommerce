@@ -7,11 +7,22 @@ interface IInputForm {
   id: string;
   placeholder: string;
   handler?: IInputhandler;
+  value?: string | number;
   inputClassName?: string;
   labelClassName?: string;
   propLabelInfo?: string;
 }
-const InputForm = ({ name, type, id, placeholder, handler, inputClassName = '', labelClassName = '', propLabelInfo = '' }: IInputForm) => {
+const InputForm = ({
+  name,
+  type,
+  id,
+  placeholder,
+  handler,
+  value,
+  inputClassName = '',
+  labelClassName = '',
+  propLabelInfo = '',
+}: IInputForm) => {
   const defaultInputClass = 'inputForm';
   const defaultLabelClass = 'inputForm__label';
   const labelClass = `${defaultLabelClass} ${labelClassName ?? ''}`;
@@ -22,6 +33,7 @@ const InputForm = ({ name, type, id, placeholder, handler, inputClassName = '', 
         id={id}
         className={inputClassName ? `${defaultInputClass} ${inputClassName}` : `${defaultInputClass}`}
         name={name}
+        value={value}
         placeholder={placeholder}
         onInput={handler}
       />

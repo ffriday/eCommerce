@@ -3,6 +3,9 @@ import SubmitButton from '../submitButton/submitButton';
 import InputForm from '../inputForm/inputForm';
 import Checkbox from '../checkbox/checkbox';
 import { useState } from 'react';
+import { EmailErrors } from '../../constants/types';
+import { PasswordErrors } from '../../constants/types';
+
 interface IformData {
   email: string | null;
   password: string | null;
@@ -15,7 +18,10 @@ interface IInputLabel {
   labelInfo: string;
   labelClassNameInvailid: string;
 }
+
 const LoginForm = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isButtonDisable, setIsButtonDisable] = useState(true);
   const [passwordPlaceholder, setPasswordPlaceholder] = useState<IInputLabel>({ labelInfo: 'Ваш пароль', labelClassNameInvailid: '' });
   const [emailLabel, setEmailLabel] = useState<IInputLabel>({ labelInfo: '', labelClassNameInvailid: '' });
@@ -23,13 +29,39 @@ const LoginForm = () => {
   const valiadation = (formData: IformData) => {
     const formErrors: IFormErrors = {};
     if (!formData.email) {
-      formErrors.email = 'Необходимо ввести email';
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)) {
-      formErrors.email = 'введите корректный email';
+      formErrors.email = EmailErrors.missing;
+    } else {
+      if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)) {
+        formErrors.email = EmailErrors.invalidFormat;
+        if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+$/i.test(formData.email)) {
+          formErrors.email = EmailErrors.noTopLevelDomain;
+        } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.\w{2,4}$/i.test(formData.email)) {
+          formErrors.email = EmailErrors.shortDomain;
+        }
+      }
     }
     if (!formData.password) {
-      formErrors.password = 'Необходимо ввести пароль';
+      formErrors.password = PasswordErrors.missing;
+    } else {
+      const passwordLength = formData.password.length;
+
+      if (!/^[A-Za-z].*/.test(formData.password)) {
+        formErrors.password = PasswordErrors.notInLatin;
+      } else if (passwordLength < 8) {
+        formErrors.password = PasswordErrors.tooShort;
+      } else if (!/[A-Z]/.test(formData.password)) {
+        formErrors.password = PasswordErrors.missingUppercase;
+      } else if (!/[a-z]/.test(formData.password)) {
+        formErrors.password = PasswordErrors.missingLowercase;
+      } else if (!/[0-9]/.test(formData.password)) {
+        formErrors.password = PasswordErrors.missingDigit;
+      } else if (!/[!@#$%^&*]/.test(formData.password)) {
+        formErrors.password = PasswordErrors.missingSpecialChar;
+      } else if (formData.password !== formData.password.trim()) {
+        formErrors.password = PasswordErrors.leadingTrailingSpace;
+      }
     }
+
     return formErrors;
   };
   const handleSubmit = (event: React.FormEvent) => {
@@ -60,13 +92,39 @@ const LoginForm = () => {
       setEmailLabel({ labelInfo: target.id === 'email' ? 'Ваш email' : '', labelClassNameInvailid: '' });
       setPasswordLabel({ labelInfo: target.id === 'password' ? 'Ваш пароль' : '', labelClassNameInvailid: '' });
     }
-    if (errorsData.email === 'введите корректный email') {
+    if (target.id === 'email') {
+      setEmail(target.value);
+    } else if (target.id === 'password') {
+      setPassword(target.value);
+    }
+    console.log(!errorsData.email);
+    console.log(!errorsData.password);
+    console.log(errorsData.email);
+    console.log(errorsData.password);
+    console.log(email);
+    console.log(password);
+    if (
+      ((!errorsData.password || errorsData.password === PasswordErrors.missingSpecialChar) &&
+        ((errorsData.email === EmailErrors.missing && email) || !errorsData.email)) ||
+      (!errorsData.email && ((errorsData.password === PasswordErrors.missing && password) || !errorsData.password))
+    ) {
+      setIsButtonDisable(false);
+    } else {
+      setIsButtonDisable(true);
+    }
+
+    if (errorsData.email && errorsData.email !== EmailErrors.missing) {
       setEmailLabel({ labelInfo: errorsData.email, labelClassNameInvailid: 'invailid-label' });
     }
     if (!errorsData.email) {
       setEmailLabel({ labelInfo: 'email корректный', labelClassNameInvailid: 'vailid-label' });
     }
-    setIsButtonDisable(false);
+    if (errorsData.password && errorsData.password !== PasswordErrors.missing) {
+      setPasswordLabel({ labelInfo: errorsData.password, labelClassNameInvailid: 'invailid-label' });
+    }
+    if (!errorsData.password) {
+      setPasswordLabel({ labelInfo: 'пароль корректный', labelClassNameInvailid: 'vailid-label' });
+    }
   };
 
   function onChangeHandler(event: React.FormEvent<HTMLInputElement>) {
@@ -83,6 +141,7 @@ const LoginForm = () => {
           id='email'
           placeholder={'Ваш email'}
           handler={onChangeHandler}
+          value={email}
           inputClassName={'login__email'}
           labelClassName={emailLabel.labelClassNameInvailid}
           propLabelInfo={emailLabel.labelInfo}
@@ -93,6 +152,7 @@ const LoginForm = () => {
           id='password'
           placeholder={passwordPlaceholder.labelInfo}
           handler={onChangeHandler}
+          value={password}
           inputClassName={`login__password ${passwordPlaceholder.labelClassNameInvailid}`}
           labelClassName={passwordLabel.labelClassNameInvailid}
           propLabelInfo={passwordLabel.labelInfo}
