@@ -97,12 +97,6 @@ const LoginForm = () => {
     } else if (target.id === 'password') {
       setPassword(target.value);
     }
-    console.log(!errorsData.email);
-    console.log(!errorsData.password);
-    console.log(errorsData.email);
-    console.log(errorsData.password);
-    console.log(email);
-    console.log(password);
     if (
       ((!errorsData.password || errorsData.password === PasswordErrors.missingSpecialChar) &&
         ((errorsData.email === EmailErrors.missing && email) || !errorsData.email)) ||
