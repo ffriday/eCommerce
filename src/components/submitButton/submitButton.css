@@ -1,0 +1,18 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
+.submit__button {
+  background: #5ca182;
+  width: 320px;
+  height: 57px;
+  border-radius: 5px;
+  color: #ffffff;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+}
+.submit__button:disabled {
+  background: #cccccc;
+}
+.submit__button:hover {
+  opacity: 0.9;
+}/*# sourceMappingURL=submitButton.css.map */

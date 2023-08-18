@@ -1,33 +1,135 @@
-import { Context, createContext, useContext, useState } from 'react';
-import InputForm, { IInputAutocomplete, IInputForm } from '../inputForm/inputForm';
+import { createContext, useContext, useEffect, useState } from 'react';
+import InputForm from '../inputForm/inputForm';
 import SliderButton from '../sliderButton/sliderButton';
 import './registerForm.scss';
 import Checkbox from '../checkbox/checkbox';
 import SubmitButton from '../submitButton/submitButton';
+import { EmailErrors, PasswordErrors, RegiserInputNames } from '../../constants/types';
+import {
+  apartFormProps,
+  buildingFormProps,
+  cityFormProps,
+  countryFormProps,
+  dateFormProps,
+  emailFormProps,
+  firstNameFormProps,
+  lastNameFormProps,
+  passwordCheckFormProps,
+  passwordFormProps,
+  postalFormProps,
+  streetFormProps,
+} from './formProps';
+import { Pattern } from '@babel/types';
 
-interface IValidate {
-  email: boolean;
-  password: boolean;
-  name: boolean;
-  surename: boolean;
-  birthDate: boolean;
-  shipCountry: boolean;
-  billCountry: boolean;
+interface IValueStatus {
+  val: string;
+  err: string;
+  className?: string;
 }
 
+interface IAddress {
+  country: IValueStatus;
+  city: IValueStatus;
+  street: IValueStatus;
+  postal: IValueStatus;
+  building: IValueStatus;
+  apart: IValueStatus;
+}
+
+interface IValidate {
+  email: IValueStatus;
+  password: IValueStatus;
+  passwordCheck: IValueStatus;
+  name: IValueStatus;
+  surename: IValueStatus;
+  birthDate: IValueStatus;
+  shipment: IAddress;
+  bill: IAddress;
+}
+
+interface IPattern {
+  pattern: RegExp;
+  error: string | EmailErrors | PasswordErrors;
+}
+
+interface IRegisterContext {
+  validateArr: Partial<IValidate>;
+  setValidateArr: React.Dispatch<React.SetStateAction<Partial<IValidate>>>;
+}
+
+const emailPattern: IPattern[] = [
+  { pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, error: 'введите корректный email' },
+  { pattern: /^[A-Za-z@{|}_~!#$%^=&*+?.\\\d/]+$/, error: EmailErrors.notInLatin },
+  { pattern: /^[A-Z0-9{|}_~!#$%^=&*+?.\\/]+@[A-Z0-9.-]+$/i, error: EmailErrors.noTopLevelDomain },
+  { pattern: /^[A-Z0-9{|}_~!#$%^=&*+?.\\/]+@[A-Z0-9.-]+\.\w{2,4}$/i, error: EmailErrors.shortDomain },
+];
+
+const passwordPattern: IPattern[] = [
+  { pattern: /^(?!(\s|\S*\s$))\S+$/, error: PasswordErrors.leadingTrailingSpace },
+  { pattern: /[A-Za-z].*/, error: PasswordErrors.notInLatin },
+  { pattern: /^(?=.{8,})/, error: PasswordErrors.tooShort },
+  { pattern: /[A-Z]/, error: PasswordErrors.missingUppercase },
+  { pattern: /[a-z]/, error: PasswordErrors.missingLowercase },
+  { pattern: /[0-9]/, error: PasswordErrors.missingDigit },
+  { pattern: /[!@#$%^&*]/, error: PasswordErrors.missingSpecialChar },
+];
+
+const checkInput = (value: string, pattern: IPattern[]): IValueStatus => {
+  const errorArr = pattern.filter((elem) => !elem.pattern.test(value));
+  const error = errorArr.length ? errorArr[0].error : '';
+  return { val: value, err: error };
+};
+
+const handleInput = (event: React.FormEvent<HTMLInputElement>, context: IRegisterContext, pattern: IPattern[], key: string) => {
+  const status = checkInput(event.currentTarget.value, pattern);
+  const labelClass = status.err.length ? ' invailid-label' : ' vailid-label';
+  status.className = emailFormProps.labelClassName + labelClass;
+  context.setValidateArr({ ...context.validateArr, [key]: status });
+};
+
+const checkMatchPassword = (event: React.FormEvent<HTMLInputElement>, context: IRegisterContext) => {
+  const status: IValueStatus = { val: event.currentTarget.value, err: PasswordErrors.notMatch };
+  if (status.val && status.val !== context.validateArr.password?.val) {
+    status.className = 'invailid-label';
+  } else {
+    status.className = 'vailid-label';
+    status.err = '';
+  }
+  context.setValidateArr({ ...context.validateArr, passwordCheck: status });
+};
+
+const RegisterContext = createContext<IRegisterContext | null>(null);
+
 const RegisterForm = () => {
-  const [validate, setValidate] = useState();
+  const validationState: Partial<IValidate> = {};
+
+  const [validateArr, setValidateArr] = useState(validationState);
   const [firstPage, setFirstPage] = useState(true);
   const [submitDisabled, setSubmitDisabled] = useState(true);
-
-  const RegisterContext = createContext({ validate, setValidate });
 
   const sliderHandler = () => {
     setFirstPage(!firstPage);
   };
 
+  const canSubmit = (state: Partial<IValidate> | Partial<IAddress>): boolean => {
+    return Object.values(state).reduce((acc, value) => {
+      if ('val' in value) {
+        // If error (in runtime enum value is string too) is not empty or value empty => we have error and we can't submit
+        if (value.err || !value.val) acc = acc && false;
+      } else {
+        // If it is a IAdress object
+        acc = canSubmit(value);
+      }
+      return acc;
+    }, true);
+  };
+
+  const updateForm = useEffect(() => {
+    setSubmitDisabled(!canSubmit(validationState));
+  }, [validateArr]);
+
   return (
-    <RegisterContext.Provider value={{ validate, setValidate }}>
+    <RegisterContext.Provider value={{ validateArr, setValidateArr } as IRegisterContext}>
       <div className='register'>
         <form className='register__form'>
           <h1 className='register__heading'>Регистрация</h1>
@@ -46,145 +148,36 @@ const RegisterForm = () => {
 };
 
 const RegisterStep1 = () => {
-  const emailFormProps: IInputForm = {
-    name: 'email',
-    type: 'email',
-    id: 'email',
-    placeholder: 'Ваш e-mail',
-    inputClassName: 'register__input-email',
-    labelClassName: 'register__label-email',
-    propLabelInfo: 'email',
-  };
-
-  const passwordFormProps: IInputForm = {
-    name: 'password',
-    type: 'password',
-    id: 'password',
-    placeholder: 'Придумайте пароль',
-    inputClassName: 'register__input-password',
-    labelClassName: 'register__label-password',
-    propLabelInfo: 'Пароль',
-  };
-
-  const passwordCheckFormProps: IInputForm = {
-    name: 'password-check',
-    type: 'password-check',
-    id: 'password-check',
-    placeholder: 'Повторите пароль',
-    inputClassName: 'register__input-password-check',
-    labelClassName: 'register__label-password-check',
-    propLabelInfo: 'Пароль',
-  };
-
-  const firstNameFormProps: IInputForm = {
-    name: 'first-name',
-    type: 'text',
-    id: 'first-name',
-    placeholder: 'Имя',
-    inputClassName: 'register__input-first-name',
-    labelClassName: 'register__label-first-name',
-    propLabelInfo: 'Имя',
-  };
-
-  const lastNameFormProps: IInputForm = {
-    name: 'last-name',
-    type: 'text',
-    id: 'last-name',
-    placeholder: 'Фамилия',
-    inputClassName: 'register__input-last-name',
-    labelClassName: 'register__label-last-name',
-    propLabelInfo: 'Фамилия',
-  };
-
-  const dateFormProps: IInputForm = {
-    name: 'date',
-    type: 'date',
-    id: 'date',
-    placeholder: 'Дата рождения',
-    inputClassName: 'register__input-date',
-    labelClassName: 'register__label-date',
-    propLabelInfo: 'Дата рождения',
-  };
+  const context = useContext(RegisterContext) as IRegisterContext;
 
   return (
     <section className='register__step2'>
       <InputForm {...firstNameFormProps} />
       <InputForm {...lastNameFormProps} />
-      <InputForm {...emailFormProps} />
-      <InputForm {...passwordFormProps} />
-      <InputForm {...passwordCheckFormProps} />
+      <InputForm
+        {...emailFormProps}
+        labelClassName={`${emailFormProps.labelClassName} ${context.validateArr.email?.className || ''}`}
+        propLabelInfo={context.validateArr.email?.err}
+        handler={(event) => handleInput(event, context, emailPattern, RegiserInputNames.email)}
+      />
+      <InputForm
+        {...passwordFormProps}
+        labelClassName={`${passwordFormProps.labelClassName} ${context.validateArr.password?.className || ''}`}
+        propLabelInfo={context.validateArr.password?.err}
+        handler={(event) => handleInput(event, context, passwordPattern, RegiserInputNames.password)}
+      />
+      <InputForm
+        {...passwordCheckFormProps}
+        labelClassName={`${passwordCheckFormProps.labelClassName} ${context.validateArr.passwordCheck?.className || ''}`}
+        propLabelInfo={context.validateArr.passwordCheck?.err}
+        handler={(event) => checkMatchPassword(event, context)}
+      />
       <InputForm {...dateFormProps} />
     </section>
   );
 };
 
 const RegisterStep2 = () => {
-  const streetFormProps: IInputForm = {
-    name: 'street',
-    type: 'text',
-    id: 'street',
-    placeholder: 'Улица',
-    inputClassName: 'register__input-street',
-    labelClassName: 'register__label-street',
-    propLabelInfo: 'Улица',
-  };
-
-  const cityFormProps: IInputForm = {
-    name: 'city',
-    type: 'text',
-    id: 'city',
-    placeholder: 'Город',
-    inputClassName: 'register__input-city',
-    labelClassName: 'register__label-city',
-    propLabelInfo: 'Город',
-  };
-
-  const postalFormProps: IInputForm = {
-    name: 'postal',
-    type: 'text',
-    id: 'postal',
-    placeholder: 'Почтовый индекс',
-    inputClassName: 'register__input-postal',
-    labelClassName: 'register__label-postal',
-    propLabelInfo: 'Почтовый индекс',
-  };
-
-  const countryAutocomplete: IInputAutocomplete = {
-    listName: 'country',
-    dataList: ['Belarus', 'Russia', 'Turkey'],
-  };
-
-  const countryFormProps: IInputForm = {
-    name: 'country',
-    type: 'text',
-    id: 'countrySelect',
-    placeholder: 'Выберите страну',
-    inputClassName: 'register__input-country',
-    labelClassName: 'register__label-country',
-    propLabelInfo: 'Страна',
-    autocomplete: countryAutocomplete,
-  };
-
-  const buildingFormProps: IInputForm = {
-    name: 'building',
-    type: 'text',
-    id: 'building',
-    placeholder: 'Дом',
-    inputClassName: 'register__input-building',
-    labelClassName: 'register__label-building',
-    propLabelInfo: 'Дом',
-  };
-
-  const apartFormProps: IInputForm = {
-    name: 'apart',
-    type: 'text',
-    id: 'apart',
-    placeholder: 'Квартира',
-    inputClassName: 'register__input-apart',
-    labelClassName: 'register__label-apart',
-    propLabelInfo: 'Квартира',
-  };
-
   return (
     <section className='register__step2'>
       <div className=''>

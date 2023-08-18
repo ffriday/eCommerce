@@ -1,0 +1,47 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
+.inputForm {
+  width: 320px;
+  height: 60px;
+  padding: 10px 20px;
+  align-items: center;
+  background: #fff;
+  border-bottom: 1px solid #b7b7b7;
+  font-family: Inter;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 300;
+  color: #222;
+}
+.inputForm__wrapper {
+  position: relative;
+}
+.inputForm__label {
+  position: absolute;
+  font-size: 10px;
+  top: 10px;
+  left: 20px;
+  color: #686868;
+}
+.inputForm::-moz-placeholder {
+  color: #222;
+}
+.inputForm::placeholder {
+  color: #222;
+}
+
+.invailid::-moz-placeholder {
+  color: red;
+}
+
+.invailid::placeholder {
+  color: red;
+}
+
+.invailid-label {
+  color: red;
+}
+
+.vailid-label {
+  color: green;
+}/*# sourceMappingURL=inputForm.css.map */

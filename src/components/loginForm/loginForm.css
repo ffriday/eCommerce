@@ -1,0 +1,80 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
+.login {
+  margin-bottom: 60px 140px;
+}
+.login__form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.login__heading {
+  color: #030b08;
+  font-family: "Inter";
+  font-size: 45px;
+  font-style: normal;
+  text-align: center;
+  font-weight: 400;
+  line-height: normal;
+  margin-bottom: 15px;
+}
+.login__subtitle {
+  color: #030b08;
+  font-family: "Inter";
+  font-size: 16px;
+  font-style: normal;
+  text-align: center;
+  font-weight: 300;
+  line-height: normal;
+  margin-bottom: 35px;
+}
+.login__email {
+  margin-bottom: 12px;
+}
+.login__password {
+  margin-bottom: 20px;
+}
+.login__checkbox {
+  margin-bottom: 40px;
+}
+.login__link {
+  margin-left: 9px;
+  color: #5ca182;
+  font-family: Inter;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 300;
+}
+.login__link-label {
+  margin-top: 20px;
+  color: #000;
+  font-family: Inter;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 300;
+}
+
+@media only screen and (max-width: 715px) {
+  .login {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+  .login__heading {
+    color: #030b08;
+    font-family: "Inter";
+    font-size: 35px;
+    font-style: normal;
+    text-align: center;
+    font-weight: 400;
+    line-height: normal;
+  }
+  .login__subtitle {
+    color: #030b08;
+    font-family: "Inter";
+    font-size: 13px;
+    font-style: normal;
+    text-align: center;
+    font-weight: 300;
+    line-height: normal;
+  }
+}/*# sourceMappingURL=loginForm.css.map */
