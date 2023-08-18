@@ -12,14 +12,16 @@ import {
   countryFormProps,
   dateFormProps,
   emailFormProps,
+  emailPattern,
   firstNameFormProps,
   lastNameFormProps,
+  namePattern,
   passwordCheckFormProps,
   passwordFormProps,
+  passwordPattern,
   postalFormProps,
   streetFormProps,
 } from './formProps';
-import { Pattern } from '@babel/types';
 
 interface IValueStatus {
   val: string;
@@ -47,7 +49,7 @@ interface IValidate {
   bill: IAddress;
 }
 
-interface IPattern {
+export interface IPattern {
   pattern: RegExp;
   error: string | EmailErrors | PasswordErrors;
 }
@@ -57,26 +59,9 @@ interface IRegisterContext {
   setValidateArr: React.Dispatch<React.SetStateAction<Partial<IValidate>>>;
 }
 
-const emailPattern: IPattern[] = [
-  { pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, error: 'введите корректный email' },
-  { pattern: /^[A-Za-z@{|}_~!#$%^=&*+?.\\\d/]+$/, error: EmailErrors.notInLatin },
-  { pattern: /^[A-Z0-9{|}_~!#$%^=&*+?.\\/]+@[A-Z0-9.-]+$/i, error: EmailErrors.noTopLevelDomain },
-  { pattern: /^[A-Z0-9{|}_~!#$%^=&*+?.\\/]+@[A-Z0-9.-]+\.\w{2,4}$/i, error: EmailErrors.shortDomain },
-];
-
-const passwordPattern: IPattern[] = [
-  { pattern: /^(?!(\s|\S*\s$))\S+$/, error: PasswordErrors.leadingTrailingSpace },
-  { pattern: /[A-Za-z].*/, error: PasswordErrors.notInLatin },
-  { pattern: /^(?=.{8,})/, error: PasswordErrors.tooShort },
-  { pattern: /[A-Z]/, error: PasswordErrors.missingUppercase },
-  { pattern: /[a-z]/, error: PasswordErrors.missingLowercase },
-  { pattern: /[0-9]/, error: PasswordErrors.missingDigit },
-  { pattern: /[!@#$%^&*]/, error: PasswordErrors.missingSpecialChar },
-];
-
 const checkInput = (value: string, pattern: IPattern[]): IValueStatus => {
   const errorArr = pattern.filter((elem) => !elem.pattern.test(value));
-  const error = errorArr.length ? errorArr[0].error : '';
+  const error = errorArr.length && value ? errorArr[0].error : '';
   return { val: value, err: error };
 };
 
@@ -152,8 +137,18 @@ const RegisterStep1 = () => {
 
   return (
     <section className='register__step2'>
-      <InputForm {...firstNameFormProps} />
-      <InputForm {...lastNameFormProps} />
+      <InputForm
+        {...firstNameFormProps}
+        labelClassName={`${firstNameFormProps.labelClassName} ${context.validateArr.name?.className || ''}`}
+        propLabelInfo={context.validateArr.name?.err}
+        handler={(event) => handleInput(event, context, namePattern, RegiserInputNames.name)}
+      />
+      <InputForm
+        {...lastNameFormProps}
+        labelClassName={`${lastNameFormProps.labelClassName} ${context.validateArr.surename?.className || ''}`}
+        propLabelInfo={context.validateArr.surename?.err}
+        handler={(event) => handleInput(event, context, namePattern, RegiserInputNames.surename)}
+      />
       <InputForm
         {...emailFormProps}
         labelClassName={`${emailFormProps.labelClassName} ${context.validateArr.email?.className || ''}`}

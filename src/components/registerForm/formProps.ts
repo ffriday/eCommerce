@@ -1,4 +1,6 @@
+import { EmailErrors, NameErrors, PasswordErrors } from '../../constants/types';
 import { IInputAutocomplete, IInputForm } from '../inputForm/inputForm';
+import { IPattern } from './registerForm';
 
 // Step 1
 
@@ -117,3 +119,27 @@ export const apartFormProps: IInputForm = {
   inputClassName: 'register__input-apart',
   labelClassName: 'register__label-apart',
 };
+
+// Patterns
+
+export const emailPattern: IPattern[] = [
+  { pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, error: EmailErrors.notCorrect },
+  { pattern: /^[A-Za-z@{|}_~!#$%^=&*+?.\\\d/]+$/, error: EmailErrors.notInLatin },
+  { pattern: /^[A-Z0-9{|}_~!#$%^=&*+?.\\/]+@[A-Z0-9.-]+$/i, error: EmailErrors.noTopLevelDomain },
+  { pattern: /^[A-Z0-9{|}_~!#$%^=&*+?.\\/]+@[A-Z0-9.-]+\.\w{2,4}$/i, error: EmailErrors.shortDomain },
+];
+
+export const passwordPattern: IPattern[] = [
+  { pattern: /^(?!(\s|\S*\s$))\S+$/, error: PasswordErrors.leadingTrailingSpace },
+  { pattern: /[A-Za-z].*/, error: PasswordErrors.notInLatin },
+  { pattern: /^(?=.{8,})/, error: PasswordErrors.tooShort },
+  { pattern: /[A-Z]/, error: PasswordErrors.missingUppercase },
+  { pattern: /[a-z]/, error: PasswordErrors.missingLowercase },
+  { pattern: /[0-9]/, error: PasswordErrors.missingDigit },
+  { pattern: /[!@#$%^&*]/, error: PasswordErrors.missingSpecialChar },
+];
+
+export const namePattern: IPattern[] = [
+  { pattern: /^.{1,}$/, error: NameErrors.tooShort },
+  { pattern: /^[a-zA-Zа-яА-Я]+$/, error: NameErrors.specialSymbols },
+];

@@ -22,6 +22,7 @@ export enum EmailErrors {
   invalidFormat = 'Неверный формат',
   noTopLevelDomain = 'Отсутствует домен вернего уровня (например: "@xxx.xx")',
   shortDomain = 'Слишком короткое имя домена',
+  notCorrect = 'введите корректный email',
 }
 
 export enum PasswordErrors {
@@ -36,7 +37,14 @@ export enum PasswordErrors {
   notMatch = 'Пароли не совпадают',
 }
 
+export enum NameErrors {
+  tooShort = 'Имя слишком короткое',
+  specialSymbols = 'Имя не должно содержать специальных символов',
+}
+
 export enum RegiserInputNames {
   email = 'email',
   password = 'password',
+  name = 'name',
+  surename = 'surename',
 }
