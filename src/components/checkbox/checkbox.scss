@@ -32,7 +32,7 @@
   // hover, focus
   &:not(:disabled):not(:checked) + &__label:hover::before,
   &:not(:disabled):not(:checked) + &__label:focus::before {
-    @include checkboxBackground($checkbox-default-img);
+    @include checkboxBackground($checkbox-hover-img);
     cursor: pointer;
   }
   // checked

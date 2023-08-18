@@ -25,6 +25,27 @@
   font-style: normal;
   font-weight: 300;
   color: $input-text-color;
+  &__show-password {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    background: url(../assets/form/hidePassword.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 24px;
+    height: 24px;
+  }
+  &__show-password:hover {
+    cursor: pointer;
+    background: url(../assets/form/hidePasswordHover.svg);
+  }
+  &__hide-password {
+    background: url(../assets/form/showPaasword.svg);
+  }
+  &__hide-password:hover {
+    cursor: pointer;
+    background: url(../assets/form/showPasswordHover.svg);
+  }
 }
 
 @mixin submitButton($width, $height) {

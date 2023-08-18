@@ -104,13 +104,13 @@ const LoginForm = () => {
       setEmailLabel({ labelInfo: errorsData.email, labelClassNameInvailid: 'invailid-label' });
     }
     if (!errorsData.email) {
-      setEmailLabel({ labelInfo: 'email корректный', labelClassNameInvailid: 'vailid-label' });
+      setEmailLabel({ labelInfo: 'Email корректный', labelClassNameInvailid: 'vailid-label' });
     }
     if (errorsData.password && errorsData.password !== missingError) {
       setPasswordLabel({ labelInfo: errorsData.password, labelClassNameInvailid: 'invailid-label' });
     }
     if (!errorsData.password) {
-      setPasswordLabel({ labelInfo: 'пароль корректный', labelClassNameInvailid: 'vailid-label' });
+      setPasswordLabel({ labelInfo: 'Пароль корректный', labelClassNameInvailid: 'vailid-label' });
     }
   };
 

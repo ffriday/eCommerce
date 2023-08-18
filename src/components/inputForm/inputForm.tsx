@@ -1,5 +1,6 @@
 import './inputForm.scss';
 import { IInputhandler } from '../../constants/types';
+import { useState } from 'react';
 
 interface IInputForm {
   name: string;
@@ -23,13 +24,24 @@ const InputForm = ({
   labelClassName = '',
   propLabelInfo = '',
 }: IInputForm) => {
+  const [inputType, setInputType] = useState(type);
+  const [hidePassword, setHidePassword] = useState('');
   const defaultInputClass = 'inputForm';
   const defaultLabelClass = 'inputForm__label';
   const labelClass = `${defaultLabelClass} ${labelClassName ?? ''}`;
+  const toggleShowPasswordHandler = () => {
+    if (inputType === 'password') {
+      setInputType('text');
+      setHidePassword('inputForm__hide-password');
+    } else {
+      setInputType('password');
+      setHidePassword('');
+    }
+  };
   return (
     <div className='inputForm__wrapper'>
       <input
-        type={type}
+        type={inputType}
         id={id}
         className={inputClassName ? `${defaultInputClass} ${inputClassName}` : `${defaultInputClass}`}
         name={name}
@@ -40,6 +52,7 @@ const InputForm = ({
       <label htmlFor={id} className={labelClass}>
         {propLabelInfo}
       </label>
+      {id === 'password' && <div className={`inputForm__show-password ${hidePassword}`} onClick={toggleShowPasswordHandler}></div>}
     </div>
   );
 };
