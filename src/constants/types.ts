@@ -18,7 +18,7 @@ export enum EmailErrors {
   notInLatin = 'Email должен быть на латинице',
   missing = 'Введите email',
   invalidFormat = 'Неверный формат',
-  noTopLevelDomain = 'Отсутствует символ "@"',
+  noTopLevelDomain = 'Отсутствует домен вернего уровня (например: "@xxx.xx")',
   shortDomain = 'Слишком короткое имя домена',
 }
 
