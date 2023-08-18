@@ -48,6 +48,11 @@
     margin-bottom: $login-link-margin-top;
     margin-top: $login-link-margin-top;
   }
+  &__addressCaption {
+    @include loginSubtitle($login-subtitle-size);
+    text-align: left;
+    margin-top: $login-link-margin-top;
+  }
 }
 
 .inputForm__wrapper {

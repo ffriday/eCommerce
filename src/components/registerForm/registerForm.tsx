@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { FC, createContext, useContext, useEffect, useState } from 'react';
 import InputForm from '../inputForm/inputForm';
 import SliderButton from '../sliderButton/sliderButton';
 import './registerForm.scss';
@@ -86,7 +86,25 @@ const checkMatchPassword = (event: React.FormEvent<HTMLInputElement>, context: I
 const RegisterContext = createContext<IRegisterContext | null>(null);
 
 const RegisterForm = () => {
-  const validationState: Partial<IValidate> = {};
+  const emptyValue: IValueStatus = { val: '', err: '', className: '' };
+  const emptyAddress: IAddress = {
+    country: emptyValue,
+    city: emptyValue,
+    street: emptyValue,
+    postal: emptyValue,
+    building: emptyValue,
+    apart: emptyValue,
+  };
+  const validationState: Partial<IValidate> = {
+    email: emptyValue,
+    password: emptyValue,
+    passwordCheck: emptyValue,
+    name: emptyValue,
+    surename: emptyValue,
+    birthDate: emptyValue,
+    shipment: emptyAddress,
+    bill: emptyAddress,
+  };
 
   const [validateArr, setValidateArr] = useState(validationState);
   const [firstPage, setFirstPage] = useState(true);
@@ -97,20 +115,25 @@ const RegisterForm = () => {
   };
 
   const canSubmit = (state: Partial<IValidate> | Partial<IAddress>): boolean => {
-    return Object.values(state).reduce((acc, value) => {
-      if ('val' in value) {
-        // If error (in runtime enum value is string too) is not empty or value empty => we have error and we can't submit
-        if (value.err || !value.val) acc = acc && false;
-      } else {
-        // If it is a IAdress object
-        acc = canSubmit(value);
-      }
-      return acc;
-    }, true);
+    const arr = Object.values(state);
+    let res = false;
+    if (arr.length) {
+      res = arr.reduce((acc, value) => {
+        if ('val' in value) {
+          // If error (in runtime enum value is string too) is not empty or value empty => we have error and we can't submit
+          if (value.err || !value.val) acc = acc && false;
+        } else {
+          // If it is a IAdress object
+          acc = canSubmit(value);
+        }
+        return acc;
+      }, true);
+    }
+    return res;
   };
 
-  const updateForm = useEffect(() => {
-    setSubmitDisabled(!canSubmit(validationState));
+  useEffect(() => {
+    setSubmitDisabled(!canSubmit(validateArr));
   }, [validateArr]);
 
   return (
@@ -136,7 +159,7 @@ const RegisterStep1 = () => {
   const context = useContext(RegisterContext) as IRegisterContext;
 
   return (
-    <section className='register__step2'>
+    <section className='register__step1'>
       <InputForm
         {...firstNameFormProps}
         labelClassName={`${firstNameFormProps.labelClassName} ${context.validateArr.name?.className || ''}`}
@@ -175,28 +198,26 @@ const RegisterStep1 = () => {
 const RegisterStep2 = () => {
   return (
     <section className='register__step2'>
-      <div className=''>
-        <InputForm {...countryFormProps} />
-        <InputForm {...cityFormProps} />
-        <InputForm {...streetFormProps} />
-        <div className='register__home'>
-          <InputForm {...buildingFormProps} />
-          <InputForm {...apartFormProps} />
-        </div>
-        <InputForm {...postalFormProps} />
-      </div>
-      <div>
-        <InputForm {...countryFormProps} />
-        <InputForm {...cityFormProps} />
-        <InputForm {...streetFormProps} />
-        <div className='register__home'>
-          <InputForm {...buildingFormProps} />
-          <InputForm {...apartFormProps} />
-        </div>
-        <InputForm {...postalFormProps} />
-      </div>
+      <AddressInputs caption='Адрес для доставки:' className='register__shipment' />
+      <AddressInputs caption='Адрес для выставления счета:' className='register__bill' />
       <Checkbox id='checkbox' handler={() => 'test action'} classNameWrapper='register__checkbox' title='Same adress' />
     </section>
+  );
+};
+
+const AddressInputs: FC<{ caption: string; className?: string }> = ({ caption, className }) => {
+  return (
+    <div className={className}>
+      <p className='register__addressCaption'>{caption}</p>
+      <InputForm {...countryFormProps} />
+      <InputForm {...cityFormProps} />
+      <InputForm {...streetFormProps} />
+      <div className='register__home'>
+        <InputForm {...buildingFormProps} />
+        <InputForm {...apartFormProps} />
+      </div>
+      <InputForm {...postalFormProps} />
+    </div>
   );
 };
 
