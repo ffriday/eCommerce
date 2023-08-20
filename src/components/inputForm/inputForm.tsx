@@ -70,7 +70,9 @@ const InputForm = ({
       <label htmlFor={id} className={labelClass}>
         {propLabelInfo}
       </label>
-      {id === 'password' && <div className={`inputForm__show-password ${hidePassword}`} onClick={toggleShowPasswordHandler}></div>}
+      {(id === 'password' || id === 'password-check') && (
+        <div className={`inputForm__show-password ${hidePassword}`} onClick={toggleShowPasswordHandler}></div>
+      )}
     </div>
   );
 };

@@ -168,6 +168,7 @@ const RegisterForm = () => {
 
   useEffect(() => {
     setSubmitDisabled(!canSubmit(validateArr));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [validateArr, billAddressDisabled]);
 
   return (
