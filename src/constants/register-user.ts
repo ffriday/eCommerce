@@ -1,3 +1,4 @@
+import { CustomerDraft } from '@commercetools/platform-sdk';
 import { apiRoot } from './ecommerce-client';
 import { IUser, IUserValidate, IValueStatus } from './types';
 
@@ -14,8 +15,11 @@ interface ICustomerAdress {
   postalCode: string;
   building: string;
   apartment: string;
-  defaultShippingAddress?: string;
-  defaultBillingAddress?: string;
+}
+
+interface IDefaultAddress {
+  defaultShippingAddress?: number;
+  defaultBillingAddress?: number;
 }
 
 export const createCustomer = (customer: IUserValidate<IUser> | IUserValidate<IValueStatus>, defaultShipment: boolean, defaultBill: boolean) => {
@@ -28,7 +32,6 @@ export const createCustomer = (customer: IUserValidate<IUser> | IUserValidate<IV
     building: customer.shipment.building.val,
     apartment: customer.shipment.apart.val,
   };
-  if (defaultShipment) shipmentAdress.defaultShippingAddress = '0';
 
   const billAdress: ICustomerAdress = {
     key: ShipmentDefaultKey.bill.toString(),
@@ -40,19 +43,24 @@ export const createCustomer = (customer: IUserValidate<IUser> | IUserValidate<IV
     apartment: customer.bill.apart.val,
   };
 
-  if (defaultBill) shipmentAdress.defaultBillingAddress = '1';
+  const defaultAdress: IDefaultAddress = {};
+  if (defaultShipment) defaultAdress.defaultShippingAddress = 0;
+  if (defaultBill) defaultAdress.defaultBillingAddress = 1;
+
+  const customerBody: CustomerDraft = {
+    firstName: customer.name.val,
+    lastName: customer.surename.val,
+    email: customer.email.val,
+    password: customer.password.val,
+    dateOfBirth: customer.birthDate.val,
+    addresses: [shipmentAdress, billAdress],
+    ...defaultAdress,
+  };
 
   return apiRoot
     .customers()
     .post({
-      body: {
-        firstName: customer.name.val,
-        lastName: customer.surename.val,
-        email: customer.email.val,
-        password: customer.password.val,
-        dateOfBirth: customer.birthDate.val,
-        addresses: [shipmentAdress, billAdress],
-      },
+      body: customerBody,
     })
     .execute();
 };
