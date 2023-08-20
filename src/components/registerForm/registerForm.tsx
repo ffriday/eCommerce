@@ -145,16 +145,20 @@ const RegisterForm = () => {
   };
 
   const canSubmit = (state: Partial<IValidate> | Partial<IAddress>): boolean => {
-    const arr = Object.values(state);
+    const arr = Object.entries(state);
     let res = false;
     if (arr.length) {
-      res = arr.reduce((acc, value) => {
+      res = arr.reduce((acc, [key, value]) => {
         if ('val' in value) {
           // If error (in runtime enum value is string too) is not empty or value empty => we have error and we can't submit
           if (value.err || !value.val) acc = acc && false;
         } else {
           // If it is a IAdress object
-          acc = canSubmit(value);
+          if (!billAddressDisabled) {
+            acc = canSubmit(value);
+          } else {
+            if (key !== RegiserInputNames.bill.toString()) acc = canSubmit(value);
+          }
         }
         return acc;
       }, true);
@@ -164,7 +168,7 @@ const RegisterForm = () => {
 
   useEffect(() => {
     setSubmitDisabled(!canSubmit(validateArr));
-  }, [validateArr]);
+  }, [validateArr, billAddressDisabled]);
 
   return (
     <RegisterContext.Provider value={{ validateArr, setValidateArr, billAddressDisabled, setBillAddressDisabled } as IRegisterContext}>
