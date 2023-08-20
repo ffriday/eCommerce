@@ -6,8 +6,20 @@ enum ShipmentDefaultKey {
   bill = 'Billing',
 }
 
-export const createCustomer = (customer: IUserValidate<IUser> | IUserValidate<IValueStatus>) => {
-  const shipmentAdress = {
+interface ICustomerAdress {
+  key: string;
+  country: string;
+  city: string;
+  streetName: string;
+  postalCode: string;
+  building: string;
+  apartment: string;
+  defaultShippingAddress?: string;
+  defaultBillingAddress?: string;
+}
+
+export const createCustomer = (customer: IUserValidate<IUser> | IUserValidate<IValueStatus>, defaultShipment: boolean, defaultBill: boolean) => {
+  const shipmentAdress: ICustomerAdress = {
     key: ShipmentDefaultKey.shipment.toString(),
     country: customer.shipment.country.val,
     city: customer.shipment.city.val,
@@ -16,8 +28,9 @@ export const createCustomer = (customer: IUserValidate<IUser> | IUserValidate<IV
     building: customer.shipment.building.val,
     apartment: customer.shipment.apart.val,
   };
+  if (defaultShipment) shipmentAdress.defaultShippingAddress = '0';
 
-  const billAdress = {
+  const billAdress: ICustomerAdress = {
     key: ShipmentDefaultKey.bill.toString(),
     country: customer.bill.country.val,
     city: customer.bill.city.val,
@@ -26,6 +39,8 @@ export const createCustomer = (customer: IUserValidate<IUser> | IUserValidate<IV
     building: customer.bill.building.val,
     apartment: customer.bill.apart.val,
   };
+
+  if (defaultShipment) shipmentAdress.defaultBillingAddress = '1';
 
   return apiRoot
     .customers()

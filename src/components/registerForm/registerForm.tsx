@@ -1,4 +1,4 @@
-import { FC, createContext, useContext, useEffect, useState } from 'react';
+import { FC, FormEvent, createContext, useContext, useEffect, useState } from 'react';
 import InputForm from '../inputForm/inputForm';
 import SliderButton from '../sliderButton/sliderButton';
 import './registerForm.scss';
@@ -38,6 +38,7 @@ import {
   streetPattern,
 } from './formProps';
 import { stat } from 'fs';
+import { createCustomer } from '../../constants/register-user';
 
 export interface IPattern {
   pattern: RegExp;
@@ -113,7 +114,7 @@ const RegisterForm = () => {
     building: emptyValue,
     apart: emptyValue,
   };
-  const validationState: Partial<IUserValidate<IValueStatus>> = {
+  const validationState: IUserValidate<IValueStatus> = {
     email: emptyValue,
     password: emptyValue,
     passwordCheck: emptyValue,
@@ -157,6 +158,15 @@ const RegisterForm = () => {
     return res;
   };
 
+  const submitForm = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const submitData = validateArr;
+    if (billAddressDisabled) {
+      submitData.bill = submitData.shipment;
+    }
+    createCustomer(validateArr, defaultShipping, defaultBill);
+  };
+
   useEffect(() => {
     setSubmitDisabled(!canSubmit(validateArr));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -177,7 +187,7 @@ const RegisterForm = () => {
         } as IRegisterContext
       }>
       <div className='register'>
-        <form className='register__form'>
+        <form className='register__form' onSubmit={(event) => submitForm(event)}>
           <h1 className='register__heading'>Регистрация</h1>
           <p className='register__subtitle'>Создайте аккаунт, чтобы войти в личный кабинет</p>
           <SliderButton text={{ first: 'Шаг 1', second: 'Шаг 2' }} handler={sliderHandler} firstStep={firstPage} className='register__slider' />
