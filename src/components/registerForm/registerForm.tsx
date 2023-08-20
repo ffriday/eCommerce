@@ -4,11 +4,14 @@ import SliderButton from '../sliderButton/sliderButton';
 import './registerForm.scss';
 import Checkbox from '../checkbox/checkbox';
 import SubmitButton from '../submitButton/submitButton';
-import { DateErrors, EmailErrors, PasswordErrors, RegiserInputNames } from '../../constants/types';
+import { AddressErrors, DateErrors, EmailErrors, PasswordErrors, RegiserInputNames } from '../../constants/types';
 import {
   apartFormProps,
   buildingFormProps,
+  buildingapartPattern,
   cityFormProps,
+  cityPattern,
+  countryAutocomplete,
   countryFormProps,
   dateFormProps,
   emailFormProps,
@@ -20,7 +23,9 @@ import {
   passwordFormProps,
   passwordPattern,
   postalFormProps,
+  postalPattern,
   streetFormProps,
+  streetPattern,
 } from './formProps';
 
 interface IValueStatus {
@@ -55,17 +60,26 @@ export interface IPattern {
 }
 
 interface IRegisterContext {
-  validateArr: Partial<IValidate>;
+  validateArr: IValidate;
   setValidateArr: React.Dispatch<React.SetStateAction<Partial<IValidate>>>;
+  billAddressDisabled: boolean;
+  setBillAddressDisabled: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+interface IAddressInput {
+  caption: string;
+  className: string;
+  arrKey: RegiserInputNames.shipment | RegiserInputNames.bill;
+  isDisabled?: boolean;
 }
 
 const checkInput = (value: string, pattern: IPattern[]): IValueStatus => {
   const errorArr = pattern.filter((elem) => !elem.pattern.test(value));
-  const error = errorArr.length && value ? errorArr[0].error : '';
+  const error = errorArr.length ? errorArr[0].error : '';
   return { val: value, err: error };
 };
 
-const handleInput = (event: React.FormEvent<HTMLInputElement>, context: IRegisterContext, pattern: IPattern[], key: string) => {
+const handleInput = (event: React.FormEvent<HTMLInputElement>, context: IRegisterContext, pattern: IPattern[], key: RegiserInputNames) => {
   const status = checkInput(event.currentTarget.value, pattern);
   const labelClass = status.err.length ? ' invailid-label' : ' vailid-label';
   status.className = emailFormProps.labelClassName + labelClass;
@@ -124,6 +138,7 @@ const RegisterForm = () => {
   const [validateArr, setValidateArr] = useState(validationState);
   const [firstPage, setFirstPage] = useState(true);
   const [submitDisabled, setSubmitDisabled] = useState(true);
+  const [billAddressDisabled, setBillAddressDisabled] = useState(false);
 
   const sliderHandler = () => {
     setFirstPage(!firstPage);
@@ -152,7 +167,7 @@ const RegisterForm = () => {
   }, [validateArr]);
 
   return (
-    <RegisterContext.Provider value={{ validateArr, setValidateArr } as IRegisterContext}>
+    <RegisterContext.Provider value={{ validateArr, setValidateArr, billAddressDisabled, setBillAddressDisabled } as IRegisterContext}>
       <div className='register'>
         <form className='register__form'>
           <h1 className='register__heading'>Регистрация</h1>
@@ -216,27 +231,117 @@ const RegisterStep1: FC<{ className: string }> = ({ className }) => {
 };
 
 const RegisterStep2: FC<{ className: string }> = ({ className }) => {
+  const context = useContext(RegisterContext) as IRegisterContext;
+
   return (
     <section className={`register__step1 ${className}`}>
-      <AddressInputs caption='Адрес для доставки:' className='register__shipment' />
-      <AddressInputs caption='Адрес для выставления счета:' className='register__bill' />
-      <Checkbox id='checkbox' handler={() => 'test action'} classNameWrapper='register__checkbox' title='Same adress' />
+      <AddressInputs caption='Адрес для доставки:' className='register__shipment' arrKey={RegiserInputNames.shipment} />
+      <AddressInputs
+        caption='Адрес для выставления счета:'
+        className='register__bill'
+        arrKey={RegiserInputNames.bill}
+        isDisabled={context.billAddressDisabled}
+      />
+      <Checkbox
+        id='checkbox'
+        handler={() => context.setBillAddressDisabled(!context.billAddressDisabled)}
+        classNameWrapper='register__checkbox'
+        title='Использовать адрес доставки'
+      />
     </section>
   );
 };
 
-const AddressInputs: FC<{ caption: string; className?: string }> = ({ caption, className }) => {
+const AddressInputs: FC<IAddressInput> = ({ caption, className, arrKey, isDisabled = false }) => {
+  const context = useContext(RegisterContext) as IRegisterContext;
+
   return (
     <div className={className}>
       <p className='register__addressCaption'>{caption}</p>
-      <InputForm {...countryFormProps} id={`${countryFormProps.id}-${className}`} />
-      <InputForm {...cityFormProps} id={`${cityFormProps.id}-${className}`} />
-      <InputForm {...streetFormProps} id={`${streetFormProps.id}-${className}`} />
+      <InputForm
+        {...countryFormProps}
+        id={`${countryFormProps.id}-${className}`}
+        labelClassName={`${countryFormProps.labelClassName} ${context.validateArr.shipment?.country.className || ''}`}
+        propLabelInfo={context.validateArr.shipment?.country.err}
+        disabled={isDisabled}
+        handler={(event) => {
+          const error = !countryAutocomplete.dataList.includes(event.currentTarget.value) ? AddressErrors.countryFromList : '';
+          const status: IValueStatus = {
+            val: event.currentTarget.value,
+            err: error,
+            className: error.length ? ' invailid-label' : ' vailid-label',
+          };
+          const adress = { ...context.validateArr[arrKey], country: status };
+          context.setValidateArr({ ...context.validateArr, [arrKey]: adress });
+        }}
+      />
+      <InputForm
+        {...cityFormProps}
+        id={`${cityFormProps.id}-${className}`}
+        labelClassName={`${cityFormProps.labelClassName} ${context.validateArr[arrKey].city.className || ''}`}
+        propLabelInfo={context.validateArr[arrKey].city.err}
+        disabled={isDisabled}
+        handler={(event) => {
+          const status = checkInput(event.currentTarget.value, cityPattern);
+          status.className = status.err.length ? ' invailid-label' : ' vailid-label';
+          const adress = { ...context.validateArr[arrKey], city: status };
+          context.setValidateArr({ ...context.validateArr, [arrKey]: adress });
+        }}
+      />
+      <InputForm
+        {...streetFormProps}
+        id={`${streetFormProps.id}-${className}`}
+        labelClassName={`${streetFormProps.labelClassName} ${context.validateArr[arrKey].street.className || ''}`}
+        propLabelInfo={context.validateArr[arrKey].street.err}
+        disabled={isDisabled}
+        handler={(event) => {
+          const status = checkInput(event.currentTarget.value, streetPattern);
+          status.className = status.err.length ? ' invailid-label' : ' vailid-label';
+          const adress = { ...context.validateArr[arrKey], street: status };
+          context.setValidateArr({ ...context.validateArr, [arrKey]: adress });
+        }}
+      />
       <div className='register__home'>
-        <InputForm {...buildingFormProps} id={`${buildingFormProps.id}-${className}`} />
-        <InputForm {...apartFormProps} id={`${apartFormProps.id}-${className}`} />
+        <InputForm
+          {...buildingFormProps}
+          id={`${buildingFormProps.id}-${className}`}
+          labelClassName={`${buildingFormProps.labelClassName} ${context.validateArr[arrKey].building.className || ''}`}
+          propLabelInfo={context.validateArr[arrKey].building.err}
+          disabled={isDisabled}
+          handler={(event) => {
+            const status = checkInput(event.currentTarget.value, buildingapartPattern);
+            status.className = status.err.length ? ' invailid-label' : ' vailid-label';
+            const adress = { ...context.validateArr[arrKey], building: status };
+            context.setValidateArr({ ...context.validateArr, [arrKey]: adress });
+          }}
+        />
+        <InputForm
+          {...apartFormProps}
+          id={`${apartFormProps.id}-${className}`}
+          labelClassName={`${apartFormProps.labelClassName} ${context.validateArr[arrKey].apart.className || ''}`}
+          propLabelInfo={context.validateArr[arrKey].apart.err}
+          disabled={isDisabled}
+          handler={(event) => {
+            const status = checkInput(event.currentTarget.value, buildingapartPattern);
+            status.className = status.err.length ? ' invailid-label' : ' vailid-label';
+            const adress = { ...context.validateArr[arrKey], apart: status };
+            context.setValidateArr({ ...context.validateArr, [arrKey]: adress });
+          }}
+        />
       </div>
-      <InputForm {...postalFormProps} id={`${postalFormProps.id}-${className}`} />
+      <InputForm
+        {...postalFormProps}
+        id={`${postalFormProps.id}-${className}`}
+        labelClassName={`${postalFormProps.labelClassName} ${context.validateArr[arrKey].postal.className || ''}`}
+        propLabelInfo={context.validateArr[arrKey].postal.err}
+        disabled={isDisabled}
+        handler={(event) => {
+          const status = checkInput(event.currentTarget.value, postalPattern);
+          status.className = status.err.length ? ' invailid-label' : ' vailid-label';
+          const adress = { ...context.validateArr[arrKey], postal: status };
+          context.setValidateArr({ ...context.validateArr, [arrKey]: adress });
+        }}
+      />
     </div>
   );
 };

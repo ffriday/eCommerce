@@ -3,6 +3,12 @@
 
 .inputForm {
   @include inputForm($inputForm-width, 60px);
+  &:disabled {
+    color: gray;
+    &::placeholder {
+      color: gray;
+    }
+  }
 }
 .invailid {
   &::placeholder {

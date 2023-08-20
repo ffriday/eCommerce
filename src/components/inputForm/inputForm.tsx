@@ -17,6 +17,7 @@ export interface IInputForm {
   inputClassName?: string;
   labelClassName?: string;
   propLabelInfo?: string;
+  disabled?: boolean;
   autocomplete?: IInputAutocomplete;
 }
 const InputForm = ({
@@ -29,6 +30,7 @@ const InputForm = ({
   inputClassName = '',
   labelClassName = '',
   propLabelInfo = '',
+  disabled = false,
   autocomplete,
 }: IInputForm) => {
   const [inputType, setInputType] = useState(type);
@@ -55,6 +57,7 @@ const InputForm = ({
         value={value}
         placeholder={placeholder}
         onInput={handler}
+        disabled={disabled}
         {...(autocomplete !== undefined ? { list: autocomplete.listName, autoComplete: autocomplete.listName } : {})}
       />
       {autocomplete !== undefined ? (

@@ -1,4 +1,4 @@
-import { EmailErrors, NameErrors, PasswordErrors } from '../../constants/types';
+import { AddressErrors, EmailErrors, NameErrors, PasswordErrors } from '../../constants/types';
 import { IInputAutocomplete, IInputForm } from '../inputForm/inputForm';
 import { IPattern } from './registerForm';
 
@@ -142,4 +142,18 @@ export const passwordPattern: IPattern[] = [
 export const namePattern: IPattern[] = [
   { pattern: /^.{1,}$/, error: NameErrors.tooShort },
   { pattern: /^[a-zA-Zа-яА-Я]+$/, error: NameErrors.specialSymbols },
+];
+
+export const streetPattern: IPattern[] = [{ pattern: /^.{1,}$/, error: AddressErrors.tooShort }];
+
+export const cityPattern: IPattern[] = [
+  { pattern: /^.{1,}$/, error: AddressErrors.tooShort },
+  { pattern: /^[a-zA-Zа-яА-Я]+$/, error: AddressErrors.specialSymbols },
+];
+
+export const postalPattern: IPattern[] = [{ pattern: /^(?:\d{6}(?:[-\s]\d{5})?|[A-Z]\d[A-Z] \d[A-Z]\d)$/, error: AddressErrors.postalFormat }];
+
+export const buildingapartPattern: IPattern[] = [
+  { pattern: /^.{1,}$/, error: AddressErrors.noNumber },
+  { pattern: /^[A-Za-z0-9А-Яа-я/]+$/, error: AddressErrors.specialSymbolsApart },
 ];

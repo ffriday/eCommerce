@@ -46,10 +46,21 @@ export enum DateErrors {
   tooYang = 'Возраст должен быть более 13 лет',
 }
 
+export enum AddressErrors {
+  tooShort = 'Название слишком короткое',
+  specialSymbols = 'Не должен содержать специальных символов',
+  postalFormat = 'Неверный формат почтового кода',
+  countryFromList = 'Выберите страну из списка',
+  noNumber = 'Введите номер',
+  specialSymbolsApart = 'Неверный номер',
+}
+
 export enum RegiserInputNames {
   email = 'email',
   password = 'password',
   name = 'name',
   surename = 'surename',
-  date = 'date',
+  birthDate = 'birthDate',
+  shipment = 'shipment',
+  bill = 'bill',
 }
