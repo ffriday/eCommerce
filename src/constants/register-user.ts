@@ -1,7 +1,7 @@
 import { apiRoot } from './ecommerce-client';
 import { IUser, IUserValidate, IValueStatus } from './types';
 
-enum ShipmentDefaultKey {
+export enum ShipmentDefaultKey {
   shipment = 'Shipment',
   bill = 'Billing',
 }
@@ -40,7 +40,7 @@ export const createCustomer = (customer: IUserValidate<IUser> | IUserValidate<IV
     apartment: customer.bill.apart.val,
   };
 
-  if (defaultShipment) shipmentAdress.defaultBillingAddress = '1';
+  if (defaultBill) shipmentAdress.defaultBillingAddress = '1';
 
   return apiRoot
     .customers()
