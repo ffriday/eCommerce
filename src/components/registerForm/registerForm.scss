@@ -53,6 +53,9 @@
     text-align: left;
     margin-top: $login-link-margin-top;
   }
+  &__step-hidden {
+    display: none;
+  }
 }
 
 .inputForm__wrapper {

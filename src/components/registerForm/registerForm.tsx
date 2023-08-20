@@ -143,8 +143,8 @@ const RegisterForm = () => {
           <h1 className='register__heading'>Регистрация</h1>
           <p className='register__subtitle'>Создайте аккаунт, чтобы войти в личный кабинет</p>
           <SliderButton text={{ first: 'Шаг 1', second: 'Шаг 2' }} handler={sliderHandler} firstStep={firstPage} className='register__slider' />
-          {firstPage ? <RegisterStep1 /> : null}
-          {!firstPage ? <RegisterStep2 /> : null}
+          <RegisterStep1 className={!firstPage ? 'register__step-hidden' : ''} />
+          <RegisterStep2 className={firstPage ? 'register__step-hidden' : ''} />
           <SubmitButton text='Зарегистрироваться' disabled={submitDisabled} className='register__submit' />
           <span className='register__loginLink'>
             У вас уже есть аккаунт? <a href='\login'>Войти</a>
@@ -155,11 +155,11 @@ const RegisterForm = () => {
   );
 };
 
-const RegisterStep1 = () => {
+const RegisterStep1: FC<{ className: string }> = ({ className }) => {
   const context = useContext(RegisterContext) as IRegisterContext;
 
   return (
-    <section className='register__step1'>
+    <section className={`register__step1 ${className}`}>
       <InputForm
         {...firstNameFormProps}
         labelClassName={`${firstNameFormProps.labelClassName} ${context.validateArr.name?.className || ''}`}
@@ -195,9 +195,9 @@ const RegisterStep1 = () => {
   );
 };
 
-const RegisterStep2 = () => {
+const RegisterStep2: FC<{ className: string }> = ({ className }) => {
   return (
-    <section className='register__step2'>
+    <section className={`register__step1 ${className}`}>
       <AddressInputs caption='Адрес для доставки:' className='register__shipment' />
       <AddressInputs caption='Адрес для выставления счета:' className='register__bill' />
       <Checkbox id='checkbox' handler={() => 'test action'} classNameWrapper='register__checkbox' title='Same adress' />
