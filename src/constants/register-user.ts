@@ -1,53 +1,43 @@
-// import fetch from 'node-fetch';
-import { eCommerceEnv as ENV } from './ecommerce.env';
-import {
-  ClientBuilder,
+import { apiRoot } from './ecommerce-client';
+import { IUser, IUserValidate, IValueStatus } from './types';
 
-  // Import middlewares
-  type AuthMiddlewareOptions, // Required for auth
-  type HttpMiddlewareOptions, // Required for sending HTTP requests
-} from '@commercetools/sdk-client-v2';
+enum ShipmentDefaultKey {
+  shipment = 'Shipment',
+  bill = 'Billing',
+}
 
-const projectKey = ENV.CTP_PROJECT_KEY;
-const scopes = [ENV.CTP_SCOPES];
+export const createCustomer = (customer: IUserValidate<IUser> | IUserValidate<IValueStatus>) => {
+  const shipmentAdress = {
+    key: ShipmentDefaultKey.shipment.toString(),
+    country: 'US',
+    city: customer.shipment.city.val,
+    streetName: customer.shipment.street.val,
+    postalCode: customer.shipment.postal.val,
+    building: customer.shipment.building.val,
+    apartment: customer.shipment.apart.val,
+  };
 
-// Configure authMiddlewareOptions
-const authMiddlewareOptions: AuthMiddlewareOptions = {
-  host: ENV.CTP_AUTH_URL,
-  projectKey: projectKey,
-  credentials: {
-    clientId: ENV.CTP_CLIENT_ID,
-    clientSecret: ENV.CTP_CLIENT_SECRET,
-  },
-  scopes,
-  fetch: fetch,
+  const billAdress = {
+    key: ShipmentDefaultKey.bill.toString(),
+    country: 'DE',
+    city: customer.bill.city.val,
+    streetName: customer.bill.street.val,
+    postalCode: customer.bill.postal.val,
+    building: customer.bill.building.val,
+    apartment: customer.bill.apart.val,
+  };
+
+  return apiRoot
+    .customers()
+    .post({
+      body: {
+        firstName: customer.name.val,
+        lastName: customer.surename.val,
+        email: customer.email.val,
+        password: customer.password.val,
+        dateOfBirth: customer.birthDate.val,
+        addresses: [shipmentAdress, billAdress],
+      },
+    })
+    .execute();
 };
-
-// Configure httpMiddlewareOptions
-const httpMiddlewareOptions: HttpMiddlewareOptions = {
-  host: ENV.CTP_API_URL,
-  fetch: fetch,
-};
-
-// Export the ClientBuilder
-export const ctpClient = new ClientBuilder()
-  .withProjectKey(projectKey) // .withProjectKey() is not required if the projectKey is included in authMiddlewareOptions
-  .withClientCredentialsFlow(authMiddlewareOptions)
-  .withHttpMiddleware(httpMiddlewareOptions)
-  .withLoggerMiddleware() // Include middleware for logging
-  .build();
-
-// import { ctpClient } from './BuildClient';
-import { ApiRoot, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
-
-// Create apiRoot from the imported ClientBuilder and include your Project key
-const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({ projectKey: ENV.CTP_PROJECT_KEY });
-
-// Example call to return Project information
-// This code has the same effect as sending a GET request to the commercetools Composable Commerce API without any endpoints.
-export const getProject = () => {
-  return apiRoot.get().execute();
-};
-
-// Retrieve Project information and output the result to the log
-getProject().then(console.log).catch(console.error);

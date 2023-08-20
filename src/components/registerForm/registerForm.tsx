@@ -4,7 +4,16 @@ import SliderButton from '../sliderButton/sliderButton';
 import './registerForm.scss';
 import Checkbox from '../checkbox/checkbox';
 import SubmitButton from '../submitButton/submitButton';
-import { AddressErrors, DateErrors, EmailErrors, PasswordErrors, RegiserInputNames } from '../../constants/types';
+import {
+  AddressErrors,
+  DateErrors,
+  EmailErrors,
+  IAddress,
+  IUserValidate,
+  IValueStatus,
+  PasswordErrors,
+  RegiserInputNames,
+} from '../../constants/types';
 import {
   apartFormProps,
   buildingFormProps,
@@ -28,40 +37,14 @@ import {
   streetPattern,
 } from './formProps';
 
-interface IValueStatus {
-  val: string;
-  err: string;
-  className?: string;
-}
-
-interface IAddress {
-  country: IValueStatus;
-  city: IValueStatus;
-  street: IValueStatus;
-  postal: IValueStatus;
-  building: IValueStatus;
-  apart: IValueStatus;
-}
-
-interface IValidate {
-  email: IValueStatus;
-  password: IValueStatus;
-  passwordCheck: IValueStatus;
-  name: IValueStatus;
-  surename: IValueStatus;
-  birthDate: IValueStatus;
-  shipment: IAddress;
-  bill: IAddress;
-}
-
 export interface IPattern {
   pattern: RegExp;
   error: string | EmailErrors | PasswordErrors;
 }
 
 interface IRegisterContext {
-  validateArr: IValidate;
-  setValidateArr: React.Dispatch<React.SetStateAction<Partial<IValidate>>>;
+  validateArr: IUserValidate<IValueStatus>;
+  setValidateArr: React.Dispatch<React.SetStateAction<Partial<IUserValidate<IValueStatus>>>>;
   billAddressDisabled: boolean;
   setBillAddressDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -116,7 +99,7 @@ const RegisterContext = createContext<IRegisterContext | null>(null);
 
 const RegisterForm = () => {
   const emptyValue: IValueStatus = { val: '', err: '', className: '' };
-  const emptyAddress: IAddress = {
+  const emptyAddress: IAddress<IValueStatus> = {
     country: emptyValue,
     city: emptyValue,
     street: emptyValue,
@@ -124,7 +107,7 @@ const RegisterForm = () => {
     building: emptyValue,
     apart: emptyValue,
   };
-  const validationState: Partial<IValidate> = {
+  const validationState: Partial<IUserValidate<IValueStatus>> = {
     email: emptyValue,
     password: emptyValue,
     passwordCheck: emptyValue,
@@ -144,7 +127,7 @@ const RegisterForm = () => {
     setFirstPage(!firstPage);
   };
 
-  const canSubmit = (state: Partial<IValidate> | Partial<IAddress>): boolean => {
+  const canSubmit = (state: Partial<IUserValidate<IValueStatus>> | Partial<IAddress<IValueStatus>>): boolean => {
     const arr = Object.entries(state);
     let res = false;
     if (arr.length) {
