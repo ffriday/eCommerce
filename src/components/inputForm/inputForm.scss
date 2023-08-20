@@ -2,7 +2,13 @@
 @import '../../styles/mixins.scss';
 
 .inputForm {
-  @include inputForm(320px, 60px);
+  @include inputForm($inputForm-width, 60px);
+  &:disabled {
+    color: gray;
+    &::placeholder {
+      color: gray;
+    }
+  }
 }
 .invailid {
   &::placeholder {

@@ -2,7 +2,12 @@ import './inputForm.scss';
 import { IInputhandler } from '../../constants/types';
 import { useState } from 'react';
 
-interface IInputForm {
+export interface IInputAutocomplete {
+  listName: string;
+  dataList: string[];
+}
+
+export interface IInputForm {
   name: string;
   type: string;
   id: string;
@@ -12,6 +17,8 @@ interface IInputForm {
   inputClassName?: string;
   labelClassName?: string;
   propLabelInfo?: string;
+  disabled?: boolean;
+  autocomplete?: IInputAutocomplete;
 }
 const InputForm = ({
   name,
@@ -23,6 +30,8 @@ const InputForm = ({
   inputClassName = '',
   labelClassName = '',
   propLabelInfo = '',
+  disabled = false,
+  autocomplete,
 }: IInputForm) => {
   const [inputType, setInputType] = useState(type);
   const [hidePassword, setHidePassword] = useState('');
@@ -48,11 +57,22 @@ const InputForm = ({
         value={value}
         placeholder={placeholder}
         onInput={handler}
+        disabled={disabled}
+        {...(autocomplete !== undefined ? { list: autocomplete.listName, autoComplete: autocomplete.listName } : {})}
       />
+      {autocomplete !== undefined ? (
+        <datalist id={autocomplete.listName}>
+          {autocomplete.dataList.map((element, i) => (
+            <option key={`${autocomplete.listName}-${i}`}>{element}</option>
+          ))}
+        </datalist>
+      ) : null}
       <label htmlFor={id} className={labelClass}>
         {propLabelInfo}
       </label>
-      {id === 'password' && <div className={`inputForm__show-password ${hidePassword}`} onClick={toggleShowPasswordHandler}></div>}
+      {(id === 'password' || id === 'password-check') && (
+        <div className={`inputForm__show-password ${hidePassword}`} onClick={toggleShowPasswordHandler}></div>
+      )}
     </div>
   );
 };
