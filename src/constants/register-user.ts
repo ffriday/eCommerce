@@ -9,7 +9,7 @@ enum ShipmentDefaultKey {
 export const createCustomer = (customer: IUserValidate<IUser> | IUserValidate<IValueStatus>) => {
   const shipmentAdress = {
     key: ShipmentDefaultKey.shipment.toString(),
-    country: 'US',
+    country: customer.shipment.country.val,
     city: customer.shipment.city.val,
     streetName: customer.shipment.street.val,
     postalCode: customer.shipment.postal.val,
@@ -19,7 +19,7 @@ export const createCustomer = (customer: IUserValidate<IUser> | IUserValidate<IV
 
   const billAdress = {
     key: ShipmentDefaultKey.bill.toString(),
-    country: 'DE',
+    country: customer.bill.country.val,
     city: customer.bill.city.val,
     streetName: customer.bill.street.val,
     postalCode: customer.bill.postal.val,

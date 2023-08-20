@@ -49,6 +49,10 @@ interface IRegisterContext {
   setValidateArr: React.Dispatch<React.SetStateAction<Partial<IUserValidate<IValueStatus>>>>;
   billAddressDisabled: boolean;
   setBillAddressDisabled: React.Dispatch<React.SetStateAction<boolean>>;
+  defaultShipping: boolean;
+  setDefaultShipping: React.Dispatch<React.SetStateAction<boolean>>;
+  defaultBill: boolean;
+  setDefaultBill: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface IAddressInput {
@@ -124,6 +128,8 @@ const RegisterForm = () => {
   const [firstPage, setFirstPage] = useState(true);
   const [submitDisabled, setSubmitDisabled] = useState(true);
   const [billAddressDisabled, setBillAddressDisabled] = useState(false);
+  const [defaultShipping, setDefaultShipping] = useState(false);
+  const [defaultBill, setDefaultBill] = useState(false);
 
   const sliderHandler = () => {
     setFirstPage(!firstPage);
@@ -157,7 +163,19 @@ const RegisterForm = () => {
   }, [validateArr, billAddressDisabled]);
 
   return (
-    <RegisterContext.Provider value={{ validateArr, setValidateArr, billAddressDisabled, setBillAddressDisabled } as IRegisterContext}>
+    <RegisterContext.Provider
+      value={
+        {
+          validateArr,
+          setValidateArr,
+          billAddressDisabled,
+          setBillAddressDisabled,
+          defaultShipping,
+          setDefaultShipping,
+          defaultBill,
+          setDefaultBill,
+        } as IRegisterContext
+      }>
       <div className='register'>
         <form className='register__form'>
           <h1 className='register__heading'>Регистрация</h1>
@@ -245,6 +263,15 @@ const RegisterStep2: FC<{ className: string }> = ({ className }) => {
 const AddressInputs: FC<IAddressInput> = ({ caption, className, arrKey, isDisabled = false }) => {
   const context = useContext(RegisterContext) as IRegisterContext;
 
+  const defaultAdвress = (arrKey: RegiserInputNames) => {
+    if (arrKey === RegiserInputNames.shipment) {
+      context.setDefaultShipping(!context.defaultShipping);
+    }
+    if (arrKey === RegiserInputNames.bill) {
+      context.setDefaultBill(!context.defaultBill);
+    }
+  };
+
   return (
     <div className={className}>
       <p className='register__addressCaption'>{caption}</p>
@@ -331,6 +358,12 @@ const AddressInputs: FC<IAddressInput> = ({ caption, className, arrKey, isDisabl
           const adress = { ...context.validateArr[arrKey], postal: status };
           context.setValidateArr({ ...context.validateArr, [arrKey]: adress });
         }}
+      />
+      <Checkbox
+        id={`checkbox ${className}`}
+        handler={() => defaultAdвress(arrKey)}
+        classNameWrapper='register__checkbox-defaultAddress'
+        title='Сделать адресом по умолчанию'
       />
     </div>
   );
