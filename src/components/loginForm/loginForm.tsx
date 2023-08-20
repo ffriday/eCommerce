@@ -10,7 +10,8 @@ import { missingError } from '../../constants/formValidation';
 import { IformData } from '../../constants/formValidation';
 import { IListOfValidationRules } from '../../constants/formValidation';
 import { IFormErrors } from '../../constants/formValidation';
-import { getProject } from '../../api/client';
+import { getProject } from '../../api/auth';
+import { test } from '../../api/getClient';
 
 interface IInputLabel {
   labelInfo: string;
@@ -58,16 +59,27 @@ const LoginForm = () => {
       email: new FormData(target).get('email') as string,
       password: new FormData(target).get('password') as string,
     };
+
+    // просто тес на получения пользователя
+    test('romankadevich@gmail.com');
     // const errorsData: IFormErrors = validation(formData, ListOfValidationRulesOfLogin);
     // if (errorsData.password) {
     //   setPasswordPlaceholder({ labelInfo: errorsData.password, labelClassNameInvailid: 'invailid' });
     // }
+
+    // проверка корректен ли токен
     if (formData.email && formData.password) {
       try {
-        await getProject(formData.email, formData.password);
-      } catch (err) {
-        setEmailLabel({ labelInfo: `${err}`, labelClassNameInvailid: 'invailid-label' });
-        setPasswordLabel({ labelInfo: `${err}`, labelClassNameInvailid: 'invailid-label' });
+        const res = await getProject(formData.email, formData.password);
+
+        console.log(res.access_token);
+      } catch (error) {
+        const typedError = error as Error;
+
+        if (typedError.message === 'Customer account with the given credentials not found.') {
+          setEmailLabel({ labelInfo: 'Нет пользователя с введенным логином и паролем', labelClassNameInvailid: 'invailid-label' });
+          setPasswordLabel({ labelInfo: 'Нет пользователя с введенным логином и паролем', labelClassNameInvailid: 'invailid-label' });
+        }
       }
     }
   };
