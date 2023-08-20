@@ -4,7 +4,7 @@ import SliderButton from '../sliderButton/sliderButton';
 import './registerForm.scss';
 import Checkbox from '../checkbox/checkbox';
 import SubmitButton from '../submitButton/submitButton';
-import { EmailErrors, PasswordErrors, RegiserInputNames } from '../../constants/types';
+import { DateErrors, EmailErrors, PasswordErrors, RegiserInputNames } from '../../constants/types';
 import {
   apartFormProps,
   buildingFormProps,
@@ -81,6 +81,21 @@ const checkMatchPassword = (event: React.FormEvent<HTMLInputElement>, context: I
     status.err = '';
   }
   context.setValidateArr({ ...context.validateArr, passwordCheck: status });
+};
+
+const checkDate = (event: React.FormEvent<HTMLInputElement>, context: IRegisterContext, age: number) => {
+  const date = new Date(event.currentTarget.value);
+  const status: IValueStatus = { val: event.currentTarget.value, err: DateErrors.tooYang, className: 'invailid-label' };
+  if (!isNaN(date.getTime())) {
+    const currentDate = new Date();
+    const delta = currentDate.getTime() - date.getTime();
+    const ageMiliseconds = age * (365 * 24 * 60 * 60 * 1000);
+    if (delta >= ageMiliseconds) {
+      status.className = 'vailid-label';
+      status.err = '';
+    }
+  }
+  context.setValidateArr({ ...context.validateArr, birthDate: status });
 };
 
 const RegisterContext = createContext<IRegisterContext | null>(null);
@@ -190,7 +205,12 @@ const RegisterStep1: FC<{ className: string }> = ({ className }) => {
         propLabelInfo={context.validateArr.passwordCheck?.err}
         handler={(event) => checkMatchPassword(event, context)}
       />
-      <InputForm {...dateFormProps} />
+      <InputForm
+        {...dateFormProps}
+        labelClassName={`${dateFormProps.labelClassName} ${context.validateArr.birthDate?.className || ''}`}
+        propLabelInfo={context.validateArr.birthDate?.err}
+        handler={(event) => checkDate(event, context, 13)}
+      />
     </section>
   );
 };
@@ -209,14 +229,14 @@ const AddressInputs: FC<{ caption: string; className?: string }> = ({ caption, c
   return (
     <div className={className}>
       <p className='register__addressCaption'>{caption}</p>
-      <InputForm {...countryFormProps} />
-      <InputForm {...cityFormProps} />
-      <InputForm {...streetFormProps} />
+      <InputForm {...countryFormProps} id={`${countryFormProps.id}-${className}`} />
+      <InputForm {...cityFormProps} id={`${cityFormProps.id}-${className}`} />
+      <InputForm {...streetFormProps} id={`${streetFormProps.id}-${className}`} />
       <div className='register__home'>
-        <InputForm {...buildingFormProps} />
-        <InputForm {...apartFormProps} />
+        <InputForm {...buildingFormProps} id={`${buildingFormProps.id}-${className}`} />
+        <InputForm {...apartFormProps} id={`${apartFormProps.id}-${className}`} />
       </div>
-      <InputForm {...postalFormProps} />
+      <InputForm {...postalFormProps} id={`${postalFormProps.id}-${className}`} />
     </div>
   );
 };

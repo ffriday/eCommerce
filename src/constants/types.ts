@@ -42,9 +42,14 @@ export enum NameErrors {
   specialSymbols = 'Имя не должно содержать специальных символов',
 }
 
+export enum DateErrors {
+  tooYang = 'Возраст должен быть более 13 лет',
+}
+
 export enum RegiserInputNames {
   email = 'email',
   password = 'password',
   name = 'name',
   surename = 'surename',
+  date = 'date',
 }
