@@ -10,6 +10,7 @@ import { missingError } from '../../constants/formValidation';
 import { IformData } from '../../constants/formValidation';
 import { IListOfValidationRules } from '../../constants/formValidation';
 import { IFormErrors } from '../../constants/formValidation';
+import { getProject } from '../../api/client';
 
 interface IInputLabel {
   labelInfo: string;
@@ -46,23 +47,30 @@ const LoginForm = () => {
       { pattern: /[A-Z]/, error: PasswordErrors.missingUppercase },
       { pattern: /[a-z]/, error: PasswordErrors.missingLowercase },
       { pattern: /[0-9]/, error: PasswordErrors.missingDigit },
-      { pattern: /[!@#$%^&*]/, error: PasswordErrors.missingSpecialChar },
+      // { pattern: /[!@#$%^&*]/, error: PasswordErrors.missingSpecialChar },
     ],
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const target = event.target as HTMLFormElement;
     const formData: IformData = {
       email: new FormData(target).get('email') as string,
       password: new FormData(target).get('password') as string,
     };
-    const errorsData: IFormErrors = validation(formData, ListOfValidationRulesOfLogin);
-    if (errorsData.password) {
-      setPasswordPlaceholder({ labelInfo: errorsData.password, labelClassNameInvailid: 'invailid' });
+    // const errorsData: IFormErrors = validation(formData, ListOfValidationRulesOfLogin);
+    // if (errorsData.password) {
+    //   setPasswordPlaceholder({ labelInfo: errorsData.password, labelClassNameInvailid: 'invailid' });
+    // }
+    if (formData.email && formData.password) {
+      try {
+        await getProject(formData.email, formData.password);
+      } catch (err) {
+        setEmailLabel({ labelInfo: `${err}`, labelClassNameInvailid: 'invailid-label' });
+        setPasswordLabel({ labelInfo: `${err}`, labelClassNameInvailid: 'invailid-label' });
+      }
     }
   };
-
   const inputValidation = (event: React.FormEvent<HTMLInputElement>) => {
     const target = event.target as HTMLFormElement;
     const formData: IformData = {
