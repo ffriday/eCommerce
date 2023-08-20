@@ -22,6 +22,7 @@ import {
   cityPattern,
   countryAutocomplete,
   countryFormProps,
+  countryMAP,
   dateFormProps,
   emailFormProps,
   emailPattern,
@@ -36,6 +37,7 @@ import {
   streetFormProps,
   streetPattern,
 } from './formProps';
+import { stat } from 'fs';
 
 export interface IPattern {
   pattern: RegExp;
@@ -255,7 +257,7 @@ const AddressInputs: FC<IAddressInput> = ({ caption, className, arrKey, isDisabl
         handler={(event) => {
           const error = !countryAutocomplete.dataList.includes(event.currentTarget.value) ? AddressErrors.countryFromList : '';
           const status: IValueStatus = {
-            val: event.currentTarget.value,
+            val: !error ? countryMAP[event.currentTarget.value] : '',
             err: error,
             className: error.length ? ' invailid-label' : ' vailid-label',
           };
