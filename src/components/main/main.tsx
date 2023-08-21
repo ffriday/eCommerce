@@ -12,6 +12,11 @@ export default function Main() {
         <Link className='main__btn-reg' to='/registration'>
           Регистрация
         </Link>
+        {window.localStorage.getItem('customerID') ? (
+          <button className='main__btn-reg' onClick={() => window.localStorage.setItem('customerID', '')}>
+            Разлогиниться
+          </button>
+        ) : null}
       </div>
     </div>
   );

@@ -2,7 +2,7 @@ import './loginForm.scss';
 import SubmitButton from '../submitButton/submitButton';
 import InputForm from '../inputForm/inputForm';
 import Checkbox from '../checkbox/checkbox';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { EmailErrors } from '../../constants/types';
 import { PasswordErrors } from '../../constants/types';
 import { validation } from '../../constants/formValidation';
@@ -27,6 +27,10 @@ const LoginForm = () => {
   const [passwordPlaceholder, setPasswordPlaceholder] = useState<IInputLabel>({ labelInfo: 'Ваш пароль', labelClassNameInvailid: '' });
   const [emailLabel, setEmailLabel] = useState<IInputLabel>({ labelInfo: '', labelClassNameInvailid: '' });
   const [passwordLabel, setPasswordLabel] = useState<IInputLabel>({ labelInfo: '', labelClassNameInvailid: '' });
+
+  useEffect(() => {
+    if (window.localStorage.getItem('customerID')) navigation('/');
+  }, []);
 
   const ListOfValidationRulesOfLogin: IListOfValidationRules = {
     email: [
