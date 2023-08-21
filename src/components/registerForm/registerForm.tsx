@@ -171,9 +171,10 @@ const RegisterForm = () => {
     let response: ClientResponse<CustomerSignInResult> | null = null;
     try {
       response = (await createCustomer(validateArr, defaultShipping, defaultBill)) as ClientResponse<CustomerSignInResult>;
-      if (response.statusCode === 200) {
+      if (response.statusCode === 201) {
         setApiError('');
-        // TODO REDIRECT
+        navigate('/');
+        window.localStorage.setItem('customerID', response.body.customer.id || '');
       }
     } catch (error) {
       const err = error as ErrorResponse;
