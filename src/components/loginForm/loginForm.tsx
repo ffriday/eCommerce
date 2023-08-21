@@ -74,8 +74,7 @@ const LoginForm = () => {
       if (userExist.statusCode === 200 && userExist.body.count > 0) {
         try {
           const res = await getCustomerToken(formData.email, formData.password);
-
-          console.log(res.access_token); // Customer ID
+          window.localStorage.setItem('customerID', res.access_token); // Store ID in local storage //TODO - change to Middleware
         } catch (error) {
           const typedError = error as Error;
 
