@@ -27,8 +27,6 @@ export const validation = (formData: IformData, ListOfValidationRules: IListOfVa
     } else {
       for (const validationRuleKey of Object.keys(ListOfValidationRules)) {
         if (formDataKey === validationRuleKey) {
-          console.log(formDataKey);
-          console.log(validationRuleKey);
           for (const { pattern, error } of ListOfValidationRules[validationRuleKey]) {
             if (!pattern.test(formDataValue)) {
               formErrors[formDataKey] = error;
