@@ -11,7 +11,7 @@ const authClient = new SdkAuth({
     clientId: ENV.CTP_CLIENT_ID,
     clientSecret: ENV.CTP_CLIENT_SECRET,
   },
-  scopes: ENV.CTP_SCOPES,
+  scopes: [ENV.CTP_SCOPES],
   fetch,
 });
 

@@ -12,7 +12,7 @@ import { IListOfValidationRules } from '../../constants/formValidation';
 import { IFormErrors } from '../../constants/formValidation';
 import { Link } from 'react-router-dom';
 import { checkUserExist, getCustomerToken } from '../../constants/auth';
-import { test } from '../../constants/getClient';
+import { useNavigate } from 'react-router-dom';
 
 interface IInputLabel {
   labelInfo: string;
@@ -20,6 +20,7 @@ interface IInputLabel {
 }
 
 const LoginForm = () => {
+  const navigation = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isButtonDisable, setIsButtonDisable] = useState(true);
@@ -61,14 +62,10 @@ const LoginForm = () => {
       password: new FormData(target).get('password') as string,
     };
 
-    // просто тес на получения пользователя
-    test('romankadevich@gmail.com');
     const errorsData: IFormErrors = validation(formData, ListOfValidationRulesOfLogin);
     if (errorsData.password) {
       setPasswordPlaceholder({ labelInfo: errorsData.password, labelClassNameInvailid: 'invailid' });
     }
-
-    // проверка корректен ли токен
     if (formData.email && formData.password) {
       const userExist = await checkUserExist(formData.email);
 
@@ -76,6 +73,7 @@ const LoginForm = () => {
         try {
           const res = await getCustomerToken(formData.email, formData.password);
           window.localStorage.setItem('customerID', res.access_token); // Store ID in local storage //TODO - change to Middleware
+          navigation('/');
         } catch (error) {
           const typedError = error as Error;
 
