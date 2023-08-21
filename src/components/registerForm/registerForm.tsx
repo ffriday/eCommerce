@@ -1,5 +1,4 @@
 import { FC, FormEvent, createContext, useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Link, useNavigate } from 'react-router-dom';
 import InputForm from '../inputForm/inputForm';
 import SliderButton from '../sliderButton/sliderButton';
@@ -107,7 +106,6 @@ const checkDate = (event: React.FormEvent<HTMLInputElement>, context: IRegisterC
 const RegisterContext = createContext<IRegisterContext | null>(null);
 
 const RegisterForm = () => {
-  const navigate = useNavigate();
   const emptyValue: IValueStatus = { val: '', err: '', className: '' };
   const emptyAddress: IAddress<IValueStatus> = {
     country: emptyValue,
