@@ -150,7 +150,7 @@ const LoginForm = () => {
           handler={() => 'test action'}
           classNameWrapper='login__checkbox'
           title='Запомнить меня'
-          link={{ path: '#', text: 'Забыли пароль?' }}
+          link={{ path: '/registration', text: 'Забыли пароль?' }}
         />
         <SubmitButton text='Войти' disabled={isButtonDisable} />
         <span className='login__link-label'>

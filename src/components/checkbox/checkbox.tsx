@@ -36,7 +36,7 @@ const Checkbox = (props: ICheckbox) => {
         {props.title}
       </label>
 
-      <Link className={linkClass} to='/registration'>
+      <Link className={linkClass} to={props.link?.path ?? ''}>
         {props.link?.text}
       </Link>
     </div>
