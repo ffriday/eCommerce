@@ -187,13 +187,16 @@ const RegisterForm = () => {
   };
 
   useEffect(() => {
+    if (window.localStorage.getItem('customerID')) navigate('/');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     setSubmitDisabled(!canSubmit(validateArr));
     setApiError('');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [validateArr, billAddressDisabled]);
-  useEffect(() => {
-    if (window.localStorage.getItem('customerID')) navigate('/');
-  }, []);
+
   return (
     <RegisterContext.Provider
       value={
