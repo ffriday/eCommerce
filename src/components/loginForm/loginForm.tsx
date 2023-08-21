@@ -28,10 +28,6 @@ const LoginForm = () => {
   const [emailLabel, setEmailLabel] = useState<IInputLabel>({ labelInfo: '', labelClassNameInvailid: '' });
   const [passwordLabel, setPasswordLabel] = useState<IInputLabel>({ labelInfo: '', labelClassNameInvailid: '' });
 
-  useEffect(() => {
-    if (window.localStorage.getItem('customerID')) navigation('/');
-  }, []);
-
   const ListOfValidationRulesOfLogin: IListOfValidationRules = {
     email: [
       {
