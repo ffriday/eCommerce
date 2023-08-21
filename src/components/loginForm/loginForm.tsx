@@ -10,7 +10,7 @@ import { missingError } from '../../constants/formValidation';
 import { IformData } from '../../constants/formValidation';
 import { IListOfValidationRules } from '../../constants/formValidation';
 import { IFormErrors } from '../../constants/formValidation';
-import { getProject } from '../../api/auth';
+import { checkUserExist, getCustomerToken } from '../../api/auth';
 import { test } from '../../api/getClient';
 
 interface IInputLabel {
@@ -69,17 +69,23 @@ const LoginForm = () => {
 
     // проверка корректен ли токен
     if (formData.email && formData.password) {
-      try {
-        const res = await getProject(formData.email, formData.password);
+      const userExist = await checkUserExist(formData.email);
 
-        console.log(res.access_token);
-      } catch (error) {
-        const typedError = error as Error;
+      if (userExist.statusCode === 200 && userExist.body.count > 0) {
+        try {
+          const res = await getCustomerToken(formData.email, formData.password);
 
-        if (typedError.message === 'Customer account with the given credentials not found.') {
-          setEmailLabel({ labelInfo: 'Нет пользователя с введенным логином и паролем', labelClassNameInvailid: 'invailid-label' });
-          setPasswordLabel({ labelInfo: 'Нет пользователя с введенным логином и паролем', labelClassNameInvailid: 'invailid-label' });
+          console.log(res.access_token); // Customer ID
+        } catch (error) {
+          const typedError = error as Error;
+
+          if (typedError.message === 'Customer account with the given credentials not found.') {
+            setEmailLabel({ labelInfo: 'Нет пользователя с введенным логином и паролем', labelClassNameInvailid: 'invailid-label' });
+            setPasswordLabel({ labelInfo: 'Нет пользователя с введенным логином и паролем', labelClassNameInvailid: 'invailid-label' });
+          }
         }
+      } else {
+        //TODO User not exist ERROR
       }
     }
   };

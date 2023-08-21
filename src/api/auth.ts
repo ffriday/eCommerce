@@ -1,5 +1,6 @@
 import SdkAuth from '@commercetools/sdk-auth';
 import fetch from 'node-fetch';
+import { apiRoot } from './getClient';
 
 const authClient = new SdkAuth({
   host: 'https://auth.europe-west1.gcp.commercetools.com',
@@ -13,9 +14,8 @@ const authClient = new SdkAuth({
   fetch,
 });
 
-export const getProject = async (email: string, password: string) => {
-  // try {
-  const response = await authClient.customerPasswordFlow(
+export const getCustomerToken = async (email: string, password: string) => {
+  return await authClient.customerPasswordFlow(
     {
       username: email,
       password: password,
@@ -24,11 +24,15 @@ export const getProject = async (email: string, password: string) => {
       disableRefreshToken: false,
     },
   );
-
-  return response;
-  // } catch (error) {
-  //   // Выбрасываем ошибку дальше
-  //   throw error;
-  // }
 };
-// Retrieve Project information and output the result to the log
+
+export const checkUserExist = (customerEmail: string) => {
+  return apiRoot
+    .customers()
+    .get({
+      queryArgs: {
+        where: `email="${customerEmail}"`,
+      },
+    })
+    .execute();
+};
