@@ -37,6 +37,7 @@ import {
   streetFormProps,
   streetPattern,
 } from './formProps';
+import { Link } from 'react-router-dom';
 import { ErorMap, createCustomer } from '../../constants/register-user';
 import { ClientResponse, CustomerSignInResult, ErrorResponse } from '@commercetools/platform-sdk';
 
@@ -212,7 +213,7 @@ const RegisterForm = () => {
           {apiError ? <span className='register__errorMessage'>{apiError}</span> : ''}
           <SubmitButton text='Зарегистрироваться' disabled={submitDisabled} className='register__submit' />
           <span className='register__loginLink'>
-            У вас уже есть аккаунт? <a href='\login'>Войти</a>
+            У вас уже есть аккаунт? <Link to='/login'>Войти</Link>
           </span>
         </form>
       </div>
