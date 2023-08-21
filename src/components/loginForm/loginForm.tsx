@@ -10,6 +10,7 @@ import { missingError } from '../../constants/formValidation';
 import { IformData } from '../../constants/formValidation';
 import { IListOfValidationRules } from '../../constants/formValidation';
 import { IFormErrors } from '../../constants/formValidation';
+import { Link } from 'react-router-dom';
 
 interface IInputLabel {
   labelInfo: string;
@@ -153,7 +154,10 @@ const LoginForm = () => {
         />
         <SubmitButton text='Войти' disabled={isButtonDisable} />
         <span className='login__link-label'>
-          Нет аккаунта?<a className='login__link'>Создать новый аккаунт</a>
+          Нет аккаунта?
+          <Link to='/registration' className='login__link'>
+            Создать новый аккаунт
+          </Link>
         </span>
       </form>
     </div>

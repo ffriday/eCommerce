@@ -4,6 +4,7 @@ import Profile from '../../assets/header/profile.svg';
 import Market from '../../assets/header/makrket.svg';
 import { FC, Fragment } from 'react';
 import { IMenuLink, IRoute, IRouteClasses } from '../../constants/types';
+import { Link } from 'react-router-dom';
 
 export const Header: FC = () => {
   const routeClassNames: IRouteClasses = {
@@ -74,9 +75,9 @@ export const Header: FC = () => {
 const RouteLink: FC<IRoute> = ({ title, href, classNames }) => {
   return (
     <li className={classNames.container} key={title}>
-      <a href={href} className={classNames.link}>
+      <Link to={href} className={classNames.link}>
         {title}
-      </a>
+      </Link>
     </li>
   );
 };
@@ -84,9 +85,9 @@ const RouteLink: FC<IRoute> = ({ title, href, classNames }) => {
 const MenuLink: FC<IMenuLink> = ({ title, href, classNames, alt, icon }) => {
   return (
     <li className={classNames.container} key={title}>
-      <a href={href}>
+      <Link to={href}>
         <img src={icon} alt={alt} />
-      </a>
+      </Link>
     </li>
   );
 };
