@@ -1,5 +1,6 @@
 import './checkbox.scss';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 interface ICheckbox {
   id: string;
@@ -35,9 +36,9 @@ const Checkbox = (props: ICheckbox) => {
         {props.title}
       </label>
 
-      <a className={linkClass} href={props.link?.path || '#'}>
+      <Link className={linkClass} to={props.link?.path ?? ''}>
         {props.link?.text}
-      </a>
+      </Link>
     </div>
   );
 };

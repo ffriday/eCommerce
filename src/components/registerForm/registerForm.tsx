@@ -27,6 +27,7 @@ import {
   streetFormProps,
   streetPattern,
 } from './formProps';
+import { Link } from 'react-router-dom';
 
 interface IValueStatus {
   val: string;
@@ -182,7 +183,7 @@ const RegisterForm = () => {
           <RegisterStep2 className={firstPage ? 'register__step-hidden' : ''} />
           <SubmitButton text='Зарегистрироваться' disabled={submitDisabled} className='register__submit' />
           <span className='register__loginLink'>
-            У вас уже есть аккаунт? <a href='\login'>Войти</a>
+            У вас уже есть аккаунт? <Link to='/login'>Войти</Link>
           </span>
         </form>
       </div>
