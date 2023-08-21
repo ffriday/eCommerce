@@ -7,6 +7,11 @@ export enum ShipmentDefaultKey {
   bill = 'Billing',
 }
 
+export enum RegisterErrors {
+  userAlredyExist = 'Пользователь с таким email уже существует',
+  serviceUnavalible = 'Сервис недоступен. Проверьте свое интернет подключение',
+}
+
 interface ICustomerAdress {
   key: string;
   country: string;
@@ -18,9 +23,14 @@ interface ICustomerAdress {
 }
 
 interface IDefaultAddress {
-  defaultShippingAddress?: number;
-  defaultBillingAddress?: number;
+  defaultShippingAddress: number;
+  defaultBillingAddress: number;
 }
+
+export const ErorMap: Record<string, string> = {
+  400: RegisterErrors.userAlredyExist,
+  503: RegisterErrors.serviceUnavalible,
+};
 
 export const createCustomer = (customer: IUserValidate<IUser> | IUserValidate<IValueStatus>, defaultShipment: boolean, defaultBill: boolean) => {
   const shipmentAdress: ICustomerAdress = {
@@ -43,7 +53,7 @@ export const createCustomer = (customer: IUserValidate<IUser> | IUserValidate<IV
     apartment: customer.bill.apart.val,
   };
 
-  const defaultAdress: IDefaultAddress = {};
+  const defaultAdress: Partial<IDefaultAddress> = {};
   if (defaultShipment) defaultAdress.defaultShippingAddress = 0;
   if (defaultBill) defaultAdress.defaultBillingAddress = 1;
 

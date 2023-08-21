@@ -37,8 +37,8 @@ import {
   streetFormProps,
   streetPattern,
 } from './formProps';
-import { stat } from 'fs';
-import { createCustomer } from '../../constants/register-user';
+import { ErorMap, createCustomer } from '../../constants/register-user';
+import { ClientResponse, CustomerSignInResult, ErrorResponse } from '@commercetools/platform-sdk';
 
 export interface IPattern {
   pattern: RegExp;
@@ -131,6 +131,7 @@ const RegisterForm = () => {
   const [billAddressDisabled, setBillAddressDisabled] = useState(false);
   const [defaultShipping, setDefaultShipping] = useState(false);
   const [defaultBill, setDefaultBill] = useState(false);
+  const [apiError, setApiError] = useState('');
 
   const sliderHandler = () => {
     setFirstPage(!firstPage);
@@ -158,13 +159,28 @@ const RegisterForm = () => {
     return res;
   };
 
-  const submitForm = (event: FormEvent<HTMLFormElement>) => {
+  const submitForm = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const submitData = validateArr;
     if (billAddressDisabled) {
       submitData.bill = submitData.shipment;
     }
-    createCustomer(validateArr, defaultShipping, defaultBill);
+
+    let response: ClientResponse<CustomerSignInResult> | null = null;
+    try {
+      response = (await createCustomer(validateArr, defaultShipping, defaultBill)) as ClientResponse<CustomerSignInResult>;
+      if (response.statusCode === 200) {
+        setApiError('');
+        // TODO REDIRECT
+      }
+    } catch (error) {
+      const err = error as ErrorResponse;
+      if (err.statusCode in ErorMap) {
+        setApiError(ErorMap[err.statusCode]);
+      } else {
+        setApiError(err.message);
+      }
+    }
   };
 
   useEffect(() => {
@@ -193,6 +209,7 @@ const RegisterForm = () => {
           <SliderButton text={{ first: 'Шаг 1', second: 'Шаг 2' }} handler={sliderHandler} firstStep={firstPage} className='register__slider' />
           <RegisterStep1 className={!firstPage ? 'register__step-hidden' : ''} />
           <RegisterStep2 className={firstPage ? 'register__step-hidden' : ''} />
+          {apiError ? <span className='register__errorMessage'>{apiError}</span> : ''}
           <SubmitButton text='Зарегистрироваться' disabled={submitDisabled} className='register__submit' />
           <span className='register__loginLink'>
             У вас уже есть аккаунт? <a href='\login'>Войти</a>
