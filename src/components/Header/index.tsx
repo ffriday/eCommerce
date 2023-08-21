@@ -32,7 +32,7 @@ export const Header: FC = () => {
   ];
 
   const menuLinks: IMenuLink[] = [
-    { title: 'профиль', href: '/profile', alt: 'Profile icon', icon: Profile, classNames: { container: 'menu__item' } },
+    { title: 'профиль', href: '/login', alt: 'Profile icon', icon: Profile, classNames: { container: 'menu__item' } },
     { title: 'корзина', href: '/market', alt: 'Market icon', icon: Market, classNames: { container: 'menu__item' } },
   ];
 

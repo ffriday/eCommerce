@@ -171,8 +171,9 @@ const RegisterForm = () => {
     let response: ClientResponse<CustomerSignInResult> | null = null;
     try {
       response = (await createCustomer(validateArr, defaultShipping, defaultBill)) as ClientResponse<CustomerSignInResult>;
-      if (response.statusCode === 201) {
-        navigate('/');
+      if (response.statusCode === 200) {
+        setApiError('');
+        // TODO REDIRECT
       }
     } catch (error) {
       const err = error as ErrorResponse;
@@ -185,7 +186,13 @@ const RegisterForm = () => {
   };
 
   useEffect(() => {
+    if (window.localStorage.getItem('customerID')) navigate('/');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     setSubmitDisabled(!canSubmit(validateArr));
+    setApiError('');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [validateArr, billAddressDisabled]);
 

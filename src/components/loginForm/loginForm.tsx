@@ -2,7 +2,7 @@ import './loginForm.scss';
 import SubmitButton from '../submitButton/submitButton';
 import InputForm from '../inputForm/inputForm';
 import Checkbox from '../checkbox/checkbox';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { EmailErrors } from '../../constants/types';
 import { PasswordErrors } from '../../constants/types';
 import { validation } from '../../constants/formValidation';
@@ -11,6 +11,8 @@ import { IformData } from '../../constants/formValidation';
 import { IListOfValidationRules } from '../../constants/formValidation';
 import { IFormErrors } from '../../constants/formValidation';
 import { Link } from 'react-router-dom';
+import { checkUserExist, getCustomerToken } from '../../constants/auth';
+import { useNavigate } from 'react-router-dom';
 
 interface IInputLabel {
   labelInfo: string;
@@ -18,12 +20,18 @@ interface IInputLabel {
 }
 
 const LoginForm = () => {
+  const navigation = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isButtonDisable, setIsButtonDisable] = useState(true);
   const [passwordPlaceholder, setPasswordPlaceholder] = useState<IInputLabel>({ labelInfo: 'Ваш пароль', labelClassNameInvailid: '' });
   const [emailLabel, setEmailLabel] = useState<IInputLabel>({ labelInfo: '', labelClassNameInvailid: '' });
   const [passwordLabel, setPasswordLabel] = useState<IInputLabel>({ labelInfo: '', labelClassNameInvailid: '' });
+
+  useEffect(() => {
+    if (window.localStorage.getItem('customerID')) navigation('/');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const ListOfValidationRulesOfLogin: IListOfValidationRules = {
     email: [
@@ -47,23 +55,43 @@ const LoginForm = () => {
       { pattern: /[A-Z]/, error: PasswordErrors.missingUppercase },
       { pattern: /[a-z]/, error: PasswordErrors.missingLowercase },
       { pattern: /[0-9]/, error: PasswordErrors.missingDigit },
-      { pattern: /[!@#$%^&*]/, error: PasswordErrors.missingSpecialChar },
+      // { pattern: /[!@#$%^&*]/, error: PasswordErrors.missingSpecialChar },
     ],
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const target = event.target as HTMLFormElement;
     const formData: IformData = {
       email: new FormData(target).get('email') as string,
       password: new FormData(target).get('password') as string,
     };
+
     const errorsData: IFormErrors = validation(formData, ListOfValidationRulesOfLogin);
     if (errorsData.password) {
       setPasswordPlaceholder({ labelInfo: errorsData.password, labelClassNameInvailid: 'invailid' });
     }
-  };
+    if (formData.email && formData.password) {
+      const userExist = await checkUserExist(formData.email);
 
+      if (userExist.statusCode === 200 && userExist.body.count > 0) {
+        try {
+          const res = await getCustomerToken(formData.email, formData.password);
+          window.localStorage.setItem('customerID', res.access_token); // Store ID in local storage //TODO - change to Middleware
+          navigation('/');
+        } catch (error) {
+          const typedError = error as Error;
+
+          if (typedError.message === 'Customer account with the given credentials not found.') {
+            setEmailLabel({ labelInfo: 'Нет пользователя с введенным логином и паролем', labelClassNameInvailid: 'invailid-label' });
+            setPasswordLabel({ labelInfo: 'Нет пользователя с введенным логином и паролем', labelClassNameInvailid: 'invailid-label' });
+          }
+        }
+      } else {
+        setEmailLabel({ labelInfo: 'Нет пользователя с введенным логином и паролем', labelClassNameInvailid: 'invailid-label' });
+      }
+    }
+  };
   const inputValidation = (event: React.FormEvent<HTMLInputElement>) => {
     const target = event.target as HTMLFormElement;
     const formData: IformData = {
