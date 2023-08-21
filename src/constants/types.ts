@@ -16,6 +16,35 @@ export interface IMenuLink extends IRoute {
 
 export type IInputhandler = (event: React.FormEvent<HTMLInputElement>) => void;
 
+export interface IUser {
+  val: string;
+}
+
+export interface IValueStatus extends IUser {
+  err: string;
+  className?: string;
+}
+
+export interface IAddress<T> {
+  country: T;
+  city: T;
+  street: T;
+  postal: T;
+  building: T;
+  apart: T;
+}
+
+export interface IUserValidate<T> {
+  email: T;
+  password: T;
+  passwordCheck: T;
+  name: T;
+  surename: T;
+  birthDate: T;
+  shipment: IAddress<T>;
+  bill: IAddress<T>;
+}
+
 export enum EmailErrors {
   notInLatin = 'Email должен быть на латинице',
   missing = 'Введите email',

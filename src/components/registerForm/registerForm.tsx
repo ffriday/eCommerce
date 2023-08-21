@@ -1,10 +1,19 @@
-import { FC, createContext, useContext, useEffect, useState } from 'react';
+import { FC, FormEvent, createContext, useContext, useEffect, useState } from 'react';
 import InputForm from '../inputForm/inputForm';
 import SliderButton from '../sliderButton/sliderButton';
 import './registerForm.scss';
 import Checkbox from '../checkbox/checkbox';
 import SubmitButton from '../submitButton/submitButton';
-import { AddressErrors, DateErrors, EmailErrors, PasswordErrors, RegiserInputNames } from '../../constants/types';
+import {
+  AddressErrors,
+  DateErrors,
+  EmailErrors,
+  IAddress,
+  IUserValidate,
+  IValueStatus,
+  PasswordErrors,
+  RegiserInputNames,
+} from '../../constants/types';
 import {
   apartFormProps,
   buildingFormProps,
@@ -13,6 +22,7 @@ import {
   cityPattern,
   countryAutocomplete,
   countryFormProps,
+  countryMAP,
   dateFormProps,
   emailFormProps,
   emailPattern,
@@ -28,32 +38,8 @@ import {
   streetPattern,
 } from './formProps';
 import { Link } from 'react-router-dom';
-
-interface IValueStatus {
-  val: string;
-  err: string;
-  className?: string;
-}
-
-interface IAddress {
-  country: IValueStatus;
-  city: IValueStatus;
-  street: IValueStatus;
-  postal: IValueStatus;
-  building: IValueStatus;
-  apart: IValueStatus;
-}
-
-interface IValidate {
-  email: IValueStatus;
-  password: IValueStatus;
-  passwordCheck: IValueStatus;
-  name: IValueStatus;
-  surename: IValueStatus;
-  birthDate: IValueStatus;
-  shipment: IAddress;
-  bill: IAddress;
-}
+import { ErorMap, createCustomer } from '../../constants/register-user';
+import { ClientResponse, CustomerSignInResult, ErrorResponse } from '@commercetools/platform-sdk';
 
 export interface IPattern {
   pattern: RegExp;
@@ -61,10 +47,14 @@ export interface IPattern {
 }
 
 interface IRegisterContext {
-  validateArr: IValidate;
-  setValidateArr: React.Dispatch<React.SetStateAction<Partial<IValidate>>>;
+  validateArr: IUserValidate<IValueStatus>;
+  setValidateArr: React.Dispatch<React.SetStateAction<Partial<IUserValidate<IValueStatus>>>>;
   billAddressDisabled: boolean;
   setBillAddressDisabled: React.Dispatch<React.SetStateAction<boolean>>;
+  defaultShipping: boolean;
+  setDefaultShipping: React.Dispatch<React.SetStateAction<boolean>>;
+  defaultBill: boolean;
+  setDefaultBill: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface IAddressInput {
@@ -117,7 +107,7 @@ const RegisterContext = createContext<IRegisterContext | null>(null);
 
 const RegisterForm = () => {
   const emptyValue: IValueStatus = { val: '', err: '', className: '' };
-  const emptyAddress: IAddress = {
+  const emptyAddress: IAddress<IValueStatus> = {
     country: emptyValue,
     city: emptyValue,
     street: emptyValue,
@@ -125,7 +115,7 @@ const RegisterForm = () => {
     building: emptyValue,
     apart: emptyValue,
   };
-  const validationState: Partial<IValidate> = {
+  const validationState: IUserValidate<IValueStatus> = {
     email: emptyValue,
     password: emptyValue,
     passwordCheck: emptyValue,
@@ -140,12 +130,15 @@ const RegisterForm = () => {
   const [firstPage, setFirstPage] = useState(true);
   const [submitDisabled, setSubmitDisabled] = useState(true);
   const [billAddressDisabled, setBillAddressDisabled] = useState(false);
+  const [defaultShipping, setDefaultShipping] = useState(false);
+  const [defaultBill, setDefaultBill] = useState(false);
+  const [apiError, setApiError] = useState('');
 
   const sliderHandler = () => {
     setFirstPage(!firstPage);
   };
 
-  const canSubmit = (state: Partial<IValidate> | Partial<IAddress>): boolean => {
+  const canSubmit = (state: Partial<IUserValidate<IValueStatus>> | Partial<IAddress<IValueStatus>>): boolean => {
     const arr = Object.entries(state);
     let res = false;
     if (arr.length) {
@@ -167,20 +160,57 @@ const RegisterForm = () => {
     return res;
   };
 
+  const submitForm = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const submitData = validateArr;
+    if (billAddressDisabled) {
+      submitData.bill = submitData.shipment;
+    }
+
+    let response: ClientResponse<CustomerSignInResult> | null = null;
+    try {
+      response = (await createCustomer(validateArr, defaultShipping, defaultBill)) as ClientResponse<CustomerSignInResult>;
+      if (response.statusCode === 200) {
+        setApiError('');
+        // TODO REDIRECT
+      }
+    } catch (error) {
+      const err = error as ErrorResponse;
+      if (err.statusCode in ErorMap) {
+        setApiError(ErorMap[err.statusCode]);
+      } else {
+        setApiError(err.message);
+      }
+    }
+  };
+
   useEffect(() => {
     setSubmitDisabled(!canSubmit(validateArr));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [validateArr, billAddressDisabled]);
 
   return (
-    <RegisterContext.Provider value={{ validateArr, setValidateArr, billAddressDisabled, setBillAddressDisabled } as IRegisterContext}>
+    <RegisterContext.Provider
+      value={
+        {
+          validateArr,
+          setValidateArr,
+          billAddressDisabled,
+          setBillAddressDisabled,
+          defaultShipping,
+          setDefaultShipping,
+          defaultBill,
+          setDefaultBill,
+        } as IRegisterContext
+      }>
       <div className='register'>
-        <form className='register__form'>
+        <form className='register__form' onSubmit={(event) => submitForm(event)}>
           <h1 className='register__heading'>Регистрация</h1>
           <p className='register__subtitle'>Создайте аккаунт, чтобы войти в личный кабинет</p>
           <SliderButton text={{ first: 'Шаг 1', second: 'Шаг 2' }} handler={sliderHandler} firstStep={firstPage} className='register__slider' />
           <RegisterStep1 className={!firstPage ? 'register__step-hidden' : ''} />
           <RegisterStep2 className={firstPage ? 'register__step-hidden' : ''} />
+          {apiError ? <span className='register__errorMessage'>{apiError}</span> : ''}
           <SubmitButton text='Зарегистрироваться' disabled={submitDisabled} className='register__submit' />
           <span className='register__loginLink'>
             У вас уже есть аккаунт? <Link to='/login'>Войти</Link>
@@ -261,6 +291,15 @@ const RegisterStep2: FC<{ className: string }> = ({ className }) => {
 const AddressInputs: FC<IAddressInput> = ({ caption, className, arrKey, isDisabled = false }) => {
   const context = useContext(RegisterContext) as IRegisterContext;
 
+  const defaultAdвress = (arrKey: RegiserInputNames) => {
+    if (arrKey === RegiserInputNames.shipment) {
+      context.setDefaultShipping(!context.defaultShipping);
+    }
+    if (arrKey === RegiserInputNames.bill) {
+      context.setDefaultBill(!context.defaultBill);
+    }
+  };
+
   return (
     <div className={className}>
       <p className='register__addressCaption'>{caption}</p>
@@ -273,7 +312,7 @@ const AddressInputs: FC<IAddressInput> = ({ caption, className, arrKey, isDisabl
         handler={(event) => {
           const error = !countryAutocomplete.dataList.includes(event.currentTarget.value) ? AddressErrors.countryFromList : '';
           const status: IValueStatus = {
-            val: event.currentTarget.value,
+            val: !error ? countryMAP[event.currentTarget.value] : '',
             err: error,
             className: error.length ? ' invailid-label' : ' vailid-label',
           };
@@ -347,6 +386,12 @@ const AddressInputs: FC<IAddressInput> = ({ caption, className, arrKey, isDisabl
           const adress = { ...context.validateArr[arrKey], postal: status };
           context.setValidateArr({ ...context.validateArr, [arrKey]: adress });
         }}
+      />
+      <Checkbox
+        id={`checkbox ${className}`}
+        handler={() => defaultAdвress(arrKey)}
+        classNameWrapper='register__checkbox-defaultAddress'
+        title='Сделать адресом по умолчанию'
       />
     </div>
   );

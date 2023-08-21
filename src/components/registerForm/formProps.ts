@@ -92,6 +92,12 @@ export const countryAutocomplete: IInputAutocomplete = {
   dataList: ['Belarus', 'Russia', 'Turkey'],
 };
 
+export const countryMAP: Record<string, string> = {
+  Belarus: 'BY',
+  Russia: 'RU',
+  Turkey: 'TR',
+};
+
 export const countryFormProps: IInputForm = {
   name: 'country',
   type: 'text',
