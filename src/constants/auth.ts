@@ -1,16 +1,17 @@
 import SdkAuth from '@commercetools/sdk-auth';
 import fetch from 'node-fetch';
-import { apiRoot } from './getClient';
+import { apiRoot } from './ecommerce-client';
+import { eCommerceEnv as ENV } from './ecommerce.env';
 
 const authClient = new SdkAuth({
   host: 'https://auth.europe-west1.gcp.commercetools.com',
-  projectKey: 'ecommerce-finaltask',
+  projectKey: ENV.CTP_PROJECT_KEY,
   disableRefreshToken: false,
   credentials: {
-    clientId: '5Sat6yVrcoZRuyCZBPlBC-nd',
-    clientSecret: '1o0NUqz7udbH9z0JonsglScks49B1GiG',
+    clientId: ENV.CTP_CLIENT_ID,
+    clientSecret: ENV.CTP_CLIENT_SECRET,
   },
-  scopes: ['manage_project:ecommerce-finaltask'],
+  scopes: ENV.CTP_SCOPES,
   fetch,
 });
 

@@ -33,5 +33,6 @@
   }
   &__button {
     @include submitButton(234px, 57px);
+    margin-bottom: 30px;
   }
 }

@@ -11,8 +11,8 @@ import { IformData } from '../../constants/formValidation';
 import { IListOfValidationRules } from '../../constants/formValidation';
 import { IFormErrors } from '../../constants/formValidation';
 import { Link } from 'react-router-dom';
-import { checkUserExist, getCustomerToken } from '../../api/auth';
-import { test } from '../../api/getClient';
+import { checkUserExist, getCustomerToken } from '../../constants/auth';
+import { test } from '../../constants/getClient';
 
 interface IInputLabel {
   labelInfo: string;
@@ -63,10 +63,10 @@ const LoginForm = () => {
 
     // просто тес на получения пользователя
     test('romankadevich@gmail.com');
-    // const errorsData: IFormErrors = validation(formData, ListOfValidationRulesOfLogin);
-    // if (errorsData.password) {
-    //   setPasswordPlaceholder({ labelInfo: errorsData.password, labelClassNameInvailid: 'invailid' });
-    // }
+    const errorsData: IFormErrors = validation(formData, ListOfValidationRulesOfLogin);
+    if (errorsData.password) {
+      setPasswordPlaceholder({ labelInfo: errorsData.password, labelClassNameInvailid: 'invailid' });
+    }
 
     // проверка корректен ли токен
     if (formData.email && formData.password) {
@@ -85,7 +85,7 @@ const LoginForm = () => {
           }
         }
       } else {
-        //TODO User not exist ERROR
+        setEmailLabel({ labelInfo: 'Нет пользователя с введенным логином и паролем', labelClassNameInvailid: 'invailid-label' });
       }
     }
   };
