@@ -1,4 +1,5 @@
 import { FC, FormEvent, createContext, useContext, useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import InputForm from '../inputForm/inputForm';
 import SliderButton from '../sliderButton/sliderButton';
 import './registerForm.scss';
@@ -37,7 +38,6 @@ import {
   streetFormProps,
   streetPattern,
 } from './formProps';
-import { Link } from 'react-router-dom';
 import { ErorMap, createCustomer } from '../../constants/register-user';
 import { ClientResponse, CustomerSignInResult, ErrorResponse } from '@commercetools/platform-sdk';
 
@@ -133,6 +133,7 @@ const RegisterForm = () => {
   const [defaultShipping, setDefaultShipping] = useState(false);
   const [defaultBill, setDefaultBill] = useState(false);
   const [apiError, setApiError] = useState('');
+  const navigate = useNavigate();
 
   const sliderHandler = () => {
     setFirstPage(!firstPage);
@@ -170,9 +171,8 @@ const RegisterForm = () => {
     let response: ClientResponse<CustomerSignInResult> | null = null;
     try {
       response = (await createCustomer(validateArr, defaultShipping, defaultBill)) as ClientResponse<CustomerSignInResult>;
-      if (response.statusCode === 200) {
-        setApiError('');
-        // TODO REDIRECT
+      if (response.statusCode === 201) {
+        navigate('/');
       }
     } catch (error) {
       const err = error as ErrorResponse;
