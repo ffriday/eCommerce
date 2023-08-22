@@ -11,8 +11,8 @@ import { IformData } from '../../constants/formValidation';
 import { IListOfValidationRules } from '../../constants/formValidation';
 import { IFormErrors } from '../../constants/formValidation';
 import { Link } from 'react-router-dom';
-import { checkUserExist, getCustomerToken } from '../../constants/auth';
 import { useNavigate } from 'react-router-dom';
+import { customerLogin } from '../../constants/ecommerce-client';
 
 interface IInputLabel {
   labelInfo: string;
@@ -72,23 +72,21 @@ const LoginForm = () => {
       setPasswordPlaceholder({ labelInfo: errorsData.password, labelClassNameInvailid: 'invailid' });
     }
     if (formData.email && formData.password) {
-      const userExist = await checkUserExist(formData.email);
-
-      if (userExist.statusCode === 200 && userExist.body.count > 0) {
-        try {
-          const res = await getCustomerToken(formData.email, formData.password);
-          window.localStorage.setItem('customerID', res.access_token); // Store ID in local storage //TODO - change to Middleware
+      try {
+        const res = await customerLogin(formData.email, formData.password);
+        if (res.statusCode === 200) {
+          window.localStorage.setItem('customerID', res.body.customer.id); // Store ID in local storage //TODO - change to Middleware
           navigation('/');
-        } catch (error) {
-          const typedError = error as Error;
-
-          if (typedError.message === 'Customer account with the given credentials not found.') {
-            setEmailLabel({ labelInfo: 'Нет пользователя с введенным логином и паролем', labelClassNameInvailid: 'invailid-label' });
-            setPasswordLabel({ labelInfo: 'Нет пользователя с введенным логином и паролем', labelClassNameInvailid: 'invailid-label' });
-          }
+        } else {
+          setEmailLabel({ labelInfo: 'Нет пользователя с введенным логином и паролем', labelClassNameInvailid: 'invailid-label' });
         }
-      } else {
-        setEmailLabel({ labelInfo: 'Нет пользователя с введенным логином и паролем', labelClassNameInvailid: 'invailid-label' });
+      } catch (error) {
+        const typedError = error as Error;
+
+        if (typedError.message === 'Account with the given credentials not found.') {
+          setEmailLabel({ labelInfo: 'Нет пользователя с введенным логином и паролем', labelClassNameInvailid: 'invailid-label' });
+          setPasswordLabel({ labelInfo: 'Нет пользователя с введенным логином и паролем', labelClassNameInvailid: 'invailid-label' });
+        }
       }
     }
   };
