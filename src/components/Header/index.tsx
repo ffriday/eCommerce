@@ -68,6 +68,7 @@ export const Header: FC = () => {
     BurgerBtnActive.isActive && setDropDownMenuActive({ classname: '', isActive: false });
     BurgerBtnActive.isActive && setBurgerBtnActive({ classname: '', isActive: false });
     BurgerBtnActive.isActive && setHeaderClassName('');
+    BurgerBtnActive.isActive && setIsWrapperActive(false);
   };
   const dropDownMenu: IRouteDropDown[] = [
     { title: 'Личный кабинет', href: '/login', classNames: dropDownMenuClassNames },

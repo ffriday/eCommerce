@@ -99,7 +99,8 @@
     height: 100%;
     background-color: black;
     z-index: 2;
-    background-color: rgba(87, 87, 87, 0.5);
+    transition: opacity 1s ease-in-out;
+    opacity: 0.3;
   }
   .header {
     z-index: 10;
