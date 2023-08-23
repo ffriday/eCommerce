@@ -18,9 +18,7 @@
     align-items: center;
   }
 }
-.navigation-mob {
-  display: none;
-}
+
 .navigation {
   padding: 20px 0;
   &__burger {
@@ -87,6 +85,7 @@
   }
 }
 .navigation-mob {
+  display: none;
   transition: transform 0.3s ease-in-out;
   transform: translateY(-120%);
   z-index: -1;
@@ -131,6 +130,7 @@
     }
   }
   .navigation-mob {
+    display: block;
     background-color: $primary-white;
     width: 100%;
     height: 100vh;
