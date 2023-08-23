@@ -44,7 +44,10 @@ export const Header: FC = () => {
   const [BurgerBtnActive, setBurgerBtnActive] = useState({ classname: '', isActive: false });
   const [DropDownMenuActive, setDropDownMenuActive] = useState({ classname: '', isActive: false });
   const [headerClassName, setHeaderClassName] = useState('');
-  const handleDropDownLink = () => {
+  const [isWrapperActive, setIsWrapperActive] = useState(false);
+  const [menuActive, setMenuActive] = useState(true);
+  const handle = () => {
+    setIsWrapperActive(false);
     setMenuActive(!menuActive);
     setDropDownMenuActive({ classname: '', isActive: false });
     setBurgerBtnActive({ classname: '', isActive: false });
@@ -52,14 +55,12 @@ export const Header: FC = () => {
   };
   const handleDropDownLogo = () => {
     if (DropDownMenuActive.isActive) {
-      setMenuActive(!menuActive);
-      setDropDownMenuActive({ classname: '', isActive: false });
-      setBurgerBtnActive({ classname: '', isActive: false });
-      setHeaderClassName('');
+      handle();
     }
   };
-  const [menuActive, setMenuActive] = useState(true);
+
   const handleBurgerLink = () => {
+    setIsWrapperActive(true);
     setHeaderClassName('navigation--rotate');
     setMenuActive(!menuActive);
     setBurgerBtnActive({ classname: 'navigation__burger--active', isActive: true });
@@ -67,60 +68,64 @@ export const Header: FC = () => {
     BurgerBtnActive.isActive && setDropDownMenuActive({ classname: '', isActive: false });
     BurgerBtnActive.isActive && setBurgerBtnActive({ classname: '', isActive: false });
     BurgerBtnActive.isActive && setHeaderClassName('');
+    BurgerBtnActive.isActive && setIsWrapperActive(false);
   };
   const dropDownMenu: IRouteDropDown[] = [
     { title: 'Личный кабинет', href: '/login', classNames: dropDownMenuClassNames },
     { title: 'Каталог', href: '/catalog', classNames: dropDownMenuClassNames },
     { title: 'О нас', href: '/about', classNames: dropDownMenuClassNames },
     { title: 'Aкции', href: '/shares', classNames: dropDownMenuClassNames },
-    { title: 'Yовинки', href: '/novelties', classNames: dropDownMenuClassNames },
+    { title: 'Новинки', href: '/novelties', classNames: dropDownMenuClassNames },
     { title: 'Контакты', href: '/contacts', classNames: dropDownMenuClassNames },
   ];
   return (
-    <header className='header' data-testid='header'>
-      <div className='header__container container'>
-        <div className='header__body'>
-          <nav className={`header__navigation navigation ${headerClassName}`}>
-            <ul className='navigation__pages'>
-              {routes.map((route) => (
+    <>
+      {isWrapperActive && <div className='wrapper-header' onClick={handle}></div>}
+      <header className='header' data-testid='header'>
+        <div className='header__container container'>
+          <div className='header__body'>
+            <nav className={`header__navigation navigation ${headerClassName}`}>
+              <ul className='navigation__pages'>
+                {routes.map((route) => (
+                  <Fragment key={route.title}>
+                    <RouteLink {...route} />
+                  </Fragment>
+                ))}
+              </ul>
+              <button className={`navigation__burger ${BurgerBtnActive.classname}`} onClick={handleBurgerLink}></button>
+              <Link to='/' className='navigation__logo'>
+                <img src={Logo} alt='blosson logo' onClick={handleDropDownLogo} />
+              </Link>
+              {menuActive && (
+                <ul className='navigation__menu menu'>
+                  {menuLinks.map((option) => (
+                    <Fragment key={option.title}>
+                      <MenuLink {...option} />
+                    </Fragment>
+                  ))}
+                </ul>
+              )}
+            </nav>
+            <ul className='header__tabs tabs'>
+              {tabs.map((route) => (
                 <Fragment key={route.title}>
                   <RouteLink {...route} />
                 </Fragment>
               ))}
             </ul>
-            <button className={`navigation__burger ${BurgerBtnActive.classname}`} onClick={handleBurgerLink}></button>
-            <Link to='/' className='navigation__logo'>
-              <img src={Logo} alt='blosson logo' onClick={handleDropDownLogo} />
-            </Link>
-            {menuActive && (
-              <ul className='navigation__menu menu'>
-                {menuLinks.map((option) => (
-                  <Fragment key={option.title}>
-                    <MenuLink {...option} />
-                  </Fragment>
-                ))}
-              </ul>
-            )}
-          </nav>
-          <ul className='header__tabs tabs'>
-            {tabs.map((route) => (
+          </div>
+        </div>
+        <nav className={`navigation-mob ${DropDownMenuActive.classname}`}>
+          <ul className='navigation-mob__drop-down-menu drop-down-menu'>
+            {dropDownMenu.map((route) => (
               <Fragment key={route.title}>
-                <RouteLink {...route} />
+                <RouteLink {...route} onClickHandle={handle} />
               </Fragment>
             ))}
           </ul>
-        </div>
-      </div>
-      <nav className={`navigation-mob ${DropDownMenuActive.classname}`}>
-        <ul className='navigation-mob__drop-down-menu drop-down-menu'>
-          {dropDownMenu.map((route) => (
-            <Fragment key={route.title}>
-              <RouteLink {...route} onClickHandle={handleDropDownLink} />
-            </Fragment>
-          ))}
-        </ul>
-      </nav>
-    </header>
+        </nav>
+      </header>
+    </>
   );
 };
 

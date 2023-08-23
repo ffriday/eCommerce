@@ -88,13 +88,23 @@
   display: none;
   transition: transform 0.3s ease-in-out;
   transform: translateY(-120%);
-  z-index: -1;
   &--active {
     transform: translateY(0);
   }
 }
 @media (max-width: 767px) {
+  .wrapper-header {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    z-index: 2;
+    transition: opacity 1s ease-in-out;
+    opacity: 0.3;
+  }
   .header {
+    z-index: 10;
+    background-color: $primary-white;
     &__body {
       background-color: $primary-white;
       position: relative;
@@ -134,8 +144,8 @@
     background-color: $primary-white;
     width: 100%;
     height: 100vh;
-    position: fixed;
-    z-index: 2;
+    position: absolute;
+    z-index: 5;
 
     &__drop-down-menu {
       display: flex;
