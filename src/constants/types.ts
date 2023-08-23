@@ -2,6 +2,12 @@ export interface IRoute {
   title: string;
   href: string;
   classNames: IRouteClasses;
+  onClickHandle?: () => void;
+}
+export interface IRouteDropDown {
+  title: string;
+  href: string;
+  classNames: IRouteClasses;
 }
 
 export interface IRouteClasses {
