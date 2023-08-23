@@ -18,7 +18,9 @@
     align-items: center;
   }
 }
-
+.navigation-mob {
+  display: none;
+}
 .navigation {
   padding: 20px 0;
   &__burger {
