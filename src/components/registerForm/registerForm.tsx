@@ -170,7 +170,7 @@ const RegisterForm = () => {
 
     let response: ClientResponse<CustomerSignInResult> | null = null;
     try {
-      response = (await createCustomer(validateArr, defaultShipping, defaultBill)) as ClientResponse<CustomerSignInResult>;
+      response = (await createCustomer(validateArr, defaultShipping, defaultBill, billAddressDisabled)) as ClientResponse<CustomerSignInResult>;
       if (response.statusCode === 201) {
         setApiError('');
         navigate('/');
