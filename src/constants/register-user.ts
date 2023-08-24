@@ -1,6 +1,6 @@
-import { CustomerDraft } from '@commercetools/platform-sdk';
+import { BaseAddress, CustomerDraft } from '@commercetools/platform-sdk';
 import { apiRoot } from './ecommerce-client';
-import { IUser, IUserValidate, IValueStatus } from './types';
+import { IAddress, IUser, IUserValidate, IValueStatus } from './types';
 
 export enum ShipmentDefaultKey {
   shipment = 'Shipment',
@@ -32,7 +32,12 @@ export const ErorMap: Record<string, string> = {
   503: RegisterErrors.serviceUnavalible,
 };
 
-export const createCustomer = (customer: IUserValidate<IUser> | IUserValidate<IValueStatus>, defaultShipment: boolean, defaultBill: boolean) => {
+export const createCustomer = (
+  customer: IUserValidate<IUser> | IUserValidate<IValueStatus>,
+  defaultShipment: boolean,
+  defaultBill: boolean,
+  billAddressDisabled: boolean,
+) => {
   const shipmentAdress: ICustomerAdress = {
     key: ShipmentDefaultKey.shipment.toString(),
     country: customer.shipment.country.val,
@@ -55,7 +60,10 @@ export const createCustomer = (customer: IUserValidate<IUser> | IUserValidate<IV
 
   const defaultAdress: Partial<IDefaultAddress> = {};
   if (defaultShipment) defaultAdress.defaultShippingAddress = 0;
-  if (defaultBill) defaultAdress.defaultBillingAddress = 1;
+  // If defauld billing address input disabled => make shipping address as defalt (if chosen)
+  if (defaultBill) defaultAdress.defaultBillingAddress = billAddressDisabled ? 0 : 1;
+  const addressArr: BaseAddress[] = [shipmentAdress];
+  if (!billAddressDisabled) addressArr.push(billAdress);
 
   const customerBody: CustomerDraft = {
     firstName: customer.name.val,
@@ -63,7 +71,9 @@ export const createCustomer = (customer: IUserValidate<IUser> | IUserValidate<IV
     email: customer.email.val,
     password: customer.password.val,
     dateOfBirth: customer.birthDate.val,
-    addresses: [shipmentAdress, billAdress],
+    addresses: addressArr,
+    shippingAddresses: [0],
+    billingAddresses: [billAddressDisabled ? 0 : 1],
     ...defaultAdress,
   };
 
