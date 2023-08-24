@@ -137,12 +137,11 @@ export const emailPattern: IPattern[] = [
 
 export const passwordPattern: IPattern[] = [
   { pattern: /^(?!(\s|\S*\s$))\S+$/, error: PasswordErrors.leadingTrailingSpace },
-  { pattern: /[A-Za-z].*/, error: PasswordErrors.notInLatin },
+  { pattern: /[A-Za-z\d].*/, error: PasswordErrors.notInLatin },
   { pattern: /^(?=.{8,})/, error: PasswordErrors.tooShort },
   { pattern: /[A-Z]/, error: PasswordErrors.missingUppercase },
   { pattern: /[a-z]/, error: PasswordErrors.missingLowercase },
   { pattern: /[0-9]/, error: PasswordErrors.missingDigit },
-  { pattern: /[!@#$%^&*]/, error: PasswordErrors.missingSpecialChar },
 ];
 
 export const namePattern: IPattern[] = [

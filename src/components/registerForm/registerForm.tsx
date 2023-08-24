@@ -1,5 +1,6 @@
 import { FC, FormEvent, createContext, useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import moment from 'moment';
 import InputForm from '../inputForm/inputForm';
 import SliderButton from '../sliderButton/sliderButton';
 import './registerForm.scss';
@@ -73,8 +74,13 @@ const checkInput = (value: string, pattern: IPattern[]): IValueStatus => {
 const handleInput = (event: React.FormEvent<HTMLInputElement>, context: IRegisterContext, pattern: IPattern[], key: RegiserInputNames) => {
   const status = checkInput(event.currentTarget.value, pattern);
   const labelClass = status.err.length ? ' invailid-label' : ' vailid-label';
+  const passwordCheckParams: IValueStatus = { ...context.validateArr.passwordCheck };
   status.className = emailFormProps.labelClassName + labelClass;
-  context.setValidateArr({ ...context.validateArr, [key]: status });
+  if (key === RegiserInputNames.password && context.validateArr.passwordCheck.val !== event.currentTarget.value) {
+    passwordCheckParams.className = 'invailid-label';
+    passwordCheckParams.err = PasswordErrors.notMatch;
+  }
+  context.setValidateArr({ ...context.validateArr, [key]: status, passwordCheck: passwordCheckParams });
 };
 
 const checkMatchPassword = (event: React.FormEvent<HTMLInputElement>, context: IRegisterContext) => {
@@ -90,12 +96,13 @@ const checkMatchPassword = (event: React.FormEvent<HTMLInputElement>, context: I
 
 const checkDate = (event: React.FormEvent<HTMLInputElement>, context: IRegisterContext, age: number) => {
   const date = new Date(event.currentTarget.value);
+
+  const birthDate = moment(event.currentTarget.value, 'YYYY-MM-DD');
   const status: IValueStatus = { val: event.currentTarget.value, err: DateErrors.tooYang, className: 'invailid-label' };
   if (!isNaN(date.getTime())) {
-    const currentDate = new Date();
-    const delta = currentDate.getTime() - date.getTime();
-    const ageMiliseconds = age * (365 * 24 * 60 * 60 * 1000);
-    if (delta >= ageMiliseconds) {
+    const currentDate = moment();
+    const delta = currentDate.diff(birthDate, 'year');
+    if (delta >= age) {
       status.className = 'vailid-label';
       status.err = '';
     }
