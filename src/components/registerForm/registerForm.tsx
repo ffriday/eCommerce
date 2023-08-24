@@ -1,5 +1,6 @@
 import { FC, FormEvent, createContext, useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import moment from 'moment';
 import InputForm from '../inputForm/inputForm';
 import SliderButton from '../sliderButton/sliderButton';
 import './registerForm.scss';
@@ -90,12 +91,13 @@ const checkMatchPassword = (event: React.FormEvent<HTMLInputElement>, context: I
 
 const checkDate = (event: React.FormEvent<HTMLInputElement>, context: IRegisterContext, age: number) => {
   const date = new Date(event.currentTarget.value);
+
+  const birthDate = moment(event.currentTarget.value, 'YYYY-MM-DD');
   const status: IValueStatus = { val: event.currentTarget.value, err: DateErrors.tooYang, className: 'invailid-label' };
   if (!isNaN(date.getTime())) {
-    const currentDate = new Date();
-    const delta = currentDate.getTime() - date.getTime();
-    const ageMiliseconds = age * (365 * 24 * 60 * 60 * 1000);
-    if (delta >= ageMiliseconds) {
+    const currentDate = moment();
+    const delta = currentDate.diff(birthDate, 'year');
+    if (delta >= age) {
       status.className = 'vailid-label';
       status.err = '';
     }
