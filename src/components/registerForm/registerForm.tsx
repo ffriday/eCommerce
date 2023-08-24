@@ -74,8 +74,13 @@ const checkInput = (value: string, pattern: IPattern[]): IValueStatus => {
 const handleInput = (event: React.FormEvent<HTMLInputElement>, context: IRegisterContext, pattern: IPattern[], key: RegiserInputNames) => {
   const status = checkInput(event.currentTarget.value, pattern);
   const labelClass = status.err.length ? ' invailid-label' : ' vailid-label';
+  const passwordCheckParams: IValueStatus = { ...context.validateArr.passwordCheck };
   status.className = emailFormProps.labelClassName + labelClass;
-  context.setValidateArr({ ...context.validateArr, [key]: status });
+  if (key === RegiserInputNames.password && context.validateArr.passwordCheck.val !== event.currentTarget.value) {
+    passwordCheckParams.className = 'invailid-label';
+    passwordCheckParams.err = PasswordErrors.notMatch;
+  }
+  context.setValidateArr({ ...context.validateArr, [key]: status, passwordCheck: passwordCheckParams });
 };
 
 const checkMatchPassword = (event: React.FormEvent<HTMLInputElement>, context: IRegisterContext) => {
