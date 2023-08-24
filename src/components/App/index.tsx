@@ -14,7 +14,7 @@ export default function App() {
         <Route path='/' element={<Main />} />
         <Route path='/login' element={<LoginForm />} />
         <Route path='/registration' element={<RegisterForm />} />
-        <Route path='/*' element={<Notfound />} />
+        <Route path='*' element={<Notfound />} />
       </Routes>
     </BrowserRouter>
   );

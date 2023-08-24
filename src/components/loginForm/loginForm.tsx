@@ -35,6 +35,7 @@ const LoginForm = () => {
 
   const ListOfValidationRulesOfLogin: IListOfValidationRules = {
     email: [
+      { pattern: /^(?!(\s|\S*\s$))\S+$/, error: EmailErrors.leadingTrailingSpace },
       {
         pattern: /^[A-Za-z@{|}_~!#$%^=&*+?.\\\d/]+$/,
         error: EmailErrors.notInLatin,
@@ -48,10 +49,12 @@ const LoginForm = () => {
         error: EmailErrors.shortDomain,
       },
     ],
+
     password: [
       { pattern: /^(?!(\s|\S*\s$))\S+$/, error: PasswordErrors.leadingTrailingSpace },
-      { pattern: /[A-Za-z].*/, error: PasswordErrors.notInLatin },
+      { pattern: /[A-Za-z\d].*/, error: PasswordErrors.notInLatin },
       { pattern: /^(?=.{8,})/, error: PasswordErrors.tooShort },
+      // { pattern: /^[^A-Za-z0-9]*$/, error: PasswordErrors.missingLetter },
       { pattern: /[A-Z]/, error: PasswordErrors.missingUppercase },
       { pattern: /[a-z]/, error: PasswordErrors.missingLowercase },
       { pattern: /[0-9]/, error: PasswordErrors.missingDigit },
