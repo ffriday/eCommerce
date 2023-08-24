@@ -52,6 +52,7 @@ export interface IUserValidate<T> {
 }
 
 export enum EmailErrors {
+  leadingTrailingSpace = 'Не должно быть начальных или конечных пробелов',
   notInLatin = 'Email должен быть на латинице',
   missing = 'Введите email',
   invalidFormat = 'Неверный формат',
@@ -64,6 +65,7 @@ export enum PasswordErrors {
   notInLatin = 'Пароль должен быть на латинице',
   missing = 'Пароль не введен',
   tooShort = 'Слишком короткий пароль',
+  missingLetter = 'Пароль не содержит букв и символов',
   missingUppercase = 'Отсутствует заглавная буква',
   missingLowercase = 'Отсутствует строчная буква',
   missingDigit = 'Отсутствует цифра',
