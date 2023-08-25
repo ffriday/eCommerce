@@ -1,0 +1,58 @@
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+.checkbox {
+  position: absolute;
+  z-index: -1;
+  opacity: 0;
+  &__wrapper {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  & + label {
+    display: inline-flex;
+    align-items: center;
+    user-select: none;
+    cursor: pointer;
+    @include labelLinkFont($checkbox-label-color);
+    margin-right: $checkbox-label-margine-right;
+  }
+  // default
+  &__label::before {
+    content: '';
+    display: inline-block;
+    width: $checkbox-width;
+    height: $checkbox-height;
+    margin-right: $checkbox-margine-right;
+    flex-shrink: 0;
+    flex-grow: 0;
+    @include checkboxBackground($checkbox-default-img);
+    cursor: pointer;
+  }
+  // hover, focus
+  &:not(:disabled):not(:checked) + &__label:hover::before,
+  &:not(:disabled):not(:checked) + &__label:focus::before {
+    @include checkboxBackground($checkbox-hover-img);
+    cursor: pointer;
+  }
+  // checked
+  &:checked + label::before {
+    @include checkboxBackground($checkbox-checked-img);
+    cursor: pointer;
+  }
+
+  &__link {
+    @include labelLinkFont($checkbox-link-color);
+  }
+}
+.disable {
+  display: none;
+}
+
+@media only screen and (max-width: 715px) {
+  .checkbox {
+    & + label {
+      margin-right: $checkbox-label-margine-right-mobile;
+    }
+  }
+}

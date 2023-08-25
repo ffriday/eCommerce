@@ -1,20 +1,21 @@
-import logo from '../../assets/logo.svg';
-import { Counter } from '../Counter';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Header } from '../Header';
+import Notfound from '../404/404';
+import LoginForm from '../loginForm/loginForm';
+import RegisterForm from '../registerForm/registerForm';
+import Main from '../main/main';
 import './styles.scss';
 
 export default function App() {
   return (
-    <div className='App'>
-      <header className='App-header'>
-        <img src={logo} className='App-logo' alt='logo' />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a className='App-link' href='https://reactjs.org' target='_blank' rel='noopener noreferrer'>
-          Learn React
-        </a>
-        <Counter />
-      </header>
-    </div>
+    <BrowserRouter>
+      <Header />
+      <Routes>
+        <Route path='/' element={<Main />} />
+        <Route path='/login' element={<LoginForm />} />
+        <Route path='/registration' element={<RegisterForm />} />
+        <Route path='*' element={<Notfound />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
