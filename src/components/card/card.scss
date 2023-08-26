@@ -2,6 +2,9 @@
 @import '../../styles/mixins.scss';
 
 .card {
+  &:hover &__price--discounted {
+    color: $card-price-discounted-hover-color;
+  }
   @include card($card-width, $card-height);
   &__image {
     margin-bottom: 20px;
