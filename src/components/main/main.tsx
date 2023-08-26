@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import './main.scss';
 import { Link } from 'react-router-dom';
+import ProductCard from '../card/card';
 
 export default function Main() {
   const [isLogged, setIsLogged] = useState(Boolean(window.localStorage.getItem('customerID')));
@@ -28,6 +29,11 @@ export default function Main() {
             </Link>
           </>
         )}
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'space-around', width: '100%' }}>
+        {' '}
+        <ProductCard discounted={false} />
+        <ProductCard discounted={true} />
       </div>
     </div>
   );

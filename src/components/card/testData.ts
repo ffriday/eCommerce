@@ -11,7 +11,7 @@ const data = `{
         }
       ],
       "description": {
-        "en": "Sample description"
+        "en": "Peony roses"
       },
       "masterVariant": {
         "attributes": [],
@@ -22,7 +22,7 @@ const data = `{
               "h": 1400,
               "w": 1400
             },
-            "url": "./testImg.jpg"
+            "url": "testImg.jpg"
           }
         ],
         "prices": [
@@ -30,8 +30,8 @@ const data = `{
             "value": {
               "type": "centPrecision",
               "fractionDigits": 2,
-              "centAmount": 10000,
-              "currencyCode": "EUR"
+              "centAmount": 20000,
+              "currencyCode": "USD"
             },
             "id": "753472a3-ddff-4e0f-a93b-2eb29c90ba54"
           }
@@ -39,7 +39,7 @@ const data = `{
         "sku": "sku_MB_PREMIUM_TECH_T_variant1_1369226795424"
       },
       "name": {
-        "en": "MB PREMIUM TECH T"
+        "en": "Bouquet “Delicate cloud”"
       },
       "slug": {
         "en": "mb-premium-tech-t1369226795424"
@@ -57,7 +57,7 @@ const data = `{
         }
       ],
       "description": {
-        "en": "Sample description"
+        "en": "peony roses"
       },
       "masterVariant": {
         "attributes": [],
@@ -76,8 +76,8 @@ const data = `{
             "value": {
               "type": "centPrecision",
               "fractionDigits": 2,
-              "centAmount": 10000,
-              "currencyCode": "EUR"
+              "centAmount": 20000,
+              "currencyCode": "USD"
             },
             "id": "753472a3-ddff-4e0f-a93b-2eb29c90ba54"
           }

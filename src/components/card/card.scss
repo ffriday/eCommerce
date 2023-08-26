@@ -1,0 +1,39 @@
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+
+.card {
+  @include card($card-width, $card-height);
+  &__image {
+    margin-bottom: 20px;
+  }
+  &__heading {
+    margin-bottom: 10px;
+    font-size: 18px;
+  }
+  &__description {
+    margin-bottom: 10px;
+  }
+  &__button {
+    @include submitButton($card-btn-width, $card-btn-height);
+  }
+  &__bottom-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  &__prices {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  &__price {
+    &--discounted {
+      color: $card-price-discounted-color;
+      font-weight: $card-price-discounted-font-weight;
+    }
+    &--disable {
+      text-decoration: line-through;
+      margin-bottom: 5px;
+    }
+  }
+}
