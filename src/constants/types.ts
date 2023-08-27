@@ -101,3 +101,8 @@ export enum RegiserInputNames {
   shipment = 'shipment',
   bill = 'bill',
 }
+
+export enum HTTPResponseCode {
+  logged = 200,
+  registerd = 201,
+}

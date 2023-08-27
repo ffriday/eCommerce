@@ -1,6 +1,6 @@
-import { BaseAddress, CustomerDraft } from '@commercetools/platform-sdk';
+import { BaseAddress, CustomerDraft, MyCustomerDraft } from '@commercetools/platform-sdk';
 import { apiRoot } from './ecommerce-client';
-import { IAddress, IUser, IUserValidate, IValueStatus } from './types';
+import { IUser, IUserValidate, IValueStatus } from './types';
 
 export enum ShipmentDefaultKey {
   shipment = 'Shipment',
@@ -77,10 +77,12 @@ export const createCustomer = (
     ...defaultAdress,
   };
 
-  return apiRoot
-    .customers()
-    .post({
-      body: customerBody,
-    })
-    .execute();
+  return customerBody;
+
+  // return apiRoot
+  //   .customers()
+  //   .post({
+  //     body: customerBody,
+  //   })
+  //   .execute();
 };

@@ -45,6 +45,7 @@ export const customerLogin = async (email: string, password: string) => {
   };
 
   return apiRoot
+    .me()
     .login()
     .post({
       body: signIn,
