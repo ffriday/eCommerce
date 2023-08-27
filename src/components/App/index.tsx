@@ -4,6 +4,7 @@ import Notfound from '../404/404';
 import LoginForm from '../loginForm/loginForm';
 import RegisterForm from '../registerForm/registerForm';
 import Main from '../main/main';
+
 import './styles.scss';
 
 export default function App() {
