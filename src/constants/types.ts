@@ -106,3 +106,89 @@ export enum HTTPResponseCode {
   logged = 200,
   registerd = 201,
 }
+
+// =========================================================
+// interfaces of Product
+interface Dimensions {
+  h: number;
+  w: number;
+}
+
+interface Image {
+  dimensions: Dimensions;
+  url: string;
+}
+
+interface PriceValue {
+  type: string;
+  fractionDigits: number;
+  centAmount: number;
+  currencyCode: string;
+}
+
+interface Price {
+  value: PriceValue;
+  id: string;
+}
+
+interface Attribute {
+  type: { name: string };
+  isSearchable: boolean;
+  inputHint: string;
+  name: string;
+  label: { en: string };
+  isRequired: boolean;
+  attributeConstraint: string;
+}
+
+interface Variant {
+  attributes: Attribute[];
+  id: number;
+  images: Image[];
+  prices: Price[];
+  sku: string;
+}
+
+interface MasterData {
+  current: {
+    categories: { id: string; typeId: string }[];
+    description: { en: string };
+    masterVariant: Variant;
+    name: { en: string };
+    slug: { en: string };
+    variants: Variant[];
+    searchKeywords: {};
+  };
+  hasStagedChanges: boolean;
+  published: boolean;
+  staged: {
+    categories: { id: string; typeId: string }[];
+    description: { en: string };
+    masterVariant: Variant;
+    name: { en: string };
+    slug: { en: string };
+    variants: Variant[];
+    searchKeywords: {};
+  };
+}
+
+interface ProductType {
+  id: string;
+  typeId: string;
+}
+
+interface TaxCategory {
+  id: string;
+  typeId: string;
+}
+
+export interface ProductData {
+  id: string;
+  version: number;
+  masterData: MasterData;
+  productType: ProductType;
+  taxCategory: TaxCategory;
+  createdAt: string;
+  lastModifiedAt: string;
+}
+// =====================================================
