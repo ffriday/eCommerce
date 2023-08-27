@@ -13,7 +13,6 @@ const description: string = jsonData.masterData.current.description.en;
 
 export default function ProductCard({ discounted }: IProductCard) {
   const disableClassName = discounted ? 'card__price--disable' : '';
-  const discountedClassName = discounted ? 'card__price--discounted' : '';
   return (
     <div className='card'>
       <img className='card__image' src={image} alt='Product card' />
@@ -22,8 +21,8 @@ export default function ProductCard({ discounted }: IProductCard) {
       <div className='card__bottom-box'>
         {' '}
         <div className='card__prices'>
-          <span className={`${disableClassName}`}> {`${price} USD/шт. `}</span>
-          {discounted && <span className={`card__price ${discountedClassName}`}>{`${price} USD/шт. `}</span>}
+          <span className={disableClassName}> {`${price} USD/шт. `}</span>
+          {discounted && <span className={'card__price card__price--discounted'}>{`${price} USD/шт. `}</span>}
         </div>
         <button className='card__button'>В корзину</button>
       </div>
