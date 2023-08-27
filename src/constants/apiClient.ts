@@ -6,7 +6,6 @@ import {
   HttpMiddlewareOptions,
   PasswordAuthMiddlewareOptions,
   TokenCache,
-  TokenCacheOptions,
   TokenStore,
   UserAuthOptions,
 } from '@commercetools/sdk-client-v2';
@@ -181,10 +180,10 @@ class MyTokenChache implements TokenCache {
     token: '',
     expirationTime: 0,
   };
-  get(tokenCacheOptions?: TokenCacheOptions | undefined): TokenStore {
+  get(): TokenStore {
     return this.myChache;
   }
-  set(cache: TokenStore, tokenCacheOptions?: TokenCacheOptions | undefined): void {
+  set(cache: TokenStore): void {
     this.myChache = cache;
   }
 }
