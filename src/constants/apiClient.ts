@@ -3,7 +3,6 @@ import { IeCommerceEnv } from './ecommerce.env';
 import {
   AuthMiddlewareOptions,
   ClientBuilder,
-  ClientResponse,
   HttpMiddlewareOptions,
   PasswordAuthMiddlewareOptions,
   TokenCache,
@@ -11,7 +10,7 @@ import {
   TokenStore,
   UserAuthOptions,
 } from '@commercetools/sdk-client-v2';
-import { CustomerDraft, CustomerSignInResult, MyCustomerSignin, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import { CustomerDraft, MyCustomerSignin, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import { HTTPResponseCode } from './types';
 
 enum LSKeys {
@@ -119,7 +118,7 @@ abstract class ApiBase {
     window.localStorage.setItem(LSKeys.token, this._userData.token);
   }
 
-  protected get userData(): IUserData {
+  public get userData(): IUserData {
     return this._userData;
   }
 }
@@ -163,6 +162,17 @@ export default class ApiClient extends ApiBase {
       this.userData = { isLogged: true, id: res.body.customer.id, token: this.token.myChache.token };
     }
     return res;
+  };
+
+  public logOutCustomer = async () => {
+    this.user = { username: '', password: '' };
+    this.userData = { isLogged: false, id: '', token: '' };
+    this.passwordMiddleware = null;
+    this.passwordApi = null;
+    this.token.myChache.token = '';
+    this.token.myChache.expirationTime = 0;
+    window.localStorage.removeItem(LSKeys.id);
+    window.localStorage.removeItem(LSKeys.token);
   };
 }
 

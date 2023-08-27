@@ -12,8 +12,6 @@ import { IListOfValidationRules } from '../../constants/formValidation';
 import { IFormErrors } from '../../constants/formValidation';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { customerLogin } from '../../constants/ecommerce-client';
-import { createContext } from 'vm';
 import { apiContext } from '../App';
 
 interface IInputLabel {
@@ -83,7 +81,6 @@ const LoginForm = () => {
         // const res = await customerLogin(formData.email, formData.password);
         const res = await api.loginCustomer(formData.email, formData.password);
         if (res.statusCode === HTTPResponseCode.logged) {
-          // window.localStorage.setItem('customerID', res.body.customer.id); // Store ID in local storage //TODO - change to Middleware
           navigation('/');
         } else {
           setEmailLabel({ labelInfo: 'Нет пользователя с введенным логином и паролем', labelClassNameInvailid: 'invailid-label' });

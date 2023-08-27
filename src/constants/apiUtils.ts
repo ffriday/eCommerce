@@ -140,3 +140,5 @@ export const changeCustomer = (api: ByProjectKeyRequestBuilder, token: string) =
       .execute()
   );
 };
+
+// TODO: Remove this module after adding methods to apiClient
