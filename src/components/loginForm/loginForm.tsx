@@ -2,8 +2,8 @@ import './loginForm.scss';
 import SubmitButton from '../submitButton/submitButton';
 import InputForm from '../inputForm/inputForm';
 import Checkbox from '../checkbox/checkbox';
-import { useEffect, useState } from 'react';
-import { EmailErrors } from '../../constants/types';
+import { useContext, useEffect, useState } from 'react';
+import { EmailErrors, HTTPResponseCode } from '../../constants/types';
 import { PasswordErrors } from '../../constants/types';
 import { validation } from '../../constants/formValidation';
 import { missingError } from '../../constants/formValidation';
@@ -12,7 +12,7 @@ import { IListOfValidationRules } from '../../constants/formValidation';
 import { IFormErrors } from '../../constants/formValidation';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { customerLogin } from '../../constants/ecommerce-client';
+import { apiContext } from '../App';
 
 interface IInputLabel {
   labelInfo: string;
@@ -27,6 +27,8 @@ const LoginForm = () => {
   const [passwordPlaceholder, setPasswordPlaceholder] = useState<IInputLabel>({ labelInfo: 'Ваш пароль', labelClassNameInvailid: '' });
   const [emailLabel, setEmailLabel] = useState<IInputLabel>({ labelInfo: '', labelClassNameInvailid: '' });
   const [passwordLabel, setPasswordLabel] = useState<IInputLabel>({ labelInfo: '', labelClassNameInvailid: '' });
+
+  const api = useContext(apiContext);
 
   useEffect(() => {
     if (window.localStorage.getItem('customerID')) navigation('/');
@@ -76,9 +78,9 @@ const LoginForm = () => {
     }
     if (formData.email && formData.password) {
       try {
-        const res = await customerLogin(formData.email, formData.password);
-        if (res.statusCode === 200) {
-          window.localStorage.setItem('customerID', res.body.customer.id); // Store ID in local storage //TODO - change to Middleware
+        // const res = await customerLogin(formData.email, formData.password);
+        const res = await api.loginCustomer(formData.email, formData.password);
+        if (res.statusCode === HTTPResponseCode.logged) {
           navigation('/');
         } else {
           setEmailLabel({ labelInfo: 'Нет пользователя с введенным логином и паролем', labelClassNameInvailid: 'invailid-label' });

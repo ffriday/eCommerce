@@ -101,6 +101,12 @@ export enum RegiserInputNames {
   shipment = 'shipment',
   bill = 'bill',
 }
+
+export enum HTTPResponseCode {
+  logged = 200,
+  registerd = 201,
+}
+
 // =========================================================
 // interfaces of Product
 interface Dimensions {
@@ -151,7 +157,7 @@ interface MasterData {
     name: { en: string };
     slug: { en: string };
     variants: Variant[];
-    searchKeywords: {};
+    searchKeywords: object;
   };
   hasStagedChanges: boolean;
   published: boolean;
@@ -162,7 +168,7 @@ interface MasterData {
     name: { en: string };
     slug: { en: string };
     variants: Variant[];
-    searchKeywords: {};
+    searchKeywords: object;
   };
 }
 

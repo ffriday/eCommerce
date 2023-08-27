@@ -10,6 +10,7 @@ import {
   AddressErrors,
   DateErrors,
   EmailErrors,
+  HTTPResponseCode,
   IAddress,
   IUserValidate,
   IValueStatus,
@@ -41,6 +42,7 @@ import {
 } from './formProps';
 import { ErorMap, createCustomer } from '../../constants/register-user';
 import { ClientResponse, CustomerSignInResult, ErrorResponse } from '@commercetools/platform-sdk';
+import { apiContext } from '../App';
 
 export interface IPattern {
   pattern: RegExp;
@@ -146,6 +148,8 @@ const RegisterForm = () => {
     setFirstPage(!firstPage);
   };
 
+  const api = useContext(apiContext);
+
   const canSubmit = (state: Partial<IUserValidate<IValueStatus>> | Partial<IAddress<IValueStatus>>): boolean => {
     const arr = Object.entries(state);
     let res = false;
@@ -177,11 +181,14 @@ const RegisterForm = () => {
 
     let response: ClientResponse<CustomerSignInResult> | null = null;
     try {
-      response = (await createCustomer(validateArr, defaultShipping, defaultBill, billAddressDisabled)) as ClientResponse<CustomerSignInResult>;
-      if (response.statusCode === 201) {
-        setApiError('');
-        navigate('/');
-        window.localStorage.setItem('customerID', response.body.customer.id || '');
+      const customer = createCustomer(validateArr, defaultShipping, defaultBill, billAddressDisabled);
+      response = await api.registerCusomer(customer);
+      if (response.statusCode === HTTPResponseCode.registerd) {
+        const res = await api.loginCustomer(validateArr.email.val, validateArr.password.val);
+        if (res.statusCode === HTTPResponseCode.logged) {
+          setApiError('');
+          navigate('/');
+        }
       }
     } catch (error) {
       const err = error as ErrorResponse;
