@@ -12,6 +12,9 @@ import {
 } from '@commercetools/sdk-client-v2';
 import { CustomerDraft, MyCustomerSignin, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import { HTTPResponseCode } from './types';
+import { ByProjectKeyProductsRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/products/by-project-key-products-request-builder';
+import { ByProjectKeyProductsByIDRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/products/by-project-key-products-by-id-request-builder';
+import { ByProjectKeyProductsKeyByKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/products/by-project-key-products-key-by-key-request-builder';
 
 enum LSKeys {
   id = 'customerId',
@@ -35,6 +38,14 @@ export interface IProductsQuery {
   [key: string]: QueryParam;
   limit: number;
   offset: number;
+}
+
+export interface IKey {
+  key: string;
+}
+
+export interface IId {
+  id: string;
 }
 
 abstract class ApiBase {
@@ -207,9 +218,16 @@ export default class ApiClient extends ApiBase {
       .execute();
   };
 
-  public getProduct = async (id: string) => {
+  public getProduct = async (param: IKey | IId) => {
     const api = this.getAvalibleApi();
-    return await api.products().withId({ ID: id }).get().execute();
+    let result: ByProjectKeyProductsRequestBuilder | ByProjectKeyProductsByIDRequestBuilder | ByProjectKeyProductsKeyByKeyRequestBuilder =
+      api.products();
+    if ('id' in param) {
+      result = result.withId({ ID: param.id });
+    } else if ('key' in param) {
+      result = result.withKey({ key: param.key });
+    }
+    return await result.get().execute();
   };
 }
 
