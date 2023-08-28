@@ -15,6 +15,7 @@ import { HTTPResponseCode } from './types';
 import { ByProjectKeyProductsRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/products/by-project-key-products-request-builder';
 import { ByProjectKeyProductsByIDRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/products/by-project-key-products-by-id-request-builder';
 import { ByProjectKeyProductsKeyByKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/products/by-project-key-products-key-by-key-request-builder';
+import { type } from 'os';
 
 enum LSKeys {
   id = 'customerId',
@@ -47,6 +48,11 @@ export interface IKey {
 export interface IId {
   id: string;
 }
+
+export type MyProjectKeyRequestBuilder =
+  | ByProjectKeyProductsRequestBuilder
+  | ByProjectKeyProductsByIDRequestBuilder
+  | ByProjectKeyProductsKeyByKeyRequestBuilder;
 
 abstract class ApiBase {
   private ENV: IeCommerceEnv;
@@ -220,8 +226,7 @@ export default class ApiClient extends ApiBase {
 
   public getProduct = async (param: IKey | IId) => {
     const api = this.getAvalibleApi();
-    let result: ByProjectKeyProductsRequestBuilder | ByProjectKeyProductsByIDRequestBuilder | ByProjectKeyProductsKeyByKeyRequestBuilder =
-      api.products();
+    let result: MyProjectKeyRequestBuilder = api.products();
     if ('id' in param) {
       result = result.withId({ ID: param.id });
     } else if ('key' in param) {
