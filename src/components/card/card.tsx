@@ -1,24 +1,21 @@
 import { useState, useEffect } from 'react';
 import './card.scss';
-import { jsonData } from './testData';
+// import { jsonData } from './testData';
 import ApiClient from '../../constants/apiClient';
 import { eCommerceEnv } from '../../constants/ecommerce.env';
-import { ProductData } from '@commercetools/platform-sdk';
-enum language {
-  en = 'en-US',
-  ru = 'ru-BY',
-}
+import { language } from '../../constants/types';
+import { GetPrice } from '../../constants/types';
 interface IProductCard {
   discounted: boolean;
 }
-const centAmount: number = jsonData.masterData.current.masterVariant.prices[0].value.centAmount;
-const fractionDigits: number = jsonData.masterData.current.masterVariant.prices[0].value.fractionDigits;
-const price: number = centAmount / 10 ** fractionDigits;
-const image: string = jsonData.masterData.current.masterVariant.images[0].url;
-const name: string = jsonData.masterData.current.name.en;
-const description: string = jsonData.masterData.current.description.en;
+// const centAmount: number = jsonData.masterData.current.masterVariant.prices[0].value.centAmount;
+// const fractionDigits: number = jsonData.masterData.current.masterVariant.prices[0].value.fractionDigits;
+// const price: number = centAmount / 10 ** fractionDigits;
+// const image: string = jsonData.masterData.current.masterVariant.images[0].url;
+// const name: string = jsonData.masterData.current.name.en;
+// const description: string = jsonData.masterData.current.description.en;
 const api = new ApiClient(eCommerceEnv);
-type GetPrice = (centAmount?: number, fractionDigits?: number) => number | '';
+
 interface ICardApiData {
   image: string | undefined;
   name: string;
@@ -44,7 +41,6 @@ export default function ProductCard({ discounted }: IProductCard) {
         }
 
         const data = res.body.results[5];
-        console.log(data);
         const image: string | undefined = data.masterData.current.masterVariant.images?.[0]?.url;
         const name: string = data.masterData.current.name[language.ru];
         const description: string | undefined = data.masterData.current.description?.[language.ru];
@@ -63,7 +59,7 @@ export default function ProductCard({ discounted }: IProductCard) {
         });
       } catch (error) {
         const typedError = error as Error;
-        console.error(typedError.message);
+        throw typedError.message;
       }
     };
     getData();
