@@ -206,6 +206,11 @@ export default class ApiClient extends ApiBase {
       })
       .execute();
   };
+
+  public getProduct = async (id: string) => {
+    const api = this.getAvalibleApi();
+    return await api.products().withId({ ID: id }).get().execute();
+  };
 }
 
 class MyTokenChache implements TokenCache {
