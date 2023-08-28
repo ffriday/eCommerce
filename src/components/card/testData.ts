@@ -1,4 +1,5 @@
 import { ProductData } from '../../constants/types';
+
 const data = `{
   "id": "e7ba4c75-b1bb-483d-94d8-2c4a10f78472",
   "version": 2,
