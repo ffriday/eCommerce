@@ -5,12 +5,17 @@ import {
   ClientBuilder,
   HttpMiddlewareOptions,
   PasswordAuthMiddlewareOptions,
+  QueryParam,
   TokenCache,
   TokenStore,
   UserAuthOptions,
 } from '@commercetools/sdk-client-v2';
 import { CustomerDraft, MyCustomerSignin, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import { HTTPResponseCode } from './types';
+import { ByProjectKeyProductsRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/products/by-project-key-products-request-builder';
+import { ByProjectKeyProductsByIDRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/products/by-project-key-products-by-id-request-builder';
+import { ByProjectKeyProductsKeyByKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/products/by-project-key-products-key-by-key-request-builder';
+import { type } from 'os';
 
 enum LSKeys {
   id = 'customerId',
@@ -24,11 +29,30 @@ interface IMiddleware {
   // anon: AnonymousAuthMiddlewareOptions;
 }
 
-interface IUserData {
+export interface IUserData {
   isLogged: boolean;
   id: string;
   token: string;
 }
+
+export interface IProductsQuery {
+  [key: string]: QueryParam;
+  limit: number;
+  offset: number;
+}
+
+export interface IKey {
+  key: string;
+}
+
+export interface IId {
+  id: string;
+}
+
+export type MyProjectKeyRequestBuilder =
+  | ByProjectKeyProductsRequestBuilder
+  | ByProjectKeyProductsByIDRequestBuilder
+  | ByProjectKeyProductsKeyByKeyRequestBuilder;
 
 abstract class ApiBase {
   private ENV: IeCommerceEnv;
@@ -125,6 +149,8 @@ abstract class ApiBase {
 export default class ApiClient extends ApiBase {
   private authApi: ByProjectKeyRequestBuilder;
   private passwordApi: ByProjectKeyRequestBuilder | null = null; // Can't initialize without password
+  // Anon API
+  // Token API
 
   constructor(env: IeCommerceEnv) {
     super(env);
@@ -172,6 +198,41 @@ export default class ApiClient extends ApiBase {
     this.token.myChache.expirationTime = 0;
     window.localStorage.removeItem(LSKeys.id);
     window.localStorage.removeItem(LSKeys.token);
+  };
+
+  private getAvalibleApi = () => {
+    // Get avalible api:
+    // Password => Token => Anonymus => Error
+    let api = null;
+    if (this.passwordApi) {
+      api = this.passwordApi;
+    } else {
+      //TODO add elseIF token and anonymus api
+      // throw Error('No avalible API');
+    }
+    api = this.authApi; // FOR TESTING !!! REMOVE
+    return api;
+  };
+
+  public getProducts = async (queryArgs: Partial<IProductsQuery>) => {
+    const api = this.getAvalibleApi();
+    return await api
+      .products()
+      .get({
+        queryArgs,
+      })
+      .execute();
+  };
+
+  public getProduct = async (param: IKey | IId) => {
+    const api = this.getAvalibleApi();
+    let result: MyProjectKeyRequestBuilder = api.products();
+    if ('id' in param) {
+      result = result.withId({ ID: param.id });
+    } else if ('key' in param) {
+      result = result.withKey({ key: param.key });
+    }
+    return await result.get().execute();
   };
 }
 
