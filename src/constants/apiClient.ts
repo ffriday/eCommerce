@@ -5,6 +5,7 @@ import {
   ClientBuilder,
   HttpMiddlewareOptions,
   PasswordAuthMiddlewareOptions,
+  QueryParam,
   TokenCache,
   TokenStore,
   UserAuthOptions,
@@ -24,10 +25,16 @@ interface IMiddleware {
   // anon: AnonymousAuthMiddlewareOptions;
 }
 
-interface IUserData {
+export interface IUserData {
   isLogged: boolean;
   id: string;
   token: string;
+}
+
+export interface IProductsQuery {
+  [key: string]: QueryParam;
+  limit: number;
+  offset: number;
 }
 
 abstract class ApiBase {
@@ -125,6 +132,8 @@ abstract class ApiBase {
 export default class ApiClient extends ApiBase {
   private authApi: ByProjectKeyRequestBuilder;
   private passwordApi: ByProjectKeyRequestBuilder | null = null; // Can't initialize without password
+  // Anon API
+  // Token API
 
   constructor(env: IeCommerceEnv) {
     super(env);
@@ -172,6 +181,30 @@ export default class ApiClient extends ApiBase {
     this.token.myChache.expirationTime = 0;
     window.localStorage.removeItem(LSKeys.id);
     window.localStorage.removeItem(LSKeys.token);
+  };
+
+  private getAvalibleApi = () => {
+    // Get avalible api:
+    // Password => Token => Anonymus => Error
+    let api = null;
+    if (this.passwordApi) {
+      api = this.passwordApi;
+    } else {
+      //TODO add elseIF token and anonymus api
+      // throw Error('No avalible API');
+    }
+    api = this.authApi; // FOR TESTING !!! REMOVE
+    return api;
+  };
+
+  public getProducts = async (queryArgs: Partial<IProductsQuery>) => {
+    const api = this.getAvalibleApi();
+    return await api
+      .products()
+      .get({
+        queryArgs,
+      })
+      .execute();
   };
 }
 
