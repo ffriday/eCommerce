@@ -11,7 +11,7 @@ import {
   TokenStore,
   UserAuthOptions,
 } from '@commercetools/sdk-client-v2';
-import { CustomerDraft, MyCustomerSignin, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import { CustomerDraft, MyCustomerSetFirstNameAction, MyCustomerSignin, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import { HTTPResponseCode } from './types';
 import { ByProjectKeyProductsRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/products/by-project-key-products-request-builder';
 import { ByProjectKeyProductsByIDRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/products/by-project-key-products-by-id-request-builder';
@@ -49,6 +49,10 @@ export interface IKey {
 
 export interface IId {
   id: string;
+}
+
+export interface ICategory {
+  [key: string]: string;
 }
 
 export type MyProjectKeyRequestBuilder =
@@ -172,11 +176,22 @@ export default class ApiClient extends ApiBase {
   private passwordApi: ByProjectKeyRequestBuilder | null = null; // Can't initialize without password
   private anonApi: ByProjectKeyRequestBuilder;
   // Token API
+  private _categories: ICategory[] | null = null;
 
   constructor(env: IeCommerceEnv) {
     super(env);
     this.authApi = this.createApi({ auth: this.authMiddleware });
     this.anonApi = this.createApi({ anon: this.anonymousMiddleware });
+
+    this.getCategories();
+  }
+
+  get categories() {
+    if (this._categories) {
+      return this._categories;
+    } else {
+      throw new Error('Categories not found');
+    }
   }
 
   public registerCusomer = async (customer: CustomerDraft) => {
@@ -262,6 +277,31 @@ export default class ApiClient extends ApiBase {
       result = result.withKey({ key: param.key });
     }
     return await result.get().execute();
+  };
+
+  private getCategories = async () => {
+    const api = this.getAvalibleApi();
+    const res = await api.categories().get().execute();
+    this._categories = res.body.results.reduce<ICategory[]>((acc, { key, id }) => {
+      if (key) acc.push({ [key]: id });
+      return acc;
+    }, []);
+  };
+
+  public test = async () => {
+    const api = this.getAvalibleApi();
+    // return await api.productTypes().get().execute();
+    return await api.categories().get().execute();
+    // return await api.productTypes().withKey({key: 'shirts'}).get().execute();
+    // return await api.productProjections().search().get({
+    //   queryArgs: {
+    //     // limit: 5,
+    //     // offset: 0,
+    //     // filter: 'categories.id:"66ce170c-bfbd-4fe0-b0c7-9826d8aba68e"',
+    //     filter: 'categories.key:"flowers"',
+    //     // markMatchingVariants: true
+    //   }
+    // }).execute();
   };
 }
 
