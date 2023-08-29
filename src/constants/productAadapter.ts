@@ -21,7 +21,8 @@ export default class ProductAdapter {
   }
   private getPrice: GetPrice = (centAmount, fractionDigits) => {
     if (centAmount && fractionDigits) {
-      return centAmount / 10 ** fractionDigits;
+      const price: number = centAmount / 10 ** fractionDigits;
+      return price.toString();
     }
     return '';
   };
@@ -29,7 +30,7 @@ export default class ProductAdapter {
     const image: string | undefined = data.masterData.current.masterVariant.images?.[productVariant]?.url;
     const name: string = data.masterData.current.name[language.ru];
     const description: string | undefined = data.masterData.current.description?.[language.ru];
-    let price: number | '' = '';
+    let price = '';
     const priceData = data.masterData.current.masterVariant.prices;
     if (priceData && priceData.length > 0) {
       const centAmount: number | undefined = data.masterData.current.masterVariant.prices[productVariant]?.value.centAmount;
@@ -44,7 +45,7 @@ export default class ProductAdapter {
     };
   };
 
-  public getCatalog = async (productsQueryParams: IProductsQuery, productVariant = 0): Promise<ICardApiData[] | ICardApiData> => {
+  public getCatalog = async (productsQueryParams: IProductsQuery, productVariant = 0): Promise<ICardApiData[]> => {
     try {
       const res = await this.api.getProducts(productsQueryParams);
       if (res.statusCode !== 200) {
@@ -57,7 +58,7 @@ export default class ProductAdapter {
     }
   };
 
-  public getProductByKey = async ({ key, productVariant = 0 }: IGetProductDataByKey): Promise<ICardApiData[] | ICardApiData> => {
+  public getProductByKey = async ({ key, productVariant = 0 }: IGetProductDataByKey): Promise<ICardApiData> => {
     try {
       const res = (await this.api.getProduct({ key: key })) as ClientResponse<Product>;
 
@@ -72,7 +73,7 @@ export default class ProductAdapter {
     }
   };
 
-  public getProductById = async ({ id, productVariant = 0 }: IGetProductDataById): Promise<ICardApiData[] | ICardApiData> => {
+  public getProductById = async ({ id, productVariant = 0 }: IGetProductDataById): Promise<ICardApiData> => {
     try {
       const res = (await this.api.getProduct({ id: id })) as ClientResponse<Product>;
       if (res.statusCode !== 200) {

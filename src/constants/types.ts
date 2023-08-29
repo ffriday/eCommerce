@@ -195,12 +195,12 @@ export interface ICardApiData {
   image: string | undefined;
   name: string;
   description: string | undefined;
-  price: number | '';
+  price: string;
 }
 export enum language {
   en = 'en-US',
   ru = 'ru-BY',
 }
 
-export type GetPrice = (centAmount?: number, fractionDigits?: number) => number | '';
+export type GetPrice = (centAmount?: number, fractionDigits?: number) => string;
 // =====================================================

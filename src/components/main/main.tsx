@@ -33,7 +33,6 @@ export default function Main() {
         )}
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-around', width: '100%' }}>
-        {' '}
         <ProductCard />
         <ProductCard discounted={true} />
       </div>
