@@ -1,8 +1,8 @@
-import { useState, useEffect, useMemo, useContext } from 'react';
-import './card.scss';
+// import { useState, useEffect, useMemo, useContext } from 'react';
+// import './card.scss';
 import { ICardApiData } from '../../constants/types';
-import ProductAdapter from '../../constants/productAadapter';
-import { apiContext } from '../App';
+// import ProductAdapter from '../../constants/productAadapter';
+// import { apiContext } from '../App';
 
 interface IProductCard {
   cardApiData?: ICardApiData;

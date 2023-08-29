@@ -17,7 +17,7 @@ export default function ProductCatalog() {
   useEffect(() => {
     const getData = async () => {
       const catalogData = (await productAdapter.getCatalog({ limit: 22, offset: 0 })) as ICardApiData[];
-      console.log(catalogData);
+      // console.log(catalogData);
       // for test using catalog KEY!!
       // const catalogData= await productAdapter.getCatalog({limit:8, offset:0}) as ICardApiData[];
       // console.log(catalogData);
