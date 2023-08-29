@@ -1,20 +1,9 @@
 import { useState, useEffect } from 'react';
 import './card.scss';
-// import { jsonData } from './testData';
-import ApiClient from '../../constants/apiClient';
-import { eCommerceEnv } from '../../constants/ecommerce.env';
-import { language } from '../../constants/types';
-import { GetPrice } from '../../constants/types';
+import { getProductsData } from '../../constants/getProductData';
 interface IProductCard {
   discounted: boolean;
 }
-// const centAmount: number = jsonData.masterData.current.masterVariant.prices[0].value.centAmount;
-// const fractionDigits: number = jsonData.masterData.current.masterVariant.prices[0].value.fractionDigits;
-// const price: number = centAmount / 10 ** fractionDigits;
-// const image: string = jsonData.masterData.current.masterVariant.images[0].url;
-// const name: string = jsonData.masterData.current.name.en;
-// const description: string = jsonData.masterData.current.description.en;
-const api = new ApiClient(eCommerceEnv);
 
 interface ICardApiData {
   image: string | undefined;
@@ -23,44 +12,18 @@ interface ICardApiData {
   price: number | '';
 }
 
-const getPrice: GetPrice = (centAmount, fractionDigits) => {
-  if (centAmount && fractionDigits) {
-    return centAmount / 10 ** fractionDigits;
-  }
-  return '';
-};
-
 export default function ProductCard({ discounted }: IProductCard) {
-  const [data, setData] = useState<ICardApiData | null>(null);
+  const [data, setData] = useState<ICardApiData>({ image: '', name: '', description: '', price: '' });
   useEffect(() => {
     const getData = async () => {
-      try {
-        const res = await api.getProducts({ key: eCommerceEnv.CTP_PROJECT_KEY });
-        if (res.statusCode !== 200) {
-          throw new Error(`Failed to fetch products. Status code: ${res.statusCode}`);
-        }
+      const productData = (await getProductsData({ productId: '123a16a9-8959-42d4-909e-f0bd15d6898b' })) as ICardApiData;
+      // for test using ID!!
+      // const productData= await getProductsData({ productId: '123a16a9-8959-42d4-909e-f0bd15d6898b' }) as ICardApiData;
 
-        const data = res.body.results[5];
-        const image: string | undefined = data.masterData.current.masterVariant.images?.[0]?.url;
-        const name: string = data.masterData.current.name[language.ru];
-        const description: string | undefined = data.masterData.current.description?.[language.ru];
-        let price: number | '' = '';
-        const priceData = data.masterData.current.masterVariant.prices;
-        if (priceData && priceData.length > 0) {
-          const centAmount: number | undefined = data.masterData.current.masterVariant.prices[0]?.value.centAmount;
-          const fractionDigits: number | undefined = data.masterData.current.masterVariant.prices[0]?.value.fractionDigits;
-          price = getPrice(centAmount, fractionDigits);
-        }
-        setData({
-          image: image,
-          name: name,
-          description: description,
-          price: price,
-        });
-      } catch (error) {
-        const typedError = error as Error;
-        throw typedError.message;
-      }
+      // for test using catalog KEY!!
+      // const catalogData= await getProductsData({ catalogKey: eCommerceEnv.CTP_PROJECT_KEY }) as ICardApiData[];
+      // console.log(catalogData)
+      setData(productData);
     };
     getData();
   }, []);

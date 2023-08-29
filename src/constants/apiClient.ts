@@ -1,4 +1,5 @@
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
+import { Product } from '@commercetools/platform-sdk';
 import { IeCommerceEnv } from './ecommerce.env';
 import {
   AuthMiddlewareOptions,
