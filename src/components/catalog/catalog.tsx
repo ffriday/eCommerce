@@ -16,20 +16,20 @@ export default function ProductCatalog() {
   const productAdapter = useMemo(() => new ProductAdapter(api), [api]);
   useEffect(() => {
     const getData = async () => {
-      const catalogData = (await productAdapter.getCatalog({ limit: 3, offset: 0 })) as ICardApiData[];
-      // console.log(catalogData);
+      const catalogData = (await productAdapter.getCatalog({ limit: 22, offset: 0 })) as ICardApiData[];
+      console.log(catalogData);
       // for test using catalog KEY!!
       // const catalogData= await productAdapter.getCatalog({limit:8, offset:0}) as ICardApiData[];
       // console.log(catalogData);
       setData(catalogData);
     };
     getData();
-  });
+  }, []);
 
   return (
-    <div>
+    <div className='catalog'>
       {data.map((item) => {
-        return <ProductCard cardApiData={item} key={new Date().getTime().toString()} />;
+        return <ProductCard cardApiData={item} key={(Math.random() * new Date().getTime()).toString()} />;
       })}
     </div>
   );
