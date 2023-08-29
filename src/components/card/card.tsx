@@ -1,28 +1,43 @@
+import { useState, useEffect, useMemo, useContext } from 'react';
 import './card.scss';
-import { jsonData } from './testData';
+import { ICardApiData } from '../../constants/types';
+import ProductAdapter from '../../constants/productAadapter';
+import { apiContext } from '../App';
 
 interface IProductCard {
-  discounted: boolean;
+  cardApiData?: ICardApiData;
+  discounted?: boolean;
 }
-const centAmount: number = jsonData.masterData.current.masterVariant.prices[0].value.centAmount;
-const fractionDigits: number = jsonData.masterData.current.masterVariant.prices[0].value.fractionDigits;
-const price: number = centAmount / 10 ** fractionDigits;
-const image: string = jsonData.masterData.current.masterVariant.images[0].url;
-const name: string = jsonData.masterData.current.name.en;
-const description: string = jsonData.masterData.current.description.en;
 
-export default function ProductCard({ discounted }: IProductCard) {
+export default function ProductCard({ discounted, cardApiData = { image: '', name: '', description: '', price: '' } }: IProductCard) {
+  const [data, setData] = useState<ICardApiData>(cardApiData);
+  const api = useContext(apiContext);
+  const productAdapter = useMemo(() => new ProductAdapter(api), [api]);
+  useEffect(() => {
+    const getData = async () => {
+      const productData = (await productAdapter.getProductById({
+        id: '123a16a9-8959-42d4-909e-f0bd15d6898b',
+        productVariant: 0,
+      })) as ICardApiData;
+
+      // for test using catalog KEY!!
+      // const catalogData= await productAdapter.getCatalog({limit:8, offset:0}) as ICardApiData[];
+      // console.log(catalogData);
+      setData(productData);
+    };
+    getData();
+  });
   const disableClassName = discounted ? 'card__price--disable' : '';
   return (
     <div className='card'>
-      <img className='card__image' src={image} alt='Product card' />
-      <h2 className='card__heading'>{name}</h2>
-      <p className='card__description'>{description}</p>
+      <img className='card__image' src={data?.image} alt='Product card' />
+      <h2 className='card__heading'>{data?.name}</h2>
+      <p className='card__description'>{data?.description}</p>
       <div className='card__bottom-box'>
         {' '}
         <div className='card__prices'>
-          <span className={disableClassName}> {`${price} USD/шт. `}</span>
-          {discounted && <span className={'card__price card__price--discounted'}>{`${price} USD/шт. `}</span>}
+          <span className={disableClassName}> {`${data?.price} USD/шт. `}</span>
+          {discounted && <span className={'card__price card__price--discounted'}>{`${data?.price} USD/шт. `}</span>}
         </div>
         <button className='card__button'>В корзину</button>
       </div>
