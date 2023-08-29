@@ -2,7 +2,8 @@ import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './main.scss';
 import { apiContext } from '../App';
-import ProductCard from '../card/card';
+// import ProductCard from '../card/card';
+import ProductCatalog from '../catalog/catalog';
 
 export default function Main() {
   const api = useContext(apiContext);
@@ -33,8 +34,9 @@ export default function Main() {
         )}
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-around', width: '100%' }}>
-        <ProductCard />
-        <ProductCard discounted={true} />
+        {/* <ProductCard />
+        <ProductCard discounted={true} /> */}
+        <ProductCatalog />
       </div>
     </div>
   );
