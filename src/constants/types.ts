@@ -191,7 +191,12 @@ export enum HTTPResponseCode {
 //   createdAt: string;
 //   lastModifiedAt: string;
 // }
-
+export interface ICardApiData {
+  image: string | undefined;
+  name: string;
+  description: string | undefined;
+  price: number | '';
+}
 export enum language {
   en = 'en-US',
   ru = 'ru-BY',

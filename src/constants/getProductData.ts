@@ -3,15 +3,9 @@ import { eCommerceEnv } from './ecommerce.env';
 import { language } from './types';
 import { GetPrice } from './types';
 import { ClientResponse, Product } from '@commercetools/platform-sdk';
-
+import { ICardApiData } from './types';
 const api = new ApiClient(eCommerceEnv);
 
-interface ICardApiData {
-  image: string | undefined;
-  name: string;
-  description: string | undefined;
-  price: number | '';
-}
 const getPrice: GetPrice = (centAmount, fractionDigits) => {
   if (centAmount && fractionDigits) {
     return centAmount / 10 ** fractionDigits;

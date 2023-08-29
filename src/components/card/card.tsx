@@ -1,19 +1,15 @@
 import { useState, useEffect } from 'react';
 import './card.scss';
 import { getProductsData } from '../../constants/getProductData';
+import { ICardApiData } from '../../constants/types';
+
 interface IProductCard {
-  discounted: boolean;
+  cardApiData?: ICardApiData;
+  discounted?: boolean;
 }
 
-interface ICardApiData {
-  image: string | undefined;
-  name: string;
-  description: string | undefined;
-  price: number | '';
-}
-
-export default function ProductCard({ discounted }: IProductCard) {
-  const [data, setData] = useState<ICardApiData>({ image: '', name: '', description: '', price: '' });
+export default function ProductCard({ discounted, cardApiData = { image: '', name: '', description: '', price: '' } }: IProductCard) {
+  const [data, setData] = useState<ICardApiData>(cardApiData);
   useEffect(() => {
     const getData = async () => {
       const productData = (await getProductsData({ productId: '123a16a9-8959-42d4-909e-f0bd15d6898b' })) as ICardApiData;
