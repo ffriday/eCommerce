@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useContext } from 'react';
 import './card.scss';
-import { getProductsData } from '../../constants/getProductData';
 import { ICardApiData } from '../../constants/types';
+import ProductAdapter from '../../constants/productAadapter';
+import { apiContext } from '../App';
 
 interface IProductCard {
   cardApiData?: ICardApiData;
@@ -10,19 +11,22 @@ interface IProductCard {
 
 export default function ProductCard({ discounted, cardApiData = { image: '', name: '', description: '', price: '' } }: IProductCard) {
   const [data, setData] = useState<ICardApiData>(cardApiData);
+  const api = useContext(apiContext);
+  const productAdapter = useMemo(() => new ProductAdapter(api), [api]);
   useEffect(() => {
     const getData = async () => {
-      const productData = (await getProductsData({ productId: '123a16a9-8959-42d4-909e-f0bd15d6898b' })) as ICardApiData;
-      // for test using ID!!
-      // const productData= await getProductsData({ productId: '123a16a9-8959-42d4-909e-f0bd15d6898b' }) as ICardApiData;
+      const productData = (await productAdapter.getProductById({
+        id: '123a16a9-8959-42d4-909e-f0bd15d6898b',
+        productVariant: 0,
+      })) as ICardApiData;
 
       // for test using catalog KEY!!
-      // const catalogData= await getProductsData({ catalogKey: eCommerceEnv.CTP_PROJECT_KEY }) as ICardApiData[];
-      // console.log(catalogData)
+      // const catalogData= await productAdapter.getCatalog({limit:8, offset:0}) as ICardApiData[];
+      // console.log(catalogData);
       setData(productData);
     };
     getData();
-  }, []);
+  });
   const disableClassName = discounted ? 'card__price--disable' : '';
   return (
     <div className='card'>
