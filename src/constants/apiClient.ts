@@ -24,8 +24,10 @@ enum LSKeys {
 }
 
 export enum SortParams {
-  en = 'en-us',
-  ru = 'ru-by',
+  sortEN = 'en-us',
+  sortRU = 'ru-by',
+  searchEN = 'en',
+  searchRU = 'ru',
   ascending = 'asc',
   descending = 'desc',
 }
@@ -59,13 +61,20 @@ export interface IPriceFilter {
   to?: number;
 }
 
-export interface IProductFilter {
+export interface IBaseFilter {
+  lang: string;
+}
+
+export interface IProductFilter extends IBaseFilter {
   categoryId: string;
   price: IPriceFilter;
-  discount: boolean;
-  sortLang: string;
   sortName: string;
   sortPrice: string;
+  discount: boolean;
+}
+
+export interface IProductSearch extends IBaseFilter {
+  keyword: string;
 }
 
 export interface IKey {
@@ -208,7 +217,6 @@ abstract class ApiBase {
         }
         return `variants.price.centAmount:range (${from} to ${to})`;
       },
-      discount: (param: string | boolean | IPriceFilter): string => `variants.scopedPriceDiscounted: ${param.toString()}`, // Not working
     };
     return Object.entries(filter).reduce<string[]>((acc, [key, val]) => {
       if (key in pattern) acc.push(pattern[key](val));
@@ -337,8 +345,10 @@ export default class ApiClient extends ApiBase {
   public getProductFiltered = async (queryArgs: Partial<IProductsQuery> = {}, queryFilter: Partial<IProductFilter> = {}) => {
     const api = this.getAvalibleApi();
     const filter = ApiClient.makeFilter(queryFilter);
-    const lang = queryFilter.sortLang || SortParams.en;
+    const lang = queryFilter.lang || SortParams.sortEN;
     const sort: string[] = [];
+    const dicsount: { [key: string]: QueryParam } = {};
+    if (queryFilter.discount !== undefined) dicsount['variants.scopedPriceDiscounted'] = queryFilter.discount;
     if (queryFilter.sortName) sort.push(`name.${lang} ${queryFilter.sortName}`);
     if (queryFilter.sortPrice) sort.push(`price ${queryFilter.sortPrice}`);
     return await api
@@ -346,11 +356,46 @@ export default class ApiClient extends ApiBase {
       .search()
       .get({
         queryArgs: {
+          ...dicsount,
           limit: queryArgs.limit,
           offset: queryArgs.offset,
           filter: filter,
           sort: sort,
           // markMatchingVariants: true,
+        },
+      })
+      .execute();
+  };
+
+  public getProductSearch = async (queryArgs: Partial<IProductsQuery> = {}, querySearch: Partial<IProductSearch> = {}) => {
+    const api = this.getAvalibleApi();
+    const lang = querySearch.lang || SortParams.searchEN;
+    const searchKey = `searchKeywords.${lang}`;
+    querySearch.keyword = querySearch.keyword || '';
+    return await api
+      .productProjections()
+      .suggest()
+      .get({
+        queryArgs: {
+          [searchKey]: [querySearch.keyword],
+          fuzzy: true,
+        },
+      })
+      .execute();
+  };
+
+  public getProductSearchT = async (queryArgs: Partial<IProductsQuery> = {}, querySearch: Partial<IProductSearch> = {}) => {
+    const api = this.getAvalibleApi();
+    const lang = querySearch.lang || SortParams.searchEN;
+    const searchKey = `text.${lang}`;
+    querySearch.keyword = querySearch.keyword || '';
+    return await api
+      .productProjections()
+      .search()
+      .get({
+        queryArgs: {
+          [searchKey]: [querySearch.keyword],
+          fuzzy: true,
         },
       })
       .execute();
