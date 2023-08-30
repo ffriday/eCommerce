@@ -7,6 +7,7 @@ import {
   HttpMiddlewareOptions,
   PasswordAuthMiddlewareOptions,
   QueryParam,
+  RefreshAuthMiddlewareOptions,
   TokenCache,
   TokenStore,
   UserAuthOptions,
@@ -26,8 +27,8 @@ enum LSKeys {
 export enum SortParams {
   sortEN = 'en-us',
   sortRU = 'ru-by',
-  searchEN = 'en',
-  searchRU = 'ru',
+  searchEN = 'en-US',
+  searchRU = 'ru-BY',
   ascending = 'asc',
   descending = 'desc',
 }
@@ -36,7 +37,7 @@ interface IMiddleware {
   auth: AuthMiddlewareOptions;
   password: PasswordAuthMiddlewareOptions;
   anon: AnonymousAuthMiddlewareOptions;
-  // token: ExistingTokenMiddlewareOptions;
+  token: RefreshAuthMiddlewareOptions;
 }
 
 export interface IUserData {
@@ -109,6 +110,7 @@ abstract class ApiBase {
   protected authMiddleware: AuthMiddlewareOptions;
   protected passwordMiddleware: PasswordAuthMiddlewareOptions | null = null; // Can't initialize without password
   protected anonymousMiddleware: AnonymousAuthMiddlewareOptions;
+  protected refreshTokenMiddleware: RefreshAuthMiddlewareOptions;
 
   constructor(env: IeCommerceEnv) {
     this.ENV = env;
@@ -116,6 +118,7 @@ abstract class ApiBase {
     this.httpMiddleware = this.createHttpMiddlewareOptions();
     this.authMiddleware = this.createAuthMiddlewareOptions();
     this.anonymousMiddleware = this.createAnonymousMiddlewareOptions();
+    this.refreshTokenMiddleware = this.createRefreshTokenMiddlewareOptions();
     this.isUserLogged(); // Check if user has id and token in LocalStorage and load it touserData
   }
 
@@ -169,7 +172,19 @@ abstract class ApiBase {
     };
   };
 
-  // TODO: Create token middleware
+  protected createRefreshTokenMiddlewareOptions = (): RefreshAuthMiddlewareOptions => {
+    return {
+      host: this.ENV.CTP_AUTH_URL,
+      projectKey: this.ENV.CTP_PROJECT_KEY,
+      credentials: {
+        clientId: this.ENV.CTP_CLIENT_ID,
+        clientSecret: this.ENV.CTP_CLIENT_SECRET,
+      },
+      refreshToken: 'bXvTyxc5yuebdvwTwyXn==',
+      tokenCache: this.token,
+      fetch: fetch,
+    };
+  };
 
   protected createApi = (middleware: Partial<IMiddleware>, log = true) => {
     let client = new ClientBuilder().withHttpMiddleware(this.httpMiddleware);
@@ -379,6 +394,8 @@ export default class ApiClient extends ApiBase {
         queryArgs: {
           [searchKey]: [querySearch.keyword],
           fuzzy: true,
+          limit: queryArgs.limit,
+          offset: queryArgs.offset,
         },
       })
       .execute();
@@ -389,15 +406,22 @@ export default class ApiClient extends ApiBase {
     const lang = querySearch.lang || SortParams.searchEN;
     const searchKey = `text.${lang}`;
     querySearch.keyword = querySearch.keyword || '';
+    // return await api
+    //   .productProjections()
+    //   .search()
+    //   .get({
+    //     queryArgs: {
+    //       [searchKey]: [querySearch.keyword],
+    //       fuzzy: true,
+    //       limit: queryArgs.limit,
+    //       offset: queryArgs.offset,
+    //     },
+    //   })
+    //   .execute();
     return await api
       .productProjections()
-      .search()
-      .get({
-        queryArgs: {
-          [searchKey]: [querySearch.keyword],
-          fuzzy: true,
-        },
-      })
+      .suggest()
+      .get({ queryArgs: { 'searchKeywords.en-US': 'mia' } })
       .execute();
   };
 }
