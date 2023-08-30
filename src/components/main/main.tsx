@@ -2,8 +2,6 @@ import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './main.scss';
 import { apiContext } from '../App';
-// import ProductCard from '../card/card';
-import ProductCatalog from '../catalog/catalog';
 
 export default function Main() {
   const api = useContext(apiContext);
@@ -11,7 +9,7 @@ export default function Main() {
 
   return (
     <div className='main'>
-      {/* <p className='main__info'>Главная страница находится в разработке. Для входа или регистрации испозуйте соответствующие кнопки</p>
+      <p className='main__info'>Главная страница находится в разработке. Для входа или регистрации испозуйте соответствующие кнопки</p>
       <div className='main__btn-box'>
         {isLogged ? (
           <button
@@ -33,12 +31,6 @@ export default function Main() {
           </>
         )}
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-around', width: '100%' }}>
-        {/* <ProductCard />
-        <ProductCard discounted={true} /> */}
-
-      {/* </div> */}
-      <ProductCatalog />
     </div>
   );
 }
