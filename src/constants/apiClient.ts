@@ -43,8 +43,18 @@ export interface IProductsQuery {
   offset: number;
 }
 
-export interface IProductsSearch extends IProductsQuery {
+interface ISearchPattern {
+  [key: string]: (param: string | IPriceFilter) => string;
+}
+
+export interface IPriceFilter {
+  from?: number;
+  to?: number;
+}
+
+export interface IProductFilter {
   categoryId: string;
+  price: IPriceFilter;
 }
 
 export interface IKey {
@@ -173,6 +183,26 @@ abstract class ApiBase {
   public get userData(): IUserData {
     return this._userData;
   }
+
+  protected static makeFilter = (filter: Partial<IProductFilter>) => {
+    const pattern: ISearchPattern = {
+      // Add patterns for filtering here:
+      categoryId: (param: string | IPriceFilter): string => `categories.id:"${param}"`,
+      price: (param: string | IPriceFilter): string => {
+        let from = '*';
+        let to = '*';
+        if (typeof param !== 'string') {
+          if (param.from && param.from > 0) from = param.from.toString();
+          if (param.to && param.to > 0) to = param.to.toString();
+        }
+        return `variants.price.centAmount:range (${from} to ${to})`;
+      },
+    };
+    return Object.entries(filter).reduce<string[]>((acc, [key, val]) => {
+      if (key in pattern) acc.push(pattern[key](val));
+      return acc;
+    }, []);
+  };
 }
 
 export default class ApiClient extends ApiBase {
@@ -292,9 +322,9 @@ export default class ApiClient extends ApiBase {
     }, {});
   };
 
-  public getProductFiltered = async (queryArgs: Partial<IProductsSearch> = {}) => {
+  public getProductFiltered = async (queryArgs: Partial<IProductsQuery> = {}, queryFilter: Partial<IProductFilter> = {}) => {
     const api = this.getAvalibleApi();
-    const filter = `categories.id:"${queryArgs.categoryId}"`;
+    const filter = ApiClient.makeFilter(queryFilter);
     return await api
       .productProjections()
       .search()
