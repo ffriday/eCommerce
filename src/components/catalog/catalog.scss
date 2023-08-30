@@ -1,5 +1,35 @@
 .catalog {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+  &__body {
+    padding-top: 40px;
+    padding-bottom: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  &__navigation {
+    display: flex;
+    justify-content: center;
+  }
+  &__button {
+    width: 15.79px;
+    height: 15.79px;
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+}
+.nav-button {
+  &__left {
+    background-image: url('../../assets/catalog/leftButton.svg');
+  }
+  &__right {
+    background-image: url('../../assets/catalog/rightButton.svg');
+  }
+}
+
+@media only screen and (max-width: 1068px) {
+  .catalog {
+    &__body {
+      justify-content: center;
+    }
+  }
 }

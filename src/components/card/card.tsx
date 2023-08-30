@@ -1,5 +1,5 @@
 // import { useState, useEffect, useMemo, useContext } from 'react';
-// import './card.scss';
+import './card.scss';
 import { ICardApiData } from '../../constants/types';
 // import ProductAdapter from '../../constants/productAadapter';
 // import { apiContext } from '../App';
@@ -9,7 +9,7 @@ interface IProductCard {
   discounted?: boolean;
 }
 
-export default function ProductCard({ discounted, cardApiData = { image: '', name: '', description: '', price: '' } }: IProductCard) {
+export default function ProductCard({ discounted, cardApiData = { image: '', name: '', description: '', price: '', id: '' } }: IProductCard) {
   // const [data, setData] = useState<ICardApiData>(cardApiData);
   // const api = useContext(apiContext);
   // const productAdapter = useMemo(() => new ProductAdapter(api), [api]);

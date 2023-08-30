@@ -4,6 +4,8 @@ import { GetPrice } from './types';
 import { ClientResponse, Product } from '@commercetools/platform-sdk';
 import { ICardApiData } from './types';
 import { IProductsQuery } from './apiClient';
+import { ICatalogApiData } from './types';
+
 interface IGetProductData {
   productVariant?: number;
 }
@@ -27,6 +29,7 @@ export default class ProductAdapter {
     return '';
   };
   private getProductCardData = (data: Product, productVariant = 0): ICardApiData => {
+    const id = data.id;
     const image: string | undefined = data.masterData.current.masterVariant.images?.[productVariant]?.url;
     const name: string = data.masterData.current.name[language.ru];
     const description: string | undefined = data.masterData.current.description?.[language.ru];
@@ -38,6 +41,7 @@ export default class ProductAdapter {
       price = this.getPrice(centAmount, fractionDigits);
     }
     return {
+      id: id,
       image: image,
       name: name,
       description: description,
@@ -45,13 +49,15 @@ export default class ProductAdapter {
     };
   };
 
-  public getCatalog = async (productsQueryParams: IProductsQuery, productVariant = 0): Promise<ICardApiData[]> => {
+  public getCatalog = async (productsQueryParams: IProductsQuery, productVariant = 0): Promise<ICatalogApiData> => {
     try {
       const res = await this.api.getProducts(productsQueryParams);
       if (res.statusCode !== 200) {
         throw new Error(`Failed to load catalog. Status code: ${res.statusCode}`);
       }
-      return res.body.results.map((data) => this.getProductCardData(data, productVariant));
+      const totalCount: number | undefined = res.body.total;
+      const products = res.body.results.map((data) => this.getProductCardData(data, productVariant));
+      return { products, totalCount };
     } catch (error) {
       const typedError = error as Error;
       throw typedError.message;

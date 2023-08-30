@@ -11,7 +11,7 @@ export default function Main() {
 
   return (
     <div className='main'>
-      <p className='main__info'>Главная страница находится в разработке. Для входа или регистрации испозуйте соответствующие кнопки</p>
+      {/* <p className='main__info'>Главная страница находится в разработке. Для входа или регистрации испозуйте соответствующие кнопки</p>
       <div className='main__btn-box'>
         {isLogged ? (
           <button
@@ -36,8 +36,9 @@ export default function Main() {
       <div style={{ display: 'flex', justifyContent: 'space-around', width: '100%' }}>
         {/* <ProductCard />
         <ProductCard discounted={true} /> */}
-        <ProductCatalog />
-      </div>
+
+      {/* </div> */}
+      <ProductCatalog />
     </div>
   );
 }
