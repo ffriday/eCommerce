@@ -11,7 +11,7 @@ import {
   TokenStore,
   UserAuthOptions,
 } from '@commercetools/sdk-client-v2';
-import { CustomerDraft, MyCustomerSetFirstNameAction, MyCustomerSignin, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import { CustomerDraft, MyCustomerSignin, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import { HTTPResponseCode } from './types';
 import { ByProjectKeyProductsRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/products/by-project-key-products-request-builder';
 import { ByProjectKeyProductsByIDRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/products/by-project-key-products-by-id-request-builder';
@@ -21,6 +21,13 @@ enum LSKeys {
   id = 'customerId',
   token = 'token',
   refreshToken = 'refreshToken',
+}
+
+export enum SortParams {
+  en = 'en-us',
+  ru = 'ru-by',
+  ascending = 'asc',
+  descending = 'desc',
 }
 
 interface IMiddleware {
@@ -44,7 +51,7 @@ export interface IProductsQuery {
 }
 
 interface ISearchPattern {
-  [key: string]: (param: string | IPriceFilter) => string;
+  [key: string]: (param: string | boolean | IPriceFilter) => string;
 }
 
 export interface IPriceFilter {
@@ -55,6 +62,10 @@ export interface IPriceFilter {
 export interface IProductFilter {
   categoryId: string;
   price: IPriceFilter;
+  discount: boolean;
+  sortLang: string;
+  sortName: string;
+  sortPrice: string;
 }
 
 export interface IKey {
@@ -187,16 +198,17 @@ abstract class ApiBase {
   protected static makeFilter = (filter: Partial<IProductFilter>) => {
     const pattern: ISearchPattern = {
       // Add patterns for filtering here:
-      categoryId: (param: string | IPriceFilter): string => `categories.id:"${param}"`,
-      price: (param: string | IPriceFilter): string => {
+      categoryId: (param: string | boolean | IPriceFilter): string => `categories.id:"${param}"`,
+      price: (param: string | boolean | IPriceFilter): string => {
         let from = '*';
         let to = '*';
-        if (typeof param !== 'string') {
+        if (typeof param !== 'string' && typeof param !== 'boolean') {
           if (param.from && param.from > 0) from = param.from.toString();
           if (param.to && param.to > 0) to = param.to.toString();
         }
         return `variants.price.centAmount:range (${from} to ${to})`;
       },
+      discount: (param: string | boolean | IPriceFilter): string => `variants.scopedPriceDiscounted: ${param.toString()}`, // Not working
     };
     return Object.entries(filter).reduce<string[]>((acc, [key, val]) => {
       if (key in pattern) acc.push(pattern[key](val));
@@ -325,6 +337,10 @@ export default class ApiClient extends ApiBase {
   public getProductFiltered = async (queryArgs: Partial<IProductsQuery> = {}, queryFilter: Partial<IProductFilter> = {}) => {
     const api = this.getAvalibleApi();
     const filter = ApiClient.makeFilter(queryFilter);
+    const lang = queryFilter.sortLang || SortParams.en;
+    const sort: string[] = [];
+    if (queryFilter.sortName) sort.push(`name.${lang} ${queryFilter.sortName}`);
+    if (queryFilter.sortPrice) sort.push(`price.${lang} ${queryFilter.sortPrice}`);
     return await api
       .productProjections()
       .search()
@@ -333,7 +349,8 @@ export default class ApiClient extends ApiBase {
           limit: queryArgs.limit,
           offset: queryArgs.offset,
           filter: filter,
-          markMatchingVariants: true,
+          sort: sort,
+          // markMatchingVariants: true,
         },
       })
       .execute();
