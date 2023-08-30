@@ -340,7 +340,7 @@ export default class ApiClient extends ApiBase {
     const lang = queryFilter.sortLang || SortParams.en;
     const sort: string[] = [];
     if (queryFilter.sortName) sort.push(`name.${lang} ${queryFilter.sortName}`);
-    if (queryFilter.sortPrice) sort.push(`price.${lang} ${queryFilter.sortPrice}`);
+    if (queryFilter.sortPrice) sort.push(`price ${queryFilter.sortPrice}`);
     return await api
       .productProjections()
       .search()
