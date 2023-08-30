@@ -24,13 +24,30 @@
       cursor: default;
     }
   }
+  &__label {
+    width: 16px;
+    height: 16px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-color: $primary-white;
+    background-image: url('../../assets/catalog/page-label-disable.svg');
+    &:not(:last-child) {
+      margin-right: 12px;
+    }
+
+    &--active {
+      background-image: url('../../assets/catalog/page-label-active.svg');
+    }
+  }
 }
 .nav-button {
   &__left {
     background-image: url('../../assets/catalog/leftButton.svg');
+    margin-right: 40px;
   }
   &__right {
     background-image: url('../../assets/catalog/rightButton.svg');
+    margin-left: 40px;
   }
 }
 
