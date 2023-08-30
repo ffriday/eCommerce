@@ -4,6 +4,7 @@ import ProductAdapter from '../../constants/productAadapter';
 import { apiContext } from '../App';
 import { ICatalogApiData } from '../../constants/types';
 import CatalogList from './catalogList';
+import CatalogNavigation from './catalogNavigation';
 export default function ProductCatalog() {
   const limit = 2;
   const startPage = 1;
@@ -38,13 +39,14 @@ export default function ProductCatalog() {
     <section className='catalog__section'>
       <div className='container'>
         <CatalogList catalogData={catalogData} />
-        <nav className='catalog__navigation'>
-          <button className='button catalog__button nav-button__left' onClick={prevButtonHandler} disabled={page === startPage}></button>
-          <button
-            className='button catalog__button nav-button__right'
-            onClick={nextButtonHandler}
-            disabled={page === getTotalPageCount(catalogData.totalCount)}></button>
-        </nav>
+        <CatalogNavigation
+          catalogData={catalogData}
+          startPage={startPage}
+          page={page}
+          limit={limit}
+          prevHandler={prevButtonHandler}
+          nextHandler={nextButtonHandler}
+        />
       </div>
     </section>
   );

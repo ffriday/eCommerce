@@ -1,0 +1,27 @@
+import { memo } from 'react';
+import './catalog.scss';
+import { ICatalogApiData } from '../../constants/types';
+
+interface ICatalogNavigation {
+  catalogData: ICatalogApiData;
+  startPage: number;
+  page: number;
+  limit: number;
+  prevHandler: () => void;
+  nextHandler: () => void;
+}
+
+const CatalogNavigation = ({ catalogData, startPage, page, limit, prevHandler, nextHandler }: ICatalogNavigation) => {
+  const getTotalPageCount = (totalCount: number | undefined): number => Math.ceil(totalCount ? totalCount / limit : 1);
+
+  return (
+    <nav className='catalog__navigation'>
+      <button className='button catalog__button nav-button__left' onClick={prevHandler} disabled={page === startPage}></button>
+      <button
+        className='button catalog__button nav-button__right'
+        onClick={nextHandler}
+        disabled={page === getTotalPageCount(catalogData.totalCount)}></button>
+    </nav>
+  );
+};
+export default memo(CatalogNavigation);
