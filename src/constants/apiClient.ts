@@ -43,6 +43,10 @@ export interface IProductsQuery {
   offset: number;
 }
 
+export interface IProductsSearch extends IProductsQuery {
+  categoryId: string;
+}
+
 export interface IKey {
   key: string;
 }
@@ -176,7 +180,7 @@ export default class ApiClient extends ApiBase {
   private passwordApi: ByProjectKeyRequestBuilder | null = null; // Can't initialize without password
   private anonApi: ByProjectKeyRequestBuilder;
   // Token API
-  private _categories: ICategory[] | null = null;
+  private _categories: ICategory | null = null;
 
   constructor(env: IeCommerceEnv) {
     super(env);
@@ -282,26 +286,27 @@ export default class ApiClient extends ApiBase {
   private getCategories = async () => {
     const api = this.getAvalibleApi();
     const res = await api.categories().get().execute();
-    this._categories = res.body.results.reduce<ICategory[]>((acc, { key, id }) => {
-      if (key) acc.push({ [key]: id });
+    this._categories = res.body.results.reduce<ICategory>((acc, { key, id }) => {
+      if (key) acc[key] = id;
       return acc;
-    }, []);
+    }, {});
   };
 
-  public test = async () => {
+  public getProductFiltered = async (queryArgs: Partial<IProductsSearch> = {}) => {
     const api = this.getAvalibleApi();
-    // return await api.productTypes().get().execute();
-    return await api.categories().get().execute();
-    // return await api.productTypes().withKey({key: 'shirts'}).get().execute();
-    // return await api.productProjections().search().get({
-    //   queryArgs: {
-    //     // limit: 5,
-    //     // offset: 0,
-    //     // filter: 'categories.id:"66ce170c-bfbd-4fe0-b0c7-9826d8aba68e"',
-    //     filter: 'categories.key:"flowers"',
-    //     // markMatchingVariants: true
-    //   }
-    // }).execute();
+    const filter = `categories.id:"${queryArgs.categoryId}"`;
+    return await api
+      .productProjections()
+      .search()
+      .get({
+        queryArgs: {
+          limit: queryArgs.limit,
+          offset: queryArgs.offset,
+          filter: filter,
+          markMatchingVariants: true,
+        },
+      })
+      .execute();
   };
 }
 
