@@ -201,7 +201,7 @@ const RegisterForm = () => {
   };
 
   useEffect(() => {
-    if (api.userData.isLogged) navigate('/');
+    if (api.api.userData.isLogged) navigate('/');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

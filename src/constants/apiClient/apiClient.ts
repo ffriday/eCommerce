@@ -26,8 +26,8 @@ export default class ApiClient extends ApiBase {
 
   constructor(env: IeCommerceEnv) {
     super(env);
-    this.authApi = this.createApi({ auth: this.authMiddleware });
-    this.anonApi = this.createApi({ anon: this.anonymousMiddleware });
+    this.authApi = this.api.createApi({ auth: this.api.authMiddleware });
+    this.anonApi = this.api.createApi({ anon: this.api.anonymousMiddleware });
 
     this.isUserLogged(); // Check if user has id and token in LocalStorage and load it touserData
 
@@ -54,8 +54,8 @@ export default class ApiClient extends ApiBase {
 
   public loginCustomer = async (email: string, password: string) => {
     this.user = { username: email, password: password };
-    this.passwordMiddleware = this.createAuthPasswordMiddlewareOptions(this.user);
-    this.passwordApi = this.createApi({ password: this.passwordMiddleware });
+    this.api.passwordMiddleware = this.api.createAuthPasswordMiddlewareOptions(this.user);
+    this.passwordApi = this.api.createApi({ password: this.api.passwordMiddleware });
     const signIn: MyCustomerSignin = {
       email,
       password,
@@ -69,11 +69,11 @@ export default class ApiClient extends ApiBase {
       })
       .execute();
     if (res.statusCode === HTTPResponseCode.logged) {
-      this.userData = {
+      this.api.userData = {
         isLogged: true,
         id: res.body.customer.id,
-        token: this.token.myChache.token,
-        refreshToken: this.token.myChache.refreshToken?.split(':')[1] || '',
+        token: this.api.token.myChache.token,
+        refreshToken: this.api.token.myChache.refreshToken?.split(':')[1] || '',
       };
     }
     return res;
@@ -88,17 +88,17 @@ export default class ApiClient extends ApiBase {
       this._userData.token = token;
       this._userData.isLogged = true;
       this._userData.refreshToken = refreshToken;
-      this.tokenApi = this.createApi({ token: this.existingTokenMiddleware, authorization: `Bearer ${this._userData.token}` });
+      this.tokenApi = this.api.createApi({ token: this.api.existingTokenMiddleware, authorization: `Bearer ${this._userData.token}` });
     }
   };
 
   public logOutCustomer = async () => {
     this.user = { username: '', password: '' };
-    this.userData = { isLogged: false, id: '', token: '', refreshToken: '' };
-    this.passwordMiddleware = null;
+    this.api.userData = { isLogged: false, id: '', token: '', refreshToken: '' };
+    this.api.passwordMiddleware = null;
     this.passwordApi = null;
-    this.token.myChache.token = '';
-    this.token.myChache.expirationTime = 0;
+    this.api.token.myChache.token = '';
+    this.api.token.myChache.expirationTime = 0;
     window.localStorage.removeItem(LSKeys.id);
     window.localStorage.removeItem(LSKeys.token);
     window.localStorage.removeItem(LSKeys.refreshToken);

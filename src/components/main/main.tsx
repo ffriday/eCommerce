@@ -5,7 +5,7 @@ import { apiContext } from '../App';
 
 export default function Main() {
   const api = useContext(apiContext);
-  const [isLogged, setIsLogged] = useState(api.userData.isLogged);
+  const [isLogged, setIsLogged] = useState(api.api.userData.isLogged);
 
   return (
     <div className='main'>
