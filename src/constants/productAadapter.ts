@@ -3,7 +3,7 @@ import { language } from './types';
 import { GetPrice } from './types';
 import { ClientResponse, Product } from '@commercetools/platform-sdk';
 import { ICardApiData } from './types';
-import { IProductsQuery } from './apiClient';
+import { IProductsQuery } from './apiClientBase';
 interface IGetProductData {
   productVariant?: number;
 }
