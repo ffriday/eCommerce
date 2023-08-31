@@ -1,17 +1,11 @@
 import { IeCommerceEnv } from './../ecommerce.env';
 import { UserAuthOptions } from '@commercetools/sdk-client-v2';
-import { IFilterPattern, IProductFilter, ISearchPattern, IUserData, SortParams } from './apiClientTypes';
+import { IFilterPattern, IProductFilter, ISearchPattern, SortParams } from './apiClientTypes';
 import Api from './apiBuilder';
 
 export abstract class ApiBase {
   private ENV: IeCommerceEnv;
   protected user: UserAuthOptions | null = null;
-  protected _userData: IUserData = {
-    isLogged: false,
-    id: '',
-    token: '',
-    refreshToken: '',
-  };
 
   public api: Api;
 

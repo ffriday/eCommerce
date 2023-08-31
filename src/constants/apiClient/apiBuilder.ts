@@ -12,15 +12,22 @@ import {
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import { IMiddleware, IUserData, LSKeys } from './apiClientTypes';
 import MyTokenChache from './myTokenChache';
+import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 
 export default class Api {
   private ENV: IeCommerceEnv;
+  public authApi: ByProjectKeyRequestBuilder;
+  public passwordApi: ByProjectKeyRequestBuilder | null = null; // Can't initialize without password
+  public anonApi: ByProjectKeyRequestBuilder;
+  public tokenApi: ByProjectKeyRequestBuilder | null = null; // Can't initialize without password
+
   protected _userData: IUserData = {
     isLogged: false,
     id: '',
     token: '',
     refreshToken: '',
   };
+
   public token: MyTokenChache = new MyTokenChache(); // Epmty token object for registred
   public tokenAnon: MyTokenChache = new MyTokenChache(); // Epmty token object for anonymus
   // Middleware
@@ -39,6 +46,9 @@ export default class Api {
     this.anonymousMiddleware = this.createAnonymousMiddlewareOptions();
     this.refreshTokenMiddleware = this.createRefreshTokenMiddlewareOptions();
     this.existingTokenMiddleware = this.createExistingTokenMiddlewareOptions();
+    // Init API
+    this.authApi = this.createApi({ auth: this.authMiddleware });
+    this.anonApi = this.createApi({ anon: this.anonymousMiddleware });
   }
 
   private createHttpMiddlewareOptions = (): HttpMiddlewareOptions => {
@@ -131,4 +141,21 @@ export default class Api {
   public get userData(): IUserData {
     return this._userData;
   }
+
+  public getAvalibleApi = () => {
+    // Get avalible api:
+    // Password => Token => Anonymus => Error
+    let api = null;
+    if (this.passwordApi) {
+      api = this.passwordApi;
+    } else if (this.tokenApi) {
+      api = this.tokenApi;
+    } else if (this.anonApi) {
+      api = this.anonApi;
+    }
+
+    if (!api) throw Error('No avalible API');
+
+    return api;
+  };
 }

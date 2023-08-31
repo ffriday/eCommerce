@@ -1,4 +1,3 @@
-import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import { IeCommerceEnv } from '../ecommerce.env';
 import { QueryParam } from '@commercetools/sdk-client-v2';
 import { CustomerDraft, MyCustomerSetFirstNameAction, MyCustomerSignin, MyCustomerUpdate } from '@commercetools/platform-sdk';
@@ -17,20 +16,12 @@ import {
 import { ApiBase } from './apiClientBase';
 
 export default class ApiClient extends ApiBase {
-  private authApi: ByProjectKeyRequestBuilder;
-  private passwordApi: ByProjectKeyRequestBuilder | null = null; // Can't initialize without password
-  private anonApi: ByProjectKeyRequestBuilder;
-  private tokenApi: ByProjectKeyRequestBuilder | null = null; // Can't initialize without password
-  // Token API
   private _categories: ICategory | null = null;
 
   constructor(env: IeCommerceEnv) {
     super(env);
-    this.authApi = this.api.createApi({ auth: this.api.authMiddleware });
-    this.anonApi = this.api.createApi({ anon: this.api.anonymousMiddleware });
 
     this.isUserLogged(); // Check if user has id and token in LocalStorage and load it touserData
-
     this.getCategories();
   }
 
@@ -43,7 +34,7 @@ export default class ApiClient extends ApiBase {
   }
 
   public registerCusomer = async (customer: CustomerDraft) => {
-    const res = await this.authApi
+    const res = await this.api.authApi
       .customers()
       .post({
         body: customer,
@@ -55,13 +46,13 @@ export default class ApiClient extends ApiBase {
   public loginCustomer = async (email: string, password: string) => {
     this.user = { username: email, password: password };
     this.api.passwordMiddleware = this.api.createAuthPasswordMiddlewareOptions(this.user);
-    this.passwordApi = this.api.createApi({ password: this.api.passwordMiddleware });
+    this.api.passwordApi = this.api.createApi({ password: this.api.passwordMiddleware });
     const signIn: MyCustomerSignin = {
       email,
       password,
     };
 
-    const res = await this.passwordApi
+    const res = await this.api.passwordApi
       .me()
       .login()
       .post({
@@ -84,11 +75,11 @@ export default class ApiClient extends ApiBase {
     const token = window.localStorage.getItem(LSKeys.token);
     const refreshToken = window.localStorage.getItem(LSKeys.refreshToken) || '';
     if (id && token) {
-      this._userData.id = id;
-      this._userData.token = token;
-      this._userData.isLogged = true;
-      this._userData.refreshToken = refreshToken;
-      this.tokenApi = this.api.createApi({ token: this.api.existingTokenMiddleware, authorization: `Bearer ${this._userData.token}` });
+      this.api.userData.id = id;
+      this.api.userData.token = token;
+      this.api.userData.isLogged = true;
+      this.api.userData.refreshToken = refreshToken;
+      this.api.tokenApi = this.api.createApi({ token: this.api.existingTokenMiddleware, authorization: `Bearer ${this.api.userData.token}` });
     }
   };
 
@@ -96,7 +87,7 @@ export default class ApiClient extends ApiBase {
     this.user = { username: '', password: '' };
     this.api.userData = { isLogged: false, id: '', token: '', refreshToken: '' };
     this.api.passwordMiddleware = null;
-    this.passwordApi = null;
+    this.api.passwordApi = null;
     this.api.token.myChache.token = '';
     this.api.token.myChache.expirationTime = 0;
     window.localStorage.removeItem(LSKeys.id);
@@ -104,25 +95,8 @@ export default class ApiClient extends ApiBase {
     window.localStorage.removeItem(LSKeys.refreshToken);
   };
 
-  public getAvalibleApi = () => {
-    // Get avalible api:
-    // Password => Token => Anonymus => Error
-    let api = null;
-    if (this.passwordApi) {
-      api = this.passwordApi;
-    } else if (this.tokenApi) {
-      api = this.tokenApi;
-    } else if (this.anonApi) {
-      api = this.anonApi;
-    }
-
-    if (!api) throw Error('No avalible API');
-
-    return api;
-  };
-
   public getProducts = async (queryArgs: Partial<IProductsQuery> = {}) => {
-    const api = this.getAvalibleApi();
+    const api = this.api.getAvalibleApi();
     return await api
       .products()
       .get({
@@ -132,7 +106,7 @@ export default class ApiClient extends ApiBase {
   };
 
   public getProduct = async (param: IKey | IId) => {
-    const api = this.getAvalibleApi();
+    const api = this.api.getAvalibleApi();
     let result: MyProjectKeyRequestBuilder = api.products();
     if ('id' in param) {
       result = result.withId({ ID: param.id });
@@ -143,7 +117,7 @@ export default class ApiClient extends ApiBase {
   };
 
   private getCategories = async () => {
-    const api = this.getAvalibleApi();
+    const api = this.api.getAvalibleApi();
     const res = await api.categories().get().execute();
     this._categories = res.body.results.reduce<ICategory>((acc, { key, id }) => {
       if (key) acc[key] = id;
@@ -152,7 +126,7 @@ export default class ApiClient extends ApiBase {
   };
 
   public getProductFiltered = async (queryArgs: Partial<IProductsQuery> = {}, queryFilter: Partial<IProductFilter> = {}) => {
-    const api = this.getAvalibleApi();
+    const api = this.api.getAvalibleApi();
     const filter = ApiClient.makeFilter(queryFilter);
     const lang = queryFilter.lang || SortParams.sortEN;
     const sort: string[] = [];
@@ -177,7 +151,7 @@ export default class ApiClient extends ApiBase {
   };
 
   public getProductSearch = async (queryArgs: Partial<IProductsQuery> = {}, querySearch: Partial<IProductSearch> = {}) => {
-    const api = this.getAvalibleApi();
+    const api = this.api.getAvalibleApi();
     const lang = querySearch.lang || SortParams.searchEN;
     const searchKey = `searchKeywords.${lang}`;
     querySearch.keyword = querySearch.keyword || '';
@@ -199,7 +173,7 @@ export default class ApiClient extends ApiBase {
   };
 
   public getCustomerInfo = async () => {
-    const api = this.getAvalibleApi();
+    const api = this.api.getAvalibleApi();
     return await api.me().get().execute();
   };
 
@@ -209,7 +183,7 @@ export default class ApiClient extends ApiBase {
   };
 
   public editCustomer = async (customer: Partial<CustomerDraft>) => {
-    const api = this.getAvalibleApi();
+    const api = this.api.getAvalibleApi();
     const version = await this.getCustomerVersion();
 
     const changeNameAction: MyCustomerSetFirstNameAction = {
