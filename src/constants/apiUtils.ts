@@ -121,7 +121,7 @@ export const changeCustomer = (api: ByProjectKeyRequestBuilder, token: string) =
   };
 
   const customerUpdate: MyCustomerUpdate = {
-    version: 6,
+    version: 28,
     actions: [changeNameAction],
   };
 

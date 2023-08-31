@@ -1,7 +1,7 @@
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import { IeCommerceEnv } from './ecommerce.env';
 import { QueryParam } from '@commercetools/sdk-client-v2';
-import { CustomerDraft, MyCustomerSignin } from '@commercetools/platform-sdk';
+import { CustomerDraft, MyCustomerSetFirstNameAction, MyCustomerSignin, MyCustomerUpdate } from '@commercetools/platform-sdk';
 import { HTTPResponseCode } from './types';
 import {
   ApiBase,
@@ -197,4 +197,29 @@ export default class ApiClient extends ApiBase {
     if (res.body && res.body[`searchKeywords.${lang}`]) keywords = res.body[`searchKeywords.${lang}`].map((val) => val.text);
     return keywords;
   };
+
+  public getCustomerInfo = async () => {
+    const api = this.getAvalibleApi();
+    return await api.me().get().execute();
+  };
+
+  // public editCustomer = (customer: CustomerDraft) => {
+  //   const api = this.getAvalibleApi();
+  //   const changeNameAction: MyCustomerSetFirstNameAction = {
+  //     action: 'setFirstName',
+  //     firstName: 'ROMAN',
+  //   };
+
+  //   const customerUpdate: MyCustomerUpdate = {
+  //     version: 27,
+  //     actions: [changeNameAction],
+  //   };
+
+  //   return api
+  //     .me()
+  //     .post({
+  //       body: customerUpdate,
+  //     })
+  //     .execute();
+  // };
 }
