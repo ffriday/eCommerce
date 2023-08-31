@@ -104,7 +104,7 @@ export default class ApiClient extends ApiBase {
     window.localStorage.removeItem(LSKeys.refreshToken);
   };
 
-  private getAvalibleApi = () => {
+  public getAvalibleApi = () => {
     // Get avalible api:
     // Password => Token => Anonymus => Error
     let api = null;

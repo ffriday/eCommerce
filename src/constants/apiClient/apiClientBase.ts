@@ -7,12 +7,11 @@ import {
   HttpMiddlewareOptions,
   PasswordAuthMiddlewareOptions,
   RefreshAuthMiddlewareOptions,
-  TokenCache,
-  TokenStore,
   UserAuthOptions,
 } from '@commercetools/sdk-client-v2';
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import { IFilterPattern, IMiddleware, IProductFilter, ISearchPattern, IUserData, LSKeys, SortParams } from './apiClientTypes';
+import MyTokenChache from './myTokenChache';
 
 export abstract class ApiBase {
   private ENV: IeCommerceEnv;
@@ -167,18 +166,4 @@ export abstract class ApiBase {
   // protected static createChangeActions = () => {
 
   // }
-}
-
-export class MyTokenChache implements TokenCache {
-  myChache: TokenStore = {
-    token: '',
-    refreshToken: '',
-    expirationTime: 0,
-  };
-  get(): TokenStore {
-    return this.myChache;
-  }
-  set(cache: TokenStore): void {
-    this.myChache = cache;
-  }
 }
