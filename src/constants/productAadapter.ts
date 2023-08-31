@@ -1,10 +1,10 @@
-import ApiClient from './apiClient';
+import ApiClient from './apiClient/apiClient';
 import { language } from './types';
 import { GetPrice } from './types';
 import { ClientResponse, Product } from '@commercetools/platform-sdk';
 import { ICardApiData } from './types';
-import { IProductsQuery } from './apiClient';
 import { ICatalogApiData } from './types';
+import { IProductsQuery } from './apiClient/apiClientTypes';
 
 interface IGetProductData {
   productVariant?: number;
