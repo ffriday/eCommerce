@@ -20,6 +20,7 @@ export default class ApiClient extends ApiBase {
   private authApi: ByProjectKeyRequestBuilder;
   private passwordApi: ByProjectKeyRequestBuilder | null = null; // Can't initialize without password
   private anonApi: ByProjectKeyRequestBuilder;
+  private tokenApi: ByProjectKeyRequestBuilder | null = null; // Can't initialize without password
   // Token API
   private _categories: ICategory | null = null;
 
@@ -28,6 +29,8 @@ export default class ApiClient extends ApiBase {
     this.authApi = this.createApi({ auth: this.authMiddleware });
     this.anonApi = this.createApi({ anon: this.anonymousMiddleware });
 
+    this.isUserLogged(); // Check if user has id and token in LocalStorage and load it touserData
+
     this.getCategories();
   }
 
@@ -35,7 +38,7 @@ export default class ApiClient extends ApiBase {
     if (this._categories) {
       return this._categories;
     } else {
-      throw new Error('Categories not found');
+      throw new Error('Categories not found'); // change to empty value
     }
   }
 
@@ -70,10 +73,23 @@ export default class ApiClient extends ApiBase {
         isLogged: true,
         id: res.body.customer.id,
         token: this.token.myChache.token,
-        refreshToken: this.token.myChache.refreshToken || '',
+        refreshToken: this.token.myChache.refreshToken?.split(':')[1] || '',
       };
     }
     return res;
+  };
+
+  protected isUserLogged = () => {
+    const id = window.localStorage.getItem(LSKeys.id);
+    const token = window.localStorage.getItem(LSKeys.token);
+    const refreshToken = window.localStorage.getItem(LSKeys.refreshToken) || '';
+    if (id && token) {
+      this._userData.id = id;
+      this._userData.token = token;
+      this._userData.isLogged = true;
+      this._userData.refreshToken = refreshToken;
+      this.tokenApi = this.createApi({ token: this.existingTokenMiddleware, authorization: `Bearer ${this._userData.token}` });
+    }
   };
 
   public logOutCustomer = async () => {
@@ -94,6 +110,8 @@ export default class ApiClient extends ApiBase {
     let api = null;
     if (this.passwordApi) {
       api = this.passwordApi;
+    } else if (this.tokenApi) {
+      api = this.tokenApi;
     } else if (this.anonApi) {
       api = this.anonApi;
     }
@@ -179,23 +197,4 @@ export default class ApiClient extends ApiBase {
     if (res.body && res.body[`searchKeywords.${lang}`]) keywords = res.body[`searchKeywords.${lang}`].map((val) => val.text);
     return keywords;
   };
-
-  // public getProductSearchT = async (queryArgs: Partial<IProductsQuery> = {}, querySearch: Partial<IProductSearch> = {}) => {
-  //   const api = this.getAvalibleApi();
-  //   const lang = querySearch.lang || SortParams.searchEN;
-  //   const searchKey = `text.${lang}`;
-  //   querySearch.keyword = querySearch.keyword || '';
-  //   return await api
-  //     .productProjections()
-  //     .search()
-  //     .get({
-  //       queryArgs: {
-  //         [searchKey]: [querySearch.keyword],
-  //         fuzzy: true,
-  //         limit: queryArgs.limit,
-  //         offset: queryArgs.offset,
-  //       },
-  //     })
-  //     .execute();
-  // };
 }

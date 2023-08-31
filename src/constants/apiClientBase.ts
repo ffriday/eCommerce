@@ -3,6 +3,7 @@ import {
   AnonymousAuthMiddlewareOptions,
   AuthMiddlewareOptions,
   ClientBuilder,
+  ExistingTokenMiddlewareOptions,
   HttpMiddlewareOptions,
   PasswordAuthMiddlewareOptions,
   QueryParam,
@@ -35,7 +36,9 @@ export interface IMiddleware {
   auth: AuthMiddlewareOptions;
   password: PasswordAuthMiddlewareOptions;
   anon: AnonymousAuthMiddlewareOptions;
-  token: RefreshAuthMiddlewareOptions;
+  token: ExistingTokenMiddlewareOptions;
+  // token: RefreshAuthMiddlewareOptions;
+  authorization?: string;
 }
 
 export interface IUserData {
@@ -101,20 +104,21 @@ export type MyProjectKeyRequestBuilder =
 export abstract class ApiBase {
   private ENV: IeCommerceEnv;
   protected user: UserAuthOptions | null = null;
-  private _userData: IUserData = {
+  protected _userData: IUserData = {
     isLogged: false,
     id: '',
     token: '',
     refreshToken: '',
   };
-  protected token: MyTokenChache = new MyTokenChache(); // Epmty token object
-  protected tokenAnon: MyTokenChache = new MyTokenChache(); // Epmty token object
+  protected token: MyTokenChache = new MyTokenChache(); // Epmty token object for registred
+  protected tokenAnon: MyTokenChache = new MyTokenChache(); // Epmty token object for anonymus
   // Middleware
   private httpMiddleware: HttpMiddlewareOptions;
   protected authMiddleware: AuthMiddlewareOptions;
   protected passwordMiddleware: PasswordAuthMiddlewareOptions | null = null; // Can't initialize without password
   protected anonymousMiddleware: AnonymousAuthMiddlewareOptions;
   protected refreshTokenMiddleware: RefreshAuthMiddlewareOptions;
+  protected existingTokenMiddleware: ExistingTokenMiddlewareOptions;
 
   constructor(env: IeCommerceEnv) {
     this.ENV = env;
@@ -123,7 +127,7 @@ export abstract class ApiBase {
     this.authMiddleware = this.createAuthMiddlewareOptions();
     this.anonymousMiddleware = this.createAnonymousMiddlewareOptions();
     this.refreshTokenMiddleware = this.createRefreshTokenMiddlewareOptions();
-    this.isUserLogged(); // Check if user has id and token in LocalStorage and load it touserData
+    this.existingTokenMiddleware = this.createExistingTokenMiddlewareOptions();
   }
 
   private createHttpMiddlewareOptions = (): HttpMiddlewareOptions => {
@@ -184,9 +188,15 @@ export abstract class ApiBase {
         clientId: this.ENV.CTP_CLIENT_ID,
         clientSecret: this.ENV.CTP_CLIENT_SECRET,
       },
-      refreshToken: 'bXvTyxc5yuebdvwTwyXn==',
+      refreshToken: this._userData.refreshToken,
       tokenCache: this.token,
       fetch: fetch,
+    };
+  };
+
+  protected createExistingTokenMiddlewareOptions = (): ExistingTokenMiddlewareOptions => {
+    return {
+      force: true,
     };
   };
 
@@ -196,20 +206,9 @@ export abstract class ApiBase {
     client = middleware.auth ? client.withClientCredentialsFlow(middleware.auth) : client;
     client = middleware.password ? client.withPasswordFlow(middleware.password) : client;
     client = middleware.anon ? client.withAnonymousSessionFlow(middleware.anon) : client;
-    // TODO add toketn
+    console.log(middleware.authorization, middleware.token);
+    client = middleware.token && middleware.authorization ? client.withExistingTokenFlow(middleware.authorization, middleware.token) : client;
     return createApiBuilderFromCtpClient(client.build()).withProjectKey({ projectKey: this.ENV.CTP_PROJECT_KEY });
-  };
-
-  protected isUserLogged = () => {
-    const id = window.localStorage.getItem(LSKeys.id);
-    const token = window.localStorage.getItem(LSKeys.token);
-    const refreshToken = window.localStorage.getItem(LSKeys.refreshToken) || '';
-    if (id && token) {
-      this._userData.id = id;
-      this._userData.token = token;
-      this._userData.isLogged = true;
-      this._userData.refreshToken = refreshToken;
-    }
   };
 
   protected set userData(data: IUserData) {
