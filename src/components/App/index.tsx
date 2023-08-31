@@ -7,7 +7,7 @@ import Main from '../main/main';
 
 import './styles.scss';
 import { createContext } from 'react';
-import ApiClient from '../../constants/apiClient';
+import ApiClient from '../../constants/apiClient/apiClient';
 import { eCommerceEnv } from '../../constants/ecommerce.env';
 import ProductCatalog from '../catalog/catalog';
 

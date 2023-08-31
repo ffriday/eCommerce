@@ -31,7 +31,7 @@ const LoginForm = () => {
   const api = useContext(apiContext);
 
   useEffect(() => {
-    if (window.localStorage.getItem('customerID')) navigation('/');
+    if (api.userData.isLogged) navigation('/');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

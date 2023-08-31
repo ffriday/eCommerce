@@ -1,10 +1,9 @@
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
-import { IeCommerceEnv } from './ecommerce.env';
+import { IeCommerceEnv } from '../ecommerce.env';
 import { QueryParam } from '@commercetools/sdk-client-v2';
 import { CustomerDraft, MyCustomerSetFirstNameAction, MyCustomerSignin, MyCustomerUpdate } from '@commercetools/platform-sdk';
-import { HTTPResponseCode } from './types';
+import { HTTPResponseCode } from '../types';
 import {
-  ApiBase,
   ICategory,
   IId,
   IKey,
@@ -14,7 +13,8 @@ import {
   LSKeys,
   MyProjectKeyRequestBuilder,
   SortParams,
-} from './apiClientBase';
+} from './apiClientTypes';
+import { ApiBase } from './apiClientBase';
 
 export default class ApiClient extends ApiBase {
   private authApi: ByProjectKeyRequestBuilder;
@@ -203,23 +203,30 @@ export default class ApiClient extends ApiBase {
     return await api.me().get().execute();
   };
 
-  // public editCustomer = (customer: CustomerDraft) => {
-  //   const api = this.getAvalibleApi();
-  //   const changeNameAction: MyCustomerSetFirstNameAction = {
-  //     action: 'setFirstName',
-  //     firstName: 'ROMAN',
-  //   };
+  private getCustomerVersion = async () => {
+    const customer = await this.getCustomerInfo();
+    return customer.body.version;
+  };
 
-  //   const customerUpdate: MyCustomerUpdate = {
-  //     version: 27,
-  //     actions: [changeNameAction],
-  //   };
+  public editCustomer = async (customer: Partial<CustomerDraft>) => {
+    const api = this.getAvalibleApi();
+    const version = await this.getCustomerVersion();
 
-  //   return api
-  //     .me()
-  //     .post({
-  //       body: customerUpdate,
-  //     })
-  //     .execute();
-  // };
+    const changeNameAction: MyCustomerSetFirstNameAction = {
+      action: 'setFirstName',
+      firstName: 'ROMAN1',
+    };
+
+    const customerUpdate: MyCustomerUpdate = {
+      version: version,
+      actions: [changeNameAction],
+    };
+
+    return api
+      .me()
+      .post({
+        body: customerUpdate,
+      })
+      .execute();
+  };
 }
