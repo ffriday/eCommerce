@@ -7,8 +7,9 @@ import CatalogList from './catalogList';
 import CatalogNavigation from './catalogNavigation';
 export default function ProductCatalog() {
   const limit = 2;
-  const storedPage = localStorage.getItem('page');
-  const startPage = storedPage ? Number(storedPage) : 1;
+  const startPage = 1;
+  // const storedPage = localStorage.getItem('page');
+  // const startPage = storedPage ? Number(storedPage) : 1;
   const [catalogData, setCatalogData] = useState<ICatalogApiData>({ products: [], totalCount: 0 });
   const [page, setPage] = useState<number>(startPage);
 
@@ -20,7 +21,7 @@ export default function ProductCatalog() {
     const nextPage: number = current + 1;
     const totalCount = catalogData.products ? getTotalPageCount(catalogData.totalCount) : 0;
     const newPage = nextPage <= totalCount ? nextPage : current;
-    localStorage.setItem('page', `${newPage}`);
+    // localStorage.setItem('page', `${newPage}`);
     setPage(newPage), [page, catalogData];
   };
   const prevButtonHandler = () => {
