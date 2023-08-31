@@ -1,12 +1,6 @@
 import { IeCommerceEnv } from '../ecommerce.env';
 import { QueryParam } from '@commercetools/sdk-client-v2';
-import {
-  CustomerDraft,
-  MyCustomerSetFirstNameAction,
-  MyCustomerSignin,
-  MyCustomerUpdate,
-  MyCustomerUpdateAction,
-} from '@commercetools/platform-sdk';
+import { CustomerDraft, MyCustomerSignin, MyCustomerUpdate, MyCustomerUpdateAction } from '@commercetools/platform-sdk';
 import { HTTPResponseCode } from '../types';
 import {
   ICategory,
