@@ -211,4 +211,21 @@ export default class ApiClient extends ApiBase {
       })
       .execute();
   };
+
+  public changePassword = async (oldPassword: string, newPassword: string) => {
+    const api = this.api.getAvalibleApi();
+    const version = await this.getCustomerVersion();
+
+    return api
+      .me()
+      .password()
+      .post({
+        body: {
+          version: version,
+          currentPassword: oldPassword,
+          newPassword: newPassword,
+        },
+      })
+      .execute();
+  };
 }
