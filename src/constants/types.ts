@@ -192,6 +192,7 @@ export enum HTTPResponseCode {
 //   lastModifiedAt: string;
 // }
 export interface ICardApiData {
+  id: string;
   image: string | undefined;
   name: string;
   description: string | undefined;
@@ -203,4 +204,21 @@ export enum language {
 }
 
 export type GetPrice = (centAmount?: number, fractionDigits?: number) => string;
+
+export interface ICatalogApiData {
+  products: ICardApiData[];
+  totalCount: number | undefined;
+}
 // =====================================================
+export interface Pagination {
+  nextPageHandler: () => void;
+  prevPageHandler: () => void;
+  navigation?: {
+    current: number;
+    total: number;
+  };
+  disable: {
+    left: boolean;
+    right: boolean;
+  };
+}

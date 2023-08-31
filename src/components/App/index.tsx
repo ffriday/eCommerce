@@ -9,6 +9,7 @@ import './styles.scss';
 import { createContext } from 'react';
 import ApiClient from '../../constants/apiClient';
 import { eCommerceEnv } from '../../constants/ecommerce.env';
+import ProductCatalog from '../catalog/catalog';
 
 const api = new ApiClient(eCommerceEnv);
 export const apiContext = createContext(api);
@@ -22,6 +23,7 @@ export default function App() {
           <Route path='/' element={<Main />} />
           <Route path='/login' element={<LoginForm />} />
           <Route path='/registration' element={<RegisterForm />} />
+          <Route path='/catalog' element={<ProductCatalog />} />
           <Route path='*' element={<Notfound />} />
         </Routes>
       </BrowserRouter>
