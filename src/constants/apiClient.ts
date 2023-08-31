@@ -53,8 +53,12 @@ export interface IProductsQuery {
   offset: number;
 }
 
+interface IFilterPattern {
+  param: string | string[] | boolean | IPriceFilter;
+}
+
 interface ISearchPattern {
-  [key: string]: (param: string | boolean | IPriceFilter) => string;
+  [key: string]: (param: IFilterPattern) => string[];
 }
 
 export interface IPriceFilter {
@@ -72,6 +76,7 @@ export interface IProductFilter extends IBaseFilter {
   sortName: string;
   sortPrice: string;
   discount: boolean;
+  searchKeywords: string[];
 }
 
 export interface IProductSearch extends IBaseFilter {
@@ -222,21 +227,30 @@ abstract class ApiBase {
   protected static makeFilter = (filter: Partial<IProductFilter>) => {
     const pattern: ISearchPattern = {
       // Add patterns for filtering here:
-      categoryId: (param: string | boolean | IPriceFilter): string => `categories.id:"${param}"`,
-      price: (param: string | boolean | IPriceFilter): string => {
+      categoryId: ({ param }: IFilterPattern): string[] => [`categories.id:"${param}"`],
+      searchKeywords: ({ param }: IFilterPattern): string[] => {
+        let res: string[] = [];
+        if (Array.isArray(param)) {
+          res = param.map((val) => `searchKeywords.${SortParams.searchEN}.text:"${val}"`);
+        }
+        return res;
+      },
+      price: ({ param }: IFilterPattern): string[] => {
         let from = '*';
         let to = '*';
-        if (typeof param !== 'string' && typeof param !== 'boolean') {
+        if (typeof param === 'object' && !Array.isArray(param)) {
           if (param.from && param.from > 0) from = param.from.toString();
           if (param.to && param.to > 0) to = param.to.toString();
         }
-        return `variants.price.centAmount:range (${from} to ${to})`;
+        return [`variants.price.centAmount:range (${from} to ${to})`];
       },
     };
-    return Object.entries(filter).reduce<string[]>((acc, [key, val]) => {
-      if (key in pattern) acc.push(pattern[key](val));
-      return acc;
-    }, []);
+    return Object.entries(filter)
+      .reduce<string[][]>((acc, [key, val]) => {
+        if (key in pattern) acc.push(pattern[key]({ param: val }));
+        return acc;
+      }, [])
+      .flat();
   };
 }
 
@@ -387,7 +401,7 @@ export default class ApiClient extends ApiBase {
     const lang = querySearch.lang || SortParams.searchEN;
     const searchKey = `searchKeywords.${lang}`;
     querySearch.keyword = querySearch.keyword || '';
-    return await api
+    const res = await api
       .productProjections()
       .suggest()
       .get({
@@ -399,31 +413,29 @@ export default class ApiClient extends ApiBase {
         },
       })
       .execute();
+    let keywords: string[] = [];
+    if (res.body && res.body[`searchKeywords.${lang}`]) keywords = res.body[`searchKeywords.${lang}`].map((val) => val.text);
+    return keywords;
   };
 
-  public getProductSearchT = async (queryArgs: Partial<IProductsQuery> = {}, querySearch: Partial<IProductSearch> = {}) => {
-    const api = this.getAvalibleApi();
-    const lang = querySearch.lang || SortParams.searchEN;
-    const searchKey = `text.${lang}`;
-    querySearch.keyword = querySearch.keyword || '';
-    // return await api
-    //   .productProjections()
-    //   .search()
-    //   .get({
-    //     queryArgs: {
-    //       [searchKey]: [querySearch.keyword],
-    //       fuzzy: true,
-    //       limit: queryArgs.limit,
-    //       offset: queryArgs.offset,
-    //     },
-    //   })
-    //   .execute();
-    return await api
-      .productProjections()
-      .suggest()
-      .get({ queryArgs: { 'searchKeywords.en-US': 'mia' } })
-      .execute();
-  };
+  // public getProductSearchT = async (queryArgs: Partial<IProductsQuery> = {}, querySearch: Partial<IProductSearch> = {}) => {
+  //   const api = this.getAvalibleApi();
+  //   const lang = querySearch.lang || SortParams.searchEN;
+  //   const searchKey = `text.${lang}`;
+  //   querySearch.keyword = querySearch.keyword || '';
+  //   return await api
+  //     .productProjections()
+  //     .search()
+  //     .get({
+  //       queryArgs: {
+  //         [searchKey]: [querySearch.keyword],
+  //         fuzzy: true,
+  //         limit: queryArgs.limit,
+  //         offset: queryArgs.offset,
+  //       },
+  //     })
+  //     .execute();
+  // };
 }
 
 class MyTokenChache implements TokenCache {
