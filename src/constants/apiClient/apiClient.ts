@@ -1,9 +1,16 @@
 import { IeCommerceEnv } from '../ecommerce.env';
 import { QueryParam } from '@commercetools/sdk-client-v2';
-import { CustomerDraft, MyCustomerSetFirstNameAction, MyCustomerSignin, MyCustomerUpdate } from '@commercetools/platform-sdk';
+import {
+  CustomerDraft,
+  MyCustomerSetFirstNameAction,
+  MyCustomerSignin,
+  MyCustomerUpdate,
+  MyCustomerUpdateAction,
+} from '@commercetools/platform-sdk';
 import { HTTPResponseCode } from '../types';
 import {
   ICategory,
+  IChangeCustomer,
   IId,
   IKey,
   IProductFilter,
@@ -182,18 +189,19 @@ export default class ApiClient extends ApiBase {
     return customer.body.version;
   };
 
-  public editCustomer = async (customer: Partial<CustomerDraft>) => {
+  public editCustomer = async ({ name, surename, email, birthDate }: Partial<IChangeCustomer>) => {
     const api = this.api.getAvalibleApi();
     const version = await this.getCustomerVersion();
+    const actions: MyCustomerUpdateAction[] = [];
 
-    const changeNameAction: MyCustomerSetFirstNameAction = {
-      action: 'setFirstName',
-      firstName: 'ROMAN1',
-    };
+    if (name) actions.push({ action: 'setFirstName', firstName: name });
+    if (surename) actions.push({ action: 'setLastName', lastName: surename });
+    if (email) actions.push({ action: 'changeEmail', email: email });
+    if (birthDate) actions.push({ action: 'setDateOfBirth', dateOfBirth: birthDate });
 
     const customerUpdate: MyCustomerUpdate = {
       version: version,
-      actions: [changeNameAction],
+      actions: actions,
     };
 
     return api

@@ -89,6 +89,13 @@ export interface ICategory {
   [key: string]: string;
 }
 
+export interface IChangeCustomer {
+  name: string;
+  surename: string;
+  email: string;
+  birthDate: string;
+}
+
 export type MyProjectKeyRequestBuilder =
   | ByProjectKeyProductsRequestBuilder
   | ByProjectKeyProductsByIDRequestBuilder
