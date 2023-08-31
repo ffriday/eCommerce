@@ -4,14 +4,13 @@ import { ICatalogApiData } from '../../constants/types';
 
 interface ICatalogNavigation {
   catalogData: ICatalogApiData;
-  startPage: number;
   page: number;
   limit: number;
   prevHandler: () => void;
   nextHandler: () => void;
 }
 
-const CatalogNavigation = ({ catalogData, startPage, page, limit, prevHandler, nextHandler }: ICatalogNavigation) => {
+const CatalogNavigation = ({ catalogData, page, limit, prevHandler, nextHandler }: ICatalogNavigation) => {
   const getTotalPageCount = (totalCount: number | undefined): number => Math.ceil(totalCount ? totalCount / limit : 1);
   const countOfPages: number = getTotalPageCount(catalogData.totalCount);
   const countOfLabel: number[] = new Array(countOfPages).fill(1);

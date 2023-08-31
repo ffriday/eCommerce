@@ -43,14 +43,7 @@ export default function ProductCatalog() {
     <section className='catalog__section'>
       <div className='container'>
         <CatalogList catalogData={catalogData} />
-        <CatalogNavigation
-          catalogData={catalogData}
-          startPage={startPage}
-          page={page}
-          limit={limit}
-          prevHandler={prevButtonHandler}
-          nextHandler={nextButtonHandler}
-        />
+        <CatalogNavigation catalogData={catalogData} page={page} limit={limit} prevHandler={prevButtonHandler} nextHandler={nextButtonHandler} />
       </div>
     </section>
   );
