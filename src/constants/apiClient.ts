@@ -110,6 +110,7 @@ abstract class ApiBase {
     refreshToken: '',
   };
   protected token: MyTokenChache = new MyTokenChache(); // Epmty token object
+  protected tokenAnon: MyTokenChache = new MyTokenChache(); // Epmty token object
   // Middleware
   private httpMiddleware: HttpMiddlewareOptions;
   protected authMiddleware: AuthMiddlewareOptions;
@@ -171,7 +172,7 @@ abstract class ApiBase {
         clientSecret: this.ENV.CTP_CLIENT_SECRET,
         // anonymousId: process.env.CTP_ANONYMOUS_ID, // a unique id
       },
-      tokenCache: this.token,
+      tokenCache: this.tokenAnon,
       scopes: [this.ENV.CTP_SCOPES],
       fetch: fetch,
     };
@@ -290,7 +291,9 @@ export default class ApiClient extends ApiBase {
   public loginCustomer = async (email: string, password: string) => {
     this.user = { username: email, password: password };
     this.passwordMiddleware = this.createAuthPasswordMiddlewareOptions(this.user);
+    console.log('1', this.token);
     this.passwordApi = this.createApi({ password: this.passwordMiddleware });
+    console.log('2', this.token);
     const signIn: MyCustomerSignin = {
       email,
       password,
@@ -332,9 +335,12 @@ export default class ApiClient extends ApiBase {
     let api = null;
     if (this.passwordApi) {
       api = this.passwordApi;
+      console.log('password');
     } else if (this.anonApi) {
       api = this.anonApi;
+      console.log('anon');
     }
+    console.log('PSSWD', this.passwordApi);
 
     if (!api) throw Error('No avalible API');
 
