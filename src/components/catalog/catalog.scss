@@ -1,0 +1,60 @@
+@import '../../styles/variables.scss';
+@import '../../styles/templates.scss';
+.catalog {
+  &__body {
+    padding-top: 40px;
+    padding-bottom: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  &__navigation {
+    display: flex;
+    justify-content: center;
+  }
+  &__button {
+    width: 16px;
+    height: 16px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-color: $primary-white;
+    @extend %buttonHover;
+    &:disabled {
+      opacity: 0.3;
+      cursor: default;
+    }
+  }
+  &__label {
+    width: 16px;
+    height: 16px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-color: $primary-white;
+    background-image: url('../../assets/catalog/page-label-disable.svg');
+    &:not(:last-child) {
+      margin-right: 12px;
+    }
+
+    &--active {
+      background-image: url('../../assets/catalog/page-label-active.svg');
+    }
+  }
+}
+.nav-button {
+  &__left {
+    background-image: url('../../assets/catalog/leftButton.svg');
+    margin-right: 40px;
+  }
+  &__right {
+    background-image: url('../../assets/catalog/rightButton.svg');
+    margin-left: 40px;
+  }
+}
+
+@media only screen and (max-width: 1068px) {
+  .catalog {
+    &__body {
+      justify-content: center;
+    }
+  }
+}

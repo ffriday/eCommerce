@@ -2,7 +2,6 @@ import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './main.scss';
 import { apiContext } from '../App';
-import ProductCard from '../card/card';
 
 export default function Main() {
   const api = useContext(apiContext);
@@ -31,10 +30,6 @@ export default function Main() {
             </Link>
           </>
         )}
-      </div>
-      <div style={{ display: 'flex', justifyContent: 'space-around', width: '100%' }}>
-        <ProductCard />
-        <ProductCard discounted={true} />
       </div>
     </div>
   );
