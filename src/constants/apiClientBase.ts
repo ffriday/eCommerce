@@ -78,6 +78,7 @@ export interface IProductFilter extends IBaseFilter {
   sortPrice: string;
   discount: boolean;
   searchKeywords: string[];
+  searchLanguage: string;
 }
 
 export interface IProductSearch extends IBaseFilter {
@@ -229,7 +230,7 @@ export abstract class ApiBase {
       searchKeywords: ({ param }: IFilterPattern): string[] => {
         let res: string[] = [];
         if (Array.isArray(param)) {
-          res = param.map((val) => `searchKeywords.${SortParams.searchEN}.text:"${val}"`);
+          res = param.map((val) => `searchKeywords.${filter.searchLanguage || SortParams.searchEN}.text:"${val}"`);
         }
         return res;
       },
