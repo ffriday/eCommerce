@@ -247,6 +247,25 @@ export default class ApiClient extends ApiBase {
       .execute();
   };
 
+  public changeAddress = async (address: BaseAddress, addressId: string) => {
+    const api = this.api.getAvalibleApi();
+    const version = await this.getCustomerVersion();
+
+    const action: MyCustomerUpdateAction = { action: 'changeAddress', address: address, addressId: addressId };
+
+    const customerUpdate: MyCustomerUpdate = {
+      version: version,
+      actions: [action],
+    };
+
+    return api
+      .me()
+      .post({
+        body: customerUpdate,
+      })
+      .execute();
+  };
+
   public changeAddressParams = async (
     addressId: string,
     shipment?: boolean,
