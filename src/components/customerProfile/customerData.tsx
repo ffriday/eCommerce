@@ -2,8 +2,11 @@ import { useContext, useEffect, useState } from 'react';
 import { apiContext } from '../App';
 import { ICustomerInfo } from './profileTypes';
 import InputForm from '../inputForm/inputForm';
-import { dateFormProps, emailFormProps, firstNameFormProps, lastNameFormProps } from '../registerForm/formProps';
+import { dateFormProps, emailFormProps, emailPattern, firstNameFormProps, lastNameFormProps, namePattern } from '../registerForm/formProps';
 import './customerProfile.scss';
+import { checkDate, checkInput } from '../../constants/formValidation';
+import { isPattern } from '@babel/types';
+import { IPattern } from '../registerForm/registerForm';
 
 interface ICustomerData {
   customerInfo: ICustomerInfo;
@@ -14,7 +17,30 @@ export const CustomerData = ({ customerInfo, update }: ICustomerData) => {
   const api = useContext(apiContext);
   const [data, setData] = useState(customerInfo);
 
-  const updateData = (newData: Partial<ICustomerInfo>) => setData({ ...data, ...newData });
+  const [name, setName] = useState('');
+  const [surename, setSurename] = useState('');
+  const [email, setEmail] = useState('');
+  const [birthDate, setBirthDate] = useState('');
+
+  const updateData = (newData: Partial<ICustomerInfo>) => {
+    if (newData.name) {
+      const { err } = checkInput(newData.name, namePattern);
+      setName(err);
+    }
+    if (newData.surename) {
+      const { err } = checkInput(newData.surename, namePattern);
+      setSurename(err);
+    }
+    if (newData.email) {
+      const { err } = checkInput(newData.email, emailPattern);
+      setEmail(err);
+    }
+    if (newData.birthDate) {
+      const { err } = checkDate(newData.birthDate, 13);
+      setBirthDate(err);
+    }
+    setData({ ...data, ...newData });
+  };
 
   useEffect(() => setData(customerInfo), [customerInfo]);
 
@@ -23,29 +49,29 @@ export const CustomerData = ({ customerInfo, update }: ICustomerData) => {
       <p className='account__subtitle'>Основные данные:</p>
       <InputForm
         {...firstNameFormProps}
-        // labelClassName={`${firstNameFormProps.labelClassName} ${context.validateArr.name?.className || ''}`}
-        // propLabelInfo={context.validateArr.name?.err}
-        // value={data.name}
+        labelClassName={`${firstNameFormProps.labelClassName} ${name ? 'invailid-label' : 'vailid-label'}`}
+        propLabelInfo={name}
+        value={data.name}
         handler={(event) => updateData({ name: event.currentTarget.value })}
       />
       <InputForm
         {...lastNameFormProps}
-        // labelClassName={`${lastNameFormProps.labelClassName} ${context.validateArr.surename?.className || ''}`}
-        // propLabelInfo={context.validateArr.surename?.err}
+        labelClassName={`${lastNameFormProps.labelClassName} ${surename ? 'invailid-label' : 'vailid-label'}`}
+        propLabelInfo={surename}
         value={data.surename}
         handler={(event) => updateData({ surename: event.currentTarget.value })}
       />
       <InputForm
         {...emailFormProps}
-        // labelClassName={`${emailFormProps.labelClassName} ${context.validateArr.email?.className || ''}`}
-        // propLabelInfo={context.validateArr.email?.err}
+        labelClassName={`${emailFormProps.labelClassName} ${email ? 'invailid-label' : 'vailid-label'}`}
+        propLabelInfo={email}
         value={data.email}
         handler={(event) => updateData({ email: event.currentTarget.value })}
       />
       <InputForm
         {...dateFormProps}
-        // labelClassName={`${dateFormProps.labelClassName} ${context.validateArr.birthDate?.className || ''}`}
-        // propLabelInfo={context.validateArr.birthDate?.err}
+        labelClassName={`${dateFormProps.labelClassName} ${birthDate ? 'invailid-label' : 'vailid-label'}`}
+        propLabelInfo={birthDate}
         value={data.birthDate}
         handler={(event) => updateData({ birthDate: event.currentTarget.value })}
       />

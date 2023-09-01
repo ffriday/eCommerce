@@ -19,7 +19,7 @@
   }
   &__subtitle {
     @include loginSubtitle($login-subtitle-size);
-    margin-bottom: $login-subtitle-margin-bottom;
+    margin-bottom: 10px;
   }
   &__slider {
     margin-bottom: $login-subtitle-margin-bottom;
@@ -56,6 +56,7 @@
   &__logout {
     @include submitButton(234px, 57px);
     padding: 20px 75px;
+    margin-top: 20px;
   }
   &__addressCaption {
     @include loginSubtitle($login-subtitle-size);

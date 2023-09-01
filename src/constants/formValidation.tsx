@@ -61,18 +61,6 @@ export const checkDate = (inputDate: string, age: number) => {
 
 export const checkDateContext = (event: React.FormEvent<HTMLInputElement>, context: IRegisterContext, age: number) => {
   const status = checkDate(event.currentTarget.value, age);
-  // const date = new Date(event.currentTarget.value);
-
-  // const birthDate = moment(event.currentTarget.value, 'YYYY-MM-DD');
-  // const status: IValueStatus = { val: event.currentTarget.value, err: DateErrors.tooYang, className: 'invailid-label' };
-  // if (!isNaN(date.getTime())) {
-  //   const currentDate = moment();
-  //   const delta = currentDate.diff(birthDate, 'year');
-  //   if (delta >= age) {
-  //     status.className = 'vailid-label';
-  //     status.err = '';
-  //   }
-  // }
   context.setValidateArr({ ...context.validateArr, birthDate: status });
 };
 
