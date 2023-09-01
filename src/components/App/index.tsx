@@ -10,6 +10,8 @@ import { createContext } from 'react';
 import ApiClient from '../../constants/apiClient/apiClient';
 import { eCommerceEnv } from '../../constants/ecommerce.env';
 import ProductCatalog from '../catalog/catalog';
+import { CustomerProfile } from '../customerProfile/customerProfile';
+import { RoutePath } from '../../constants/types';
 // import { SortParams } from '../../constants/apiClient/apiClientTypes';
 // import { ProductProjection } from '@commercetools/platform-sdk';
 
@@ -40,9 +42,10 @@ export default function App() {
         <Header />
         <Routes>
           <Route path='/' element={<Main />} />
-          <Route path='/login' element={<LoginForm />} />
-          <Route path='/registration' element={<RegisterForm />} />
-          <Route path='/catalog' element={<ProductCatalog />} />
+          <Route path={`/${RoutePath.login}`} element={<LoginForm />} />
+          <Route path={`/${RoutePath.register}`} element={<RegisterForm />} />
+          <Route path={`/${RoutePath.catalog}`} element={<ProductCatalog />} />
+          <Route path={`/${RoutePath.account}`} element={<CustomerProfile />} />
           <Route path='*' element={<Notfound />} />
         </Routes>
       </BrowserRouter>

@@ -3,7 +3,7 @@ import SubmitButton from '../submitButton/submitButton';
 import InputForm from '../inputForm/inputForm';
 import Checkbox from '../checkbox/checkbox';
 import { useContext, useEffect, useState } from 'react';
-import { EmailErrors, HTTPResponseCode } from '../../constants/types';
+import { EmailErrors, HTTPResponseCode, RoutePath } from '../../constants/types';
 import { PasswordErrors } from '../../constants/types';
 import { validation } from '../../constants/formValidation';
 import { missingError } from '../../constants/formValidation';
@@ -31,7 +31,7 @@ const LoginForm = () => {
   const api = useContext(apiContext);
 
   useEffect(() => {
-    if (api.api.userData.isLogged) navigation('/');
+    if (api.api.userData.isLogged) navigation(`/${RoutePath.account}`);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

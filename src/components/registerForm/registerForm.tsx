@@ -16,6 +16,7 @@ import {
   IValueStatus,
   PasswordErrors,
   RegiserInputNames,
+  RoutePath,
 } from '../../constants/types';
 import {
   apartFormProps,
@@ -187,7 +188,7 @@ const RegisterForm = () => {
         const res = await api.loginCustomer(validateArr.email.val, validateArr.password.val);
         if (res.statusCode === HTTPResponseCode.logged) {
           setApiError('');
-          navigate('/');
+          navigate(`/${RoutePath.account}`);
         }
       }
     } catch (error) {
@@ -201,7 +202,7 @@ const RegisterForm = () => {
   };
 
   useEffect(() => {
-    if (api.api.userData.isLogged) navigate('/');
+    if (api.api.userData.isLogged) navigate(`/${RoutePath.account}`);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

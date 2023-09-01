@@ -107,6 +107,13 @@ export enum HTTPResponseCode {
   registerd = 201,
 }
 
+export enum RoutePath {
+  account = 'account',
+  login = 'login',
+  register = 'register',
+  catalog = 'catalog',
+}
+
 // =========================================================
 // // interfaces of Product
 // interface Dimensions {
