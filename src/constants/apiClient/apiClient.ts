@@ -131,8 +131,11 @@ export default class ApiClient extends ApiBase {
     const filter = ApiClient.makeFilter(queryFilter);
     const lang = queryFilter.lang || SortParams.sortEN;
     const sort: string[] = [];
-    const dicsount: { [key: string]: QueryParam } = {};
-    if (queryFilter.discount !== undefined) dicsount['variants.scopedPriceDiscounted'] = queryFilter.discount;
+    const priceCurrency: { [key: string]: QueryParam } = {};
+    if (queryFilter.discount !== undefined) {
+      filter.push(`variants.scopedPriceDiscounted:${queryFilter.discount}`);
+      priceCurrency['priceCurrency'] = queryFilter.currency;
+    }
     if (queryFilter.sortName) sort.push(`name.${lang} ${queryFilter.sortName}`);
     if (queryFilter.sortPrice) sort.push(`price ${queryFilter.sortPrice}`);
     return await api
@@ -140,7 +143,7 @@ export default class ApiClient extends ApiBase {
       .search()
       .get({
         queryArgs: {
-          ...dicsount,
+          ...priceCurrency,
           limit: queryArgs.limit,
           offset: queryArgs.offset,
           filter: filter,

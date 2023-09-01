@@ -10,12 +10,14 @@ import { createContext } from 'react';
 import ApiClient from '../../constants/apiClient/apiClient';
 import { eCommerceEnv } from '../../constants/ecommerce.env';
 import ProductCatalog from '../catalog/catalog';
+import { CustomerProfile } from '../customerProfile/customerProfile';
+import { RoutePath } from '../../constants/types';
 
 const api = new ApiClient(eCommerceEnv);
 export const apiContext = createContext(api);
 
 // const f = async () => {
-//   const addr = await api.getCustomerAddresses();
+//   const addr = await api.getProductFiltered({}, { currency: SortParams.USD, discount: true });
 //   console.log(addr);
 // };
 
@@ -35,9 +37,10 @@ export default function App() {
         <Header />
         <Routes>
           <Route path='/' element={<Main />} />
-          <Route path='/login' element={<LoginForm />} />
-          <Route path='/registration' element={<RegisterForm />} />
-          <Route path='/catalog' element={<ProductCatalog />} />
+          <Route path={`/${RoutePath.login}`} element={<LoginForm />} />
+          <Route path={`/${RoutePath.register}`} element={<RegisterForm />} />
+          <Route path={`/${RoutePath.catalog}`} element={<ProductCatalog />} />
+          <Route path={`/${RoutePath.account}`} element={<CustomerProfile />} />
           <Route path='*' element={<Notfound />} />
         </Routes>
       </BrowserRouter>

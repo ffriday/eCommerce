@@ -105,6 +105,14 @@ export enum RegiserInputNames {
 export enum HTTPResponseCode {
   logged = 200,
   registerd = 201,
+  ok = 200,
+}
+
+export enum RoutePath {
+  account = 'account',
+  login = 'login',
+  register = 'registration',
+  catalog = 'catalog',
 }
 
 // =========================================================
@@ -204,6 +212,8 @@ export enum language {
 }
 
 export type GetPrice = (centAmount?: number, fractionDigits?: number) => string;
+
+export type IShowError = (error: string) => void;
 
 export interface ICatalogApiData {
   products: ICardApiData[];
