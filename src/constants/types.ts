@@ -105,6 +105,7 @@ export enum RegiserInputNames {
 export enum HTTPResponseCode {
   logged = 200,
   registerd = 201,
+  ok = 200,
 }
 
 export enum RoutePath {
