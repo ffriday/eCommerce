@@ -1,6 +1,6 @@
 import { IeCommerceEnv } from '../ecommerce.env';
 import { QueryParam } from '@commercetools/sdk-client-v2';
-import { CustomerDraft, MyCustomerSignin, MyCustomerUpdate, MyCustomerUpdateAction } from '@commercetools/platform-sdk';
+import { BaseAddress, CustomerDraft, MyCustomerSignin, MyCustomerUpdate, MyCustomerUpdateAction } from '@commercetools/platform-sdk';
 import { HTTPResponseCode } from '../types';
 import {
   ICategory,
@@ -183,6 +183,11 @@ export default class ApiClient extends ApiBase {
     return customer.body.version;
   };
 
+  public getCustomerAddresses = async () => {
+    const customer = await this.getCustomerInfo();
+    return customer.body.addresses;
+  };
+
   public editCustomer = async ({ name, surename, email, birthDate }: Partial<IChangeCustomer>) => {
     const api = this.api.getAvalibleApi();
     const version = await this.getCustomerVersion();
@@ -219,6 +224,95 @@ export default class ApiClient extends ApiBase {
           currentPassword: oldPassword,
           newPassword: newPassword,
         },
+      })
+      .execute();
+  };
+
+  public addAddress = async (address: BaseAddress) => {
+    const api = this.api.getAvalibleApi();
+    const version = await this.getCustomerVersion();
+
+    const action: MyCustomerUpdateAction = { action: 'addAddress', address: address };
+
+    const customerUpdate: MyCustomerUpdate = {
+      version: version,
+      actions: [action],
+    };
+
+    return api
+      .me()
+      .post({
+        body: customerUpdate,
+      })
+      .execute();
+  };
+
+  public changeAddress = async (address: BaseAddress, addressId: string) => {
+    const api = this.api.getAvalibleApi();
+    const version = await this.getCustomerVersion();
+
+    const action: MyCustomerUpdateAction = { action: 'changeAddress', address: address, addressId: addressId };
+
+    const customerUpdate: MyCustomerUpdate = {
+      version: version,
+      actions: [action],
+    };
+
+    return api
+      .me()
+      .post({
+        body: customerUpdate,
+      })
+      .execute();
+  };
+
+  public changeAddressParams = async (
+    addressId: string,
+    shipment?: boolean,
+    billing?: boolean,
+    defaultShipment?: boolean,
+    defaultBilling?: boolean,
+  ) => {
+    const api = this.api.getAvalibleApi();
+    const version = await this.getCustomerVersion();
+    const actions: MyCustomerUpdateAction[] = [];
+
+    if (defaultShipment) actions.push({ action: 'setDefaultShippingAddress', addressId: addressId });
+    if (defaultBilling) actions.push({ action: 'setDefaultBillingAddress', addressId: addressId });
+    if (shipment) actions.push({ action: 'addShippingAddressId', addressId: addressId });
+    if (billing) actions.push({ action: 'addBillingAddressId', addressId: addressId });
+
+    const customerUpdate: MyCustomerUpdate = {
+      version: version,
+      actions: actions,
+    };
+
+    return api
+      .me()
+      .post({
+        body: customerUpdate,
+      })
+      .execute();
+  };
+
+  public removeAddress = async (addressId: string, removeFromShipment?: boolean, removeFromBilling?: boolean, remove?: boolean) => {
+    const api = this.api.getAvalibleApi();
+    const version = await this.getCustomerVersion();
+    const actions: MyCustomerUpdateAction[] = [];
+
+    if (remove) actions.push({ action: 'removeAddress', addressId: addressId });
+    if (removeFromShipment) actions.push({ action: 'removeShippingAddressId', addressId: addressId });
+    if (removeFromBilling) actions.push({ action: 'removeBillingAddressId', addressId: addressId });
+
+    const customerUpdate: MyCustomerUpdate = {
+      version: version,
+      actions: actions,
+    };
+
+    return api
+      .me()
+      .post({
+        body: customerUpdate,
       })
       .execute();
   };
