@@ -5,13 +5,15 @@ import { apiContext } from '../App';
 import { ICatalogApiData } from '../../constants/types';
 import CatalogList from './catalogList';
 import CatalogNavigation from './catalogNavigation';
-import { useMediaQuery, useMediaQueries } from '@react-hook/media-query';
+import { useMediaQuery } from '@react-hook/media-query';
 
 export default function ProductCatalog() {
-  const isSmallDevice = useMediaQuery('only screen and (max-width : 768px)');
+  const isMediumDevice = useMediaQuery('only screen and (min-width: 503px) and (max-width: 800px)');
+  const isSmallDevice = useMediaQuery('only screen and (max-width : 502px)');
   const mobileLimit = 2;
-  const desktopLimit = 4;
-  const limit = isSmallDevice ? mobileLimit : desktopLimit;
+  const mediumLimit = 4;
+  const desktopLimit = 8;
+  const limit = isMediumDevice ? mediumLimit : isSmallDevice ? mobileLimit : desktopLimit;
 
   const startPage = 1;
 
@@ -36,17 +38,15 @@ export default function ProductCatalog() {
     const prevPage: number = current - 1;
     const newPage = prevPage > 0 ? prevPage : current;
     // localStorage.setItem('page', `${newPage}`);
-    setPage(prevPage > 0 ? prevPage : current), [page];
+    setPage(newPage), [page];
   };
-  const getData = async () => {
-    const offset: number = (page - 1) * limit;
-    const catalogData: ICatalogApiData = await productAdapter.getCatalog({ limit: limit, offset: offset });
-    setCatalogData(catalogData);
-  };
-  // if(size.width===768){
-  //   getData();
-  // }
+
   useEffect(() => {
+    const getData = async () => {
+      const offset: number = (page - 1) * limit;
+      const catalogData: ICatalogApiData = await productAdapter.getCatalog({ limit: limit, offset: offset });
+      setCatalogData(catalogData);
+    };
     getData();
   }, [productAdapter, page, limit]);
 
@@ -54,7 +54,15 @@ export default function ProductCatalog() {
     <section className='catalog__section'>
       <div className='container'>
         <CatalogList catalogData={catalogData} />
-        <CatalogNavigation catalogData={catalogData} page={page} limit={limit} prevHandler={prevButtonHandler} nextHandler={nextButtonHandler} />
+        {
+          <CatalogNavigation
+            catalogData={catalogData}
+            page={page}
+            limit={limit}
+            prevHandler={prevButtonHandler}
+            nextHandler={nextButtonHandler}
+          />
+        }
       </div>
     </section>
   );

@@ -2,6 +2,7 @@ import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './main.scss';
 import { apiContext } from '../App';
+import ProductInfo from '../product/productInfo';
 
 export default function Main() {
   const api = useContext(apiContext);
@@ -31,6 +32,7 @@ export default function Main() {
           </>
         )}
       </div>
+      <ProductInfo discounted={true} />
     </div>
   );
 }
