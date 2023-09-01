@@ -26,10 +26,12 @@ export const CustomerProfile = () => {
 
   const [customerInfo, setCustomerInfo] = useState<ICustomerInfo>({ name: '', surename: '', email: '', birthDate: '' });
   const [customerAddress, setCustomerAddress] = useState<Address[]>([]);
-  const [error, setError] = useState('');
   const [changeCustomer, setChangeCustomer] = useState(0);
 
+  const [error, setError] = useState('');
+
   const update = () => setChangeCustomer(changeCustomer + 1); // Made for calling state update from component
+  const showError = (error: string) => setError(error);
 
   useEffect(() => {
     // Redirect if user not logged in
@@ -55,8 +57,9 @@ export const CustomerProfile = () => {
   return (
     <div className='account'>
       <h1 className='account__heading'>{`Профиль пользователя ${customerInfo.name} ${customerInfo.surename}`}</h1>
-      <CustomerData customerInfo={customerInfo} update={update} />
+      <CustomerData customerInfo={customerInfo} update={update} showError={showError} />
       <CustomerAddress customerAddress={customerAddress} update={update} />
+      {error ? <span className='account__errorMessage'>{error}</span> : null}
       <button
         className='account__logout'
         onClick={() => {
@@ -65,7 +68,6 @@ export const CustomerProfile = () => {
         }}>
         Разлогиниться
       </button>
-      {/* TODO - add ERROR message */}
     </div>
   );
 };

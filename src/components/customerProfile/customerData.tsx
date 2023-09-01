@@ -10,9 +10,10 @@ import SubmitButton from '../submitButton/submitButton';
 interface ICustomerData {
   customerInfo: ICustomerInfo;
   update: () => void;
+  showError: (error: string) => void;
 }
 
-export const CustomerData = ({ customerInfo, update }: ICustomerData) => {
+export const CustomerData = ({ customerInfo, update, showError }: ICustomerData) => {
   const api = useContext(apiContext);
   const [data, setData] = useState(customerInfo);
 
@@ -50,10 +51,16 @@ export const CustomerData = ({ customerInfo, update }: ICustomerData) => {
 
   const submitForm = (event: React.FormEvent) => {
     event.preventDefault();
-    api.editCustomer({ name: data.name, surename: data.surename, email: data.email, birthDate: data.birthDate });
-    setSubmit(false);
-    window.setTimeout(update, 300); // Wati for server response
-    setSubmit(true);
+    try {
+      api.editCustomer({ name: data.name, surename: data.surename, email: data.email, birthDate: data.birthDate });
+      setSubmit(false);
+      window.setTimeout(update, 300); // Wati for server response
+      setSubmit(true);
+    } catch (error) {
+      if (error) {
+        showError(error.toString());
+      }
+    }
   };
 
   useEffect(() => setData(customerInfo), [customerInfo]);
