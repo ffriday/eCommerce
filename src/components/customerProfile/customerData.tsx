@@ -1,12 +1,11 @@
-import { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { apiContext } from '../App';
 import { ICustomerInfo } from './profileTypes';
 import InputForm from '../inputForm/inputForm';
 import { dateFormProps, emailFormProps, emailPattern, firstNameFormProps, lastNameFormProps, namePattern } from '../registerForm/formProps';
 import './customerProfile.scss';
 import { checkDate, checkInput } from '../../constants/formValidation';
-import { isPattern } from '@babel/types';
-import { IPattern } from '../registerForm/registerForm';
+import SubmitButton from '../submitButton/submitButton';
 
 interface ICustomerData {
   customerInfo: ICustomerInfo;
@@ -21,31 +20,46 @@ export const CustomerData = ({ customerInfo, update }: ICustomerData) => {
   const [surename, setSurename] = useState('');
   const [email, setEmail] = useState('');
   const [birthDate, setBirthDate] = useState('');
+  const [submit, setSubmit] = useState(true);
 
   const updateData = (newData: Partial<ICustomerInfo>) => {
+    let error = false;
     if (newData.name) {
       const { err } = checkInput(newData.name, namePattern);
+      if (err) error = true;
       setName(err);
     }
     if (newData.surename) {
       const { err } = checkInput(newData.surename, namePattern);
+      if (err) error = true;
       setSurename(err);
     }
     if (newData.email) {
       const { err } = checkInput(newData.email, emailPattern);
+      if (err) error = true;
       setEmail(err);
     }
     if (newData.birthDate) {
       const { err } = checkDate(newData.birthDate, 13);
+      if (err) error = true;
       setBirthDate(err);
     }
     setData({ ...data, ...newData });
+    setSubmit(!error);
+  };
+
+  const submitForm = (event: React.FormEvent) => {
+    event.preventDefault();
+    api.editCustomer({ name: data.name, surename: data.surename, email: data.email, birthDate: data.birthDate });
+    setSubmit(false);
+    window.setTimeout(update, 300); // Wati for server response
+    setSubmit(true);
   };
 
   useEffect(() => setData(customerInfo), [customerInfo]);
 
   return (
-    <form className='account__data' onSubmit={(event) => null}>
+    <form className='account__data' onSubmit={(event) => submitForm(event)}>
       <p className='account__subtitle'>Основные данные:</p>
       <InputForm
         {...firstNameFormProps}
@@ -75,6 +89,7 @@ export const CustomerData = ({ customerInfo, update }: ICustomerData) => {
         value={data.birthDate}
         handler={(event) => updateData({ birthDate: event.currentTarget.value })}
       />
+      <SubmitButton text='Обновить основные данные' disabled={!submit} className='account__submit' />
     </form>
   );
 };
