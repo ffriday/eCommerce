@@ -14,7 +14,6 @@ import {
   IValueStatus,
   PasswordErrors,
   RegiserInputNames,
-  RoutePath,
 } from '../../constants/types';
 import {
   apartFormProps,

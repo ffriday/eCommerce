@@ -7,10 +7,12 @@ import './customerProfile.scss';
 import { checkDate, checkInput } from '../../constants/formValidation';
 import SubmitButton from '../submitButton/submitButton';
 
+type IShowError = (error: string) => void;
+
 interface ICustomerData {
   customerInfo: ICustomerInfo;
   update: () => void;
-  showError: (error: string) => void;
+  showError: IShowError;
 }
 
 export const CustomerData = ({ customerInfo, update, showError }: ICustomerData) => {
@@ -49,10 +51,11 @@ export const CustomerData = ({ customerInfo, update, showError }: ICustomerData)
     setSubmit(!error);
   };
 
-  const submitForm = (event: React.FormEvent) => {
+  const submitForm = async (event: React.FormEvent) => {
     event.preventDefault();
+    showError('');
     try {
-      api.editCustomer({ name: data.name, surename: data.surename, email: data.email, birthDate: data.birthDate });
+      await api.editCustomer({ name: data.name, surename: data.surename, email: data.email, birthDate: data.birthDate });
       setSubmit(false);
       window.setTimeout(update, 300); // Wati for server response
       setSubmit(true);

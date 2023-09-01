@@ -22,6 +22,7 @@ export enum SortParams {
   searchRU = 'ru-BY',
   ascending = 'asc',
   descending = 'desc',
+  USD = 'USD',
 }
 
 export interface IMiddleware {
@@ -71,6 +72,7 @@ export interface IProductFilter extends IBaseFilter {
   discount: boolean;
   searchKeywords: string[];
   searchLanguage: string;
+  currency: string;
 }
 
 export interface IProductSearch extends IBaseFilter {
