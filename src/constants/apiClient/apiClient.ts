@@ -1,6 +1,6 @@
 import { IeCommerceEnv } from '../ecommerce.env';
 import { QueryParam } from '@commercetools/sdk-client-v2';
-import { CustomerDraft, MyCustomerSignin, MyCustomerUpdate, MyCustomerUpdateAction } from '@commercetools/platform-sdk';
+import { BaseAddress, CustomerDraft, MyCustomerSignin, MyCustomerUpdate, MyCustomerUpdateAction } from '@commercetools/platform-sdk';
 import { HTTPResponseCode } from '../types';
 import {
   ICategory,
@@ -183,6 +183,11 @@ export default class ApiClient extends ApiBase {
     return customer.body.version;
   };
 
+  private getCustomerAddresses = async () => {
+    const customer = await this.getCustomerInfo();
+    return customer.body.addresses;
+  };
+
   public editCustomer = async ({ name, surename, email, birthDate }: Partial<IChangeCustomer>) => {
     const api = this.api.getAvalibleApi();
     const version = await this.getCustomerVersion();
@@ -219,6 +224,25 @@ export default class ApiClient extends ApiBase {
           currentPassword: oldPassword,
           newPassword: newPassword,
         },
+      })
+      .execute();
+  };
+
+  public addAddress = async (address: BaseAddress) => {
+    const api = this.api.getAvalibleApi();
+    const version = await this.getCustomerVersion();
+
+    const action: MyCustomerUpdateAction = { action: 'addAddress', address: address };
+
+    const customerUpdate: MyCustomerUpdate = {
+      version: version,
+      actions: [action],
+    };
+
+    return api
+      .me()
+      .post({
+        body: customerUpdate,
       })
       .execute();
   };
