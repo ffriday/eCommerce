@@ -213,6 +213,8 @@ export enum language {
 
 export type GetPrice = (centAmount?: number, fractionDigits?: number) => string;
 
+export type IShowError = (error: string) => void;
+
 export interface ICatalogApiData {
   products: ICardApiData[];
   totalCount: number | undefined;

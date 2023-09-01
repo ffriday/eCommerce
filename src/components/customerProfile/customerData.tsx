@@ -6,8 +6,7 @@ import { dateFormProps, emailFormProps, emailPattern, firstNameFormProps, lastNa
 import './customerProfile.scss';
 import { checkDate, checkInput } from '../../constants/formValidation';
 import SubmitButton from '../submitButton/submitButton';
-
-type IShowError = (error: string) => void;
+import { IShowError } from '../../constants/types';
 
 interface ICustomerData {
   customerInfo: ICustomerInfo;

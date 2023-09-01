@@ -12,15 +12,14 @@ import { eCommerceEnv } from '../../constants/ecommerce.env';
 import ProductCatalog from '../catalog/catalog';
 import { CustomerProfile } from '../customerProfile/customerProfile';
 import { RoutePath } from '../../constants/types';
-import { SortParams } from '../../constants/apiClient/apiClientTypes';
 
 const api = new ApiClient(eCommerceEnv);
 export const apiContext = createContext(api);
 
-const f = async () => {
-  const addr = await api.getProductFiltered({}, { currency: SortParams.USD, discount: true });
-  console.log(addr);
-};
+// const f = async () => {
+//   const addr = await api.getProductFiltered({}, { currency: SortParams.USD, discount: true });
+//   console.log(addr);
+// };
 
 // const d = async (val: string) => {
 //   const s = await api.getProductSearch({}, {keyword: val});
@@ -45,7 +44,7 @@ export default function App() {
           <Route path='*' element={<Notfound />} />
         </Routes>
       </BrowserRouter>
-      <button onClick={f}>TEST</button>
+      {/* <button onClick={f}>TEST</button> */}
       {/* <input onChange={(e) => d(e.currentTarget.value)} placeholder='test'/> */}
     </apiContext.Provider>
   );
