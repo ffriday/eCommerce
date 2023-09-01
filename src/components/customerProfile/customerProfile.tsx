@@ -42,7 +42,6 @@ export const CustomerProfile = () => {
     (async () => {
       try {
         const customer = await getCustomer(api);
-        console.log('ADDR', customer.address);
         if (customer) {
           setCustomerInfo(customer.info);
           if (customer.address) setCustomerAddress(customer.address);
@@ -54,9 +53,11 @@ export const CustomerProfile = () => {
   }, [changeCustomer, api]);
 
   return (
-    <div>
+    <div className='account'>
+      <h1 className='account__heading'>{`Профиль пользователя ${customerInfo.name} ${customerInfo.surename}`}</h1>
       <CustomerData customerInfo={customerInfo} update={update} />
       <CustomerAddress customerAddress={customerAddress} update={update} />
+      {/* TODO - add ERROR message */}
     </div>
   );
 };

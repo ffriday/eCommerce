@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { apiContext } from '../App';
-import { ICustomerInfo } from './profileTypes';
 import { Address } from '@commercetools/platform-sdk';
+import './customerProfile.scss';
 
 interface ICustomerAddress {
   customerAddress: Address[] | undefined;
@@ -10,7 +10,6 @@ interface ICustomerAddress {
 
 export const CustomerAddress = ({ customerAddress, update }: ICustomerAddress) => {
   const api = useContext(apiContext);
-  // console.log('ADDR', customerAddress);
 
   return <div>{customerAddress ? customerAddress.map((val) => val.country) : ''}</div>;
 };
