@@ -111,7 +111,7 @@ export enum HTTPResponseCode {
 export enum RoutePath {
   account = 'account',
   login = 'login',
-  register = 'register',
+  register = 'registration',
   catalog = 'catalog',
 }
 

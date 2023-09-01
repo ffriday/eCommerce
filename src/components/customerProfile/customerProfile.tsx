@@ -57,6 +57,14 @@ export const CustomerProfile = () => {
       <h1 className='account__heading'>{`Профиль пользователя ${customerInfo.name} ${customerInfo.surename}`}</h1>
       <CustomerData customerInfo={customerInfo} update={update} />
       <CustomerAddress customerAddress={customerAddress} update={update} />
+      <button
+        className='account__logout'
+        onClick={() => {
+          api.logOutCustomer();
+          navigate('/');
+        }}>
+        Разлогиниться
+      </button>
       {/* TODO - add ERROR message */}
     </div>
   );

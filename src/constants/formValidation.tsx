@@ -1,3 +1,7 @@
+import moment from 'moment';
+import { DateErrors, IValueStatus } from './types';
+import { IPattern, IRegisterContext } from '../components/registerForm/registerForm';
+
 export interface IformData {
   [key: string]: string | null;
 }
@@ -38,4 +42,42 @@ export const validation = (formData: IformData, ListOfValidationRules: IListOfVa
     }
   });
   return formErrors;
+};
+
+export const checkDate = (inputDate: string, age: number) => {
+  const date = new Date(inputDate);
+  const birthDate = moment(inputDate, 'YYYY-MM-DD');
+  const status: IValueStatus = { val: inputDate, err: DateErrors.tooYang, className: 'invailid-label' };
+  if (!isNaN(date.getTime())) {
+    const currentDate = moment();
+    const delta = currentDate.diff(birthDate, 'year');
+    if (delta >= age) {
+      status.className = 'vailid-label';
+      status.err = '';
+    }
+  }
+  return status;
+};
+
+export const checkDateContext = (event: React.FormEvent<HTMLInputElement>, context: IRegisterContext, age: number) => {
+  const status = checkDate(event.currentTarget.value, age);
+  // const date = new Date(event.currentTarget.value);
+
+  // const birthDate = moment(event.currentTarget.value, 'YYYY-MM-DD');
+  // const status: IValueStatus = { val: event.currentTarget.value, err: DateErrors.tooYang, className: 'invailid-label' };
+  // if (!isNaN(date.getTime())) {
+  //   const currentDate = moment();
+  //   const delta = currentDate.diff(birthDate, 'year');
+  //   if (delta >= age) {
+  //     status.className = 'vailid-label';
+  //     status.err = '';
+  //   }
+  // }
+  context.setValidateArr({ ...context.validateArr, birthDate: status });
+};
+
+export const checkInput = (value: string, pattern: IPattern[]): IValueStatus => {
+  const errorArr = pattern.filter((elem) => !elem.pattern.test(value));
+  const error = errorArr.length ? errorArr[0].error : '';
+  return { val: value, err: error };
 };

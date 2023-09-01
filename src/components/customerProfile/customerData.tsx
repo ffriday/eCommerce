@@ -2,14 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { apiContext } from '../App';
 import { ICustomerInfo } from './profileTypes';
 import InputForm from '../inputForm/inputForm';
-import {
-  dateFormProps,
-  emailFormProps,
-  firstNameFormProps,
-  lastNameFormProps,
-  passwordCheckFormProps,
-  passwordFormProps,
-} from '../registerForm/formProps';
+import { dateFormProps, emailFormProps, firstNameFormProps, lastNameFormProps } from '../registerForm/formProps';
 import './customerProfile.scss';
 
 interface ICustomerData {
@@ -23,18 +16,16 @@ export const CustomerData = ({ customerInfo, update }: ICustomerData) => {
 
   const updateData = (newData: Partial<ICustomerInfo>) => setData({ ...data, ...newData });
 
-  useEffect(() => {
-    setData(customerInfo);
-  }, [customerInfo]);
+  useEffect(() => setData(customerInfo), [customerInfo]);
 
   return (
-    <section className='account__data'>
+    <form className='account__data' onSubmit={(event) => null}>
       <p className='account__subtitle'>Основные данные:</p>
       <InputForm
         {...firstNameFormProps}
         // labelClassName={`${firstNameFormProps.labelClassName} ${context.validateArr.name?.className || ''}`}
         // propLabelInfo={context.validateArr.name?.err}
-        value={data.name}
+        // value={data.name}
         handler={(event) => updateData({ name: event.currentTarget.value })}
       />
       <InputForm
@@ -58,6 +49,6 @@ export const CustomerData = ({ customerInfo, update }: ICustomerData) => {
         value={data.birthDate}
         handler={(event) => updateData({ birthDate: event.currentTarget.value })}
       />
-    </section>
+    </form>
   );
 };

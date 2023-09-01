@@ -1,6 +1,5 @@
 import { FC, FormEvent, createContext, useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import moment from 'moment';
 import InputForm from '../inputForm/inputForm';
 import SliderButton from '../sliderButton/sliderButton';
 import './registerForm.scss';
@@ -8,7 +7,6 @@ import Checkbox from '../checkbox/checkbox';
 import SubmitButton from '../submitButton/submitButton';
 import {
   AddressErrors,
-  DateErrors,
   EmailErrors,
   HTTPResponseCode,
   IAddress,
@@ -44,13 +42,14 @@ import {
 import { ErorMap, createCustomer } from '../../constants/register-user';
 import { ClientResponse, CustomerSignInResult, ErrorResponse } from '@commercetools/platform-sdk';
 import { apiContext } from '../App';
+import { checkDateContext, checkInput } from '../../constants/formValidation';
 
 export interface IPattern {
   pattern: RegExp;
   error: string | EmailErrors | PasswordErrors;
 }
 
-interface IRegisterContext {
+export interface IRegisterContext {
   validateArr: IUserValidate<IValueStatus>;
   setValidateArr: React.Dispatch<React.SetStateAction<Partial<IUserValidate<IValueStatus>>>>;
   billAddressDisabled: boolean;
@@ -67,12 +66,6 @@ interface IAddressInput {
   arrKey: RegiserInputNames.shipment | RegiserInputNames.bill;
   isDisabled?: boolean;
 }
-
-const checkInput = (value: string, pattern: IPattern[]): IValueStatus => {
-  const errorArr = pattern.filter((elem) => !elem.pattern.test(value));
-  const error = errorArr.length ? errorArr[0].error : '';
-  return { val: value, err: error };
-};
 
 const handleInput = (event: React.FormEvent<HTMLInputElement>, context: IRegisterContext, pattern: IPattern[], key: RegiserInputNames) => {
   const status = checkInput(event.currentTarget.value, pattern);
@@ -95,22 +88,6 @@ const checkMatchPassword = (event: React.FormEvent<HTMLInputElement>, context: I
     status.err = '';
   }
   context.setValidateArr({ ...context.validateArr, passwordCheck: status });
-};
-
-const checkDate = (event: React.FormEvent<HTMLInputElement>, context: IRegisterContext, age: number) => {
-  const date = new Date(event.currentTarget.value);
-
-  const birthDate = moment(event.currentTarget.value, 'YYYY-MM-DD');
-  const status: IValueStatus = { val: event.currentTarget.value, err: DateErrors.tooYang, className: 'invailid-label' };
-  if (!isNaN(date.getTime())) {
-    const currentDate = moment();
-    const delta = currentDate.diff(birthDate, 'year');
-    if (delta >= age) {
-      status.className = 'vailid-label';
-      status.err = '';
-    }
-  }
-  context.setValidateArr({ ...context.validateArr, birthDate: status });
 };
 
 const RegisterContext = createContext<IRegisterContext | null>(null);
@@ -188,7 +165,7 @@ const RegisterForm = () => {
         const res = await api.loginCustomer(validateArr.email.val, validateArr.password.val);
         if (res.statusCode === HTTPResponseCode.logged) {
           setApiError('');
-          navigate(`/${RoutePath.account}`);
+          navigate('/');
         }
       }
     } catch (error) {
@@ -202,7 +179,7 @@ const RegisterForm = () => {
   };
 
   useEffect(() => {
-    if (api.api.userData.isLogged) navigate(`/${RoutePath.account}`);
+    if (api.api.userData.isLogged) navigate('/');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -283,7 +260,7 @@ const RegisterStep1: FC<{ className: string }> = ({ className }) => {
         {...dateFormProps}
         labelClassName={`${dateFormProps.labelClassName} ${context.validateArr.birthDate?.className || ''}`}
         propLabelInfo={context.validateArr.birthDate?.err}
-        handler={(event) => checkDate(event, context, 13)}
+        handler={(event) => checkDateContext(event, context, 13)}
       />
     </section>
   );

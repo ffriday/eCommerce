@@ -3,6 +3,9 @@
 
 .account {
   margin-bottom: $loging-padding-top-bottom;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   &__data {
     display: flex;
     flex-direction: column;
@@ -49,6 +52,10 @@
   &__submit {
     margin-bottom: $login-link-margin-top;
     margin-top: $login-link-margin-top;
+  }
+  &__logout {
+    @include submitButton(234px, 57px);
+    padding: 20px 75px;
   }
   &__addressCaption {
     @include loginSubtitle($login-subtitle-size);
