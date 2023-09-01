@@ -12,18 +12,13 @@ import { eCommerceEnv } from '../../constants/ecommerce.env';
 import ProductCatalog from '../catalog/catalog';
 import { CustomerProfile } from '../customerProfile/customerProfile';
 import { RoutePath } from '../../constants/types';
-// import { SortParams } from '../../constants/apiClient/apiClientTypes';
-// import { ProductProjection } from '@commercetools/platform-sdk';
 
 const api = new ApiClient(eCommerceEnv);
 export const apiContext = createContext(api);
 
 // const f = async () => {
-//   // api.editCustomer({ name: 'ROMAN-1', surename: 'KADEVICH-1', birthDate: '2000-10-21', email: 'fuu@bar.buzz' });
-//   // api.changePassword('qweQWE123!@#', '123!@#qweQWE');
-//   const buketID = api.categories['bouquets'];
-//   const res = api.getProductFiltered({ limit: 10 }, { categoryId: buketID, sortName: SortParams.descending, discount: true });
-//   console.log(res);
+//   const addr = await api.getCustomerAddresses();
+//   console.log(addr);
 // };
 
 // const d = async (val: string) => {
@@ -49,8 +44,8 @@ export default function App() {
           <Route path='*' element={<Notfound />} />
         </Routes>
       </BrowserRouter>
-      {/* <button onClick={f}>TEST</button>
-      <input onChange={(e) => d(e.currentTarget.value)} placeholder='test'/> */}
+      {/* <button onClick={f}>TEST</button> */}
+      {/* <input onChange={(e) => d(e.currentTarget.value)} placeholder='test'/> */}
     </apiContext.Provider>
   );
 }
