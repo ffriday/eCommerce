@@ -5,9 +5,16 @@ import { apiContext } from '../App';
 import { ICatalogApiData } from '../../constants/types';
 import CatalogList from './catalogList';
 import CatalogNavigation from './catalogNavigation';
+import { useMediaQuery, useMediaQueries } from '@react-hook/media-query';
+
 export default function ProductCatalog() {
-  const limit = 2;
+  const isSmallDevice = useMediaQuery('only screen and (max-width : 768px)');
+  const mobileLimit = 2;
+  const desktopLimit = 4;
+  const limit = isSmallDevice ? mobileLimit : desktopLimit;
+
   const startPage = 1;
+
   // const storedPage = localStorage.getItem('page');
   // const startPage = storedPage ? Number(storedPage) : 1;
   const [catalogData, setCatalogData] = useState<ICatalogApiData>({ products: [], totalCount: 0 });
@@ -22,23 +29,26 @@ export default function ProductCatalog() {
     const totalCount = catalogData.products ? getTotalPageCount(catalogData.totalCount) : 0;
     const newPage = nextPage <= totalCount ? nextPage : current;
     // localStorage.setItem('page', `${newPage}`);
-    setPage(newPage), [page, catalogData];
+    setPage(newPage), [page, catalogData, isSmallDevice];
   };
   const prevButtonHandler = () => {
     const current: number = page;
     const prevPage: number = current - 1;
     const newPage = prevPage > 0 ? prevPage : current;
-    localStorage.setItem('page', `${newPage}`);
+    // localStorage.setItem('page', `${newPage}`);
     setPage(prevPage > 0 ? prevPage : current), [page];
   };
+  const getData = async () => {
+    const offset: number = (page - 1) * limit;
+    const catalogData: ICatalogApiData = await productAdapter.getCatalog({ limit: limit, offset: offset });
+    setCatalogData(catalogData);
+  };
+  // if(size.width===768){
+  //   getData();
+  // }
   useEffect(() => {
-    const getData = async () => {
-      const offset: number = (page - 1) * limit;
-      const catalogData: ICatalogApiData = await productAdapter.getCatalog({ limit: limit, offset: offset });
-      setCatalogData(catalogData);
-    };
     getData();
-  }, [productAdapter, page]);
+  }, [productAdapter, page, limit]);
 
   return (
     <section className='catalog__section'>
