@@ -19,8 +19,8 @@ function ProductInfo({ discounted, cardApiData, isActiveLabelClass }: ProductInf
         <div className='product__variants-info'>Размер букета</div>
         <div className='product__variants-labels'>
           {' '}
-          <button className={`product__variants-label ${isActiveLabelClass && activeLabelClass}`}>S</button>
-          <button className={`product__variants-label ${!isActiveLabelClass && activeLabelClass}`}>M</button>
+          <div className={`product__variants-label ${isActiveLabelClass && activeLabelClass}`}>S</div>
+          <div className={`product__variants-label ${!isActiveLabelClass && activeLabelClass}`}>M</div>
         </div>
       </div>
       <div className='product__bottom-box'>

@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useContext } from 'react';
+import { useParams } from 'react-router-dom';
 import ProductAdapter from '../../constants/productAadapter';
 import { apiContext } from '../App';
 import './product.scss';
@@ -9,14 +10,15 @@ import { useMediaQuery } from '@react-hook/media-query';
 import { ICardApiData } from '../../constants/types';
 import { Slider } from './productSlider';
 export const Product = () => {
+  const { key } = useParams();
   const isSmallDevice = useMediaQuery('only screen and (max-width : 670px)');
   const demension = isSmallDevice ? '300px' : '600px';
   const api = useContext(apiContext);
   const productAdapter = useMemo(() => new ProductAdapter(api), [api]);
 
   const [isVariant, setIsVariant] = useState(false);
-  const [productData, setProductData] = useState<ICardApiData>({ image: '', name: '', description: '', price: '', id: '' });
-  const [productsData, setProductsData] = useState<ICardApiData[]>([{ image: '', name: '', description: '', price: '', id: '' }]);
+  const [productData, setProductData] = useState<ICardApiData | undefined>({ image: '', name: '', description: '', price: '', id: '', key: '' });
+  const [productsData, setProductsData] = useState<ICardApiData[]>([{ image: '', name: '', description: '', price: '', id: '', key: '' }]);
   const swiperHandler = async () => {
     setIsVariant(!isVariant);
   };
@@ -32,15 +34,34 @@ export const Product = () => {
 
   useEffect(() => {
     const getData = async () => {
-      const product1: ICardApiData = await productAdapter.getProductByKey({ key: 'nude' });
-      const product2: ICardApiData = await productAdapter.getProductByKey({ key: 'nude', productVariant: true });
-      console.log(product2);
-      const products: ICardApiData[] = [product1, product2];
-      isVariant ? setProductData(product1) : setProductData(product2);
+      let product1: ICardApiData | undefined;
+      let product2: ICardApiData | undefined;
+
+      try {
+        if (!key) {
+          return;
+        }
+
+        product1 = await productAdapter.getProductByKey({ key });
+        product2 = await productAdapter.getProductByKey({ key, productVariant: true });
+      } catch (error) {
+        product2 = undefined;
+      }
+
+      const products: ICardApiData[] = [];
+      if (product1?.image) products.push(product1);
+      if (product2?.image) products.push(product2);
+
+      if (isVariant) {
+        setProductData(product1);
+      } else {
+        setProductData(product2 || product1);
+      }
+
       setProductsData(products);
     };
     getData();
-  }, [productAdapter, isVariant]);
+  }, [productAdapter, isVariant, key]);
   return (
     <div className='product__container container'>
       <div className='slider__box'>
@@ -67,11 +88,12 @@ export const Product = () => {
             width: `${demension}`,
             height: `${demension}`,
             border: '0',
-            padding: '0',
+            padding: '20px',
             overflow: 'hidden',
             position: 'absolute',
             margin: 'auto',
             zIndex: 20,
+            background: 'rgba(0, 0, 0, 0)',
           },
         }}>
         <Slider sliders={productsData} swiperHandler={swiperHandler} clickHandler={closeModal} />

@@ -31,10 +31,14 @@ export default class ProductAdapter {
   private getProductCardData = (data: Product, productVariant = false): ICardApiData => {
     console.log(data);
     const id = data.id;
+    const key = data.key;
     const image: string | undefined = productVariant
       ? data.masterData.current.variants[0].images?.[0].url
       : data.masterData.current.masterVariant.images?.[0].url;
     console.log(image);
+    if (!image) {
+      console.log('no image');
+    }
     const name: string = data.masterData.current.name[language.ru];
     const description: string | undefined = data.masterData.current.description?.[language.ru];
     let price = '';
@@ -52,6 +56,7 @@ export default class ProductAdapter {
     }
     return {
       id: id,
+      key: key,
       image: image,
       name: name,
       description: description,

@@ -13,7 +13,7 @@ const CatalogList = ({ catalogData }: ICatalogList) => {
       {catalogData && (
         <div className='catalog__body'>
           {catalogData.products.map((item) => {
-            return <ProductCard cardApiData={item} key={item.id} />;
+            return <ProductCard link={item.key || ''} cardApiData={item} key={item.id} />;
           })}
         </div>
       )}

@@ -113,11 +113,12 @@ export enum RoutePath {
   login = 'login',
   register = 'registration',
   catalog = 'catalog',
-  product = 'product',
+  product = 'catalog/:key',
 }
 
 export interface ICardApiData {
   id: string;
+  key: string | undefined;
   image: string | undefined;
   name: string;
   description: string | undefined;

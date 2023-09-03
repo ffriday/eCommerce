@@ -89,11 +89,10 @@
     text-align: center;
     font-size: 11px;
     opacity: 0;
-    pointer-events: none; /* Предотвращаем взаимодействие с подсказкой */
+    pointer-events: none;
     transition: opacity 0.3s ease-in-out;
     z-index: 40;
   }
-  // position: relative;
 }
 
 .slider__box:hover .slider__tooltip {
