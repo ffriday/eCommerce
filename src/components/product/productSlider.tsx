@@ -10,10 +10,11 @@ import './product.scss';
 interface ISlider {
   sliders: ICardApiData[];
   swiperHandler: () => void;
+  clickHandler: () => void;
 }
-export const Slider = ({ sliders, swiperHandler }: ISlider) => {
+export const Slider = ({ sliders, swiperHandler, clickHandler }: ISlider) => {
   return (
-    <div className='slider'>
+    <div className='slider' onDoubleClick={clickHandler}>
       <Swiper
         modules={[Navigation, Pagination, Scrollbar, A11y, EffectFade]}
         navigation

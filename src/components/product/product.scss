@@ -6,7 +6,9 @@
   @include product-info($product-width, $product-height);
   &__container {
     display: flex;
-    gap: 136px;
+    justify-content: center;
+    gap: 50px;
+    flex-wrap: wrap;
   }
   &__heading {
     margin-bottom: 20px;
@@ -36,9 +38,7 @@
       padding: 10px 16px;
       border-radius: 40px;
       border: 1.5px solid #ccc;
-      @extend %buttonHover;
-      &--active,
-      &:active {
+      &--active {
         border-color: #5ca182;
         color: #5ca182;
       }
@@ -70,28 +70,44 @@
   }
 }
 .slider {
-  width: 500px;
-  position: relative;
+  cursor: pointer;
+  &__box {
+    width: 350px;
+    position: relative;
+  }
+  width: 100%;
+  height: auto;
+  &__tooltip {
+    position: absolute;
+    top: 10%;
+    left: 45%;
+    transform: translateX(-50%);
+    background-color: #6d6d6d;
+    color: #d6d6d6;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 11px;
+    opacity: 0;
+    pointer-events: none; /* Предотвращаем взаимодействие с подсказкой */
+    transition: opacity 0.3s ease-in-out;
+    z-index: 40;
+  }
+  // position: relative;
 }
-// /* Стили для стрелки "влево" */
-// .swiper-button-prev {
-//   background-color: #ff0000; /* Задайте желаемый цвет фона */
-//   color: #fff; /* Задайте цвет текста */
-//   font-size: 24px; /* Задайте размер шрифта */
-//   /* Другие стили по вашему выбору */
-// }
 
-// /* Стили для стрелки "вправо" */
-// .swiper-button-next {
-//   background-color: #00ff00; /* Задайте желаемый цвет фона */
-//   color: #fff; /* Задайте цвет текста */
-//   font-size: 24px; /* Задайте размер шрифта */
-//   /* Другие стили по вашему выбору */
-// }
-.swiper-button-prev:after {
-  content: url(../../assets/catalog/leftButton.svg);
+.slider__box:hover .slider__tooltip {
+  opacity: 1;
 }
-
-.swiper-button-next:after {
-  content: url(../../assets/catalog/rightButton.svg);
+@media only screen and (max-width: 870px) {
+  .product {
+    max-width: 350px;
+    &__variants {
+      margin-bottom: 30px;
+    }
+    &__container {
+      flex-direction: column-reverse;
+      align-items: center;
+    }
+  }
 }
