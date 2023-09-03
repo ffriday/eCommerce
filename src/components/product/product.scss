@@ -28,11 +28,11 @@
     &-info {
       margin-bottom: 20px;
     }
-    &-btns {
+    &-labels {
       display: flex;
       gap: 15px;
     }
-    &-btn {
+    &-label {
       padding: 10px 16px;
       border-radius: 40px;
       border: 1.5px solid #ccc;
@@ -71,4 +71,27 @@
 }
 .slider {
   width: 500px;
+  position: relative;
+}
+// /* Стили для стрелки "влево" */
+// .swiper-button-prev {
+//   background-color: #ff0000; /* Задайте желаемый цвет фона */
+//   color: #fff; /* Задайте цвет текста */
+//   font-size: 24px; /* Задайте размер шрифта */
+//   /* Другие стили по вашему выбору */
+// }
+
+// /* Стили для стрелки "вправо" */
+// .swiper-button-next {
+//   background-color: #00ff00; /* Задайте желаемый цвет фона */
+//   color: #fff; /* Задайте цвет текста */
+//   font-size: 24px; /* Задайте размер шрифта */
+//   /* Другие стили по вашему выбору */
+// }
+.swiper-button-prev:after {
+  content: url(../../assets/catalog/leftButton.svg);
+}
+
+.swiper-button-next:after {
+  content: url(../../assets/catalog/rightButton.svg);
 }

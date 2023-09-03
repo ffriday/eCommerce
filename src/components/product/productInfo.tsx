@@ -2,23 +2,25 @@ import { ICardApiData } from '../../constants/types';
 import './product.scss';
 
 interface ProductInfo {
+  isActiveLabelClass: boolean;
   cardApiData?: ICardApiData;
   discounted?: boolean;
 }
 
-function ProductInfo({ discounted, cardApiData }: ProductInfo) {
+function ProductInfo({ discounted, cardApiData, isActiveLabelClass }: ProductInfo) {
   const data = cardApiData;
   const disableClassName = discounted ? 'card__price--disable' : '';
+  const activeLabelClass = 'product__variants-label--active';
   return (
     <div className='product'>
       <h2 className='product__heading'>{data?.name}</h2>
       <p className='product__description'>{data?.description}</p>
       <div className='product__variants'>
         <div className='product__variants-info'>Размер букета</div>
-        <div className='product__variants-btns'>
+        <div className='product__variants-labels'>
           {' '}
-          <button className='product__variants-btn'>S</button>
-          <button className='product__variants-btn'>M</button>
+          <button className={`product__variants-label ${isActiveLabelClass && activeLabelClass}`}>S</button>
+          <button className={`product__variants-label ${!isActiveLabelClass && activeLabelClass}`}>M</button>
         </div>
       </div>
       <div className='product__bottom-box'>
