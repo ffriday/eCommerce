@@ -31,14 +31,14 @@ export default function ProductCatalog() {
     const totalCount = catalogData.products ? getTotalPageCount(catalogData.totalCount) : 0;
     const newPage = nextPage <= totalCount ? nextPage : current;
     // localStorage.setItem('page', `${newPage}`);
-    setPage(newPage), [page, catalogData, isSmallDevice];
+    setPage(newPage);
   };
   const prevButtonHandler = () => {
     const current: number = page;
     const prevPage: number = current - 1;
     const newPage = prevPage > 0 ? prevPage : current;
     // localStorage.setItem('page', `${newPage}`);
-    setPage(newPage), [page];
+    setPage(newPage);
   };
 
   useEffect(() => {
