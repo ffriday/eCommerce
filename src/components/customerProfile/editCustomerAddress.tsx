@@ -44,19 +44,6 @@ const addressPreview = (address: Address | undefined, countries: Record<string, 
 export const EditCustomerAddress = ({ address, addressTypes, buttons, update, showError }: Partial<ICustomerAddress>) => {
   const api = useContext(apiContext);
 
-  const [active, setActive] = useState(false);
-
-  const [country, setCountry] = useState('');
-  const [city, setCity] = useState('');
-  const [street, setStreet] = useState('');
-  const [building, setBuilding] = useState('');
-  const [apart, setApart] = useState('');
-  const [postal, setPostal] = useState('');
-
-  const [addressInput, setAddressInput] = useState<Partial<BaseAddress>>({ ...(address && { city: '' }) });
-
-  const [submit, setSubmit] = useState(true);
-
   const countries = useMemo(
     () =>
       Object.entries(countryMAP).reduce((acc: Record<string, string>, [key, value]) => {
@@ -66,13 +53,21 @@ export const EditCustomerAddress = ({ address, addressTypes, buttons, update, sh
     [],
   );
 
+  const [active, setActive] = useState(false);
+
+  const [country, setCountry] = useState('');
+  const [countryState, setCountryState] = useState(address?.country ? countries[address?.country] : '');
+  const [city, setCity] = useState('');
+  const [street, setStreet] = useState('');
+  const [building, setBuilding] = useState('');
+  const [apart, setApart] = useState('');
+  const [postal, setPostal] = useState('');
+
+  const [addressInput, setAddressInput] = useState<Partial<BaseAddress>>({ city: '', ...address });
+
+  const [submit, setSubmit] = useState(true);
+
   const toggleAddress = () => setActive(!active);
-  // const toggleAddress = async () => {
-  //   const a = await api.getProductFiltered({}, {});
-  //   console.log(a);
-  //   if (a) console.log(a.body.results[0].masterVariant.images[0].url);
-  //   a.body.results.forEach(el => console.log(el.name));
-  // };
 
   const updateData = (newData: Partial<Address>) => {
     let error = false;
@@ -125,13 +120,18 @@ export const EditCustomerAddress = ({ address, addressTypes, buttons, update, sh
             id={`${countryFormProps.id}-${address?.id}`}
             labelClassName={`${countryFormProps.labelClassName} ${country ? 'invailid-label' : 'vailid-label'}`}
             propLabelInfo={country}
-            handler={(event) => updateData({ country: event.currentTarget.value })}
+            value={countryState}
+            handler={(event) => {
+              updateData({ country: event.currentTarget.value });
+              setCountryState(event.currentTarget.value);
+            }}
           />
           <InputForm
             {...cityFormProps}
             id={`${cityFormProps.id}-${address?.id}`}
             labelClassName={`${cityFormProps.labelClassName} ${city ? 'invailid-label' : 'vailid-label'}`}
             propLabelInfo={city}
+            value={addressInput.city}
             handler={(event) => updateData({ city: event.currentTarget.value })}
           />
           <InputForm
@@ -139,6 +139,7 @@ export const EditCustomerAddress = ({ address, addressTypes, buttons, update, sh
             id={`${streetFormProps.id}-${address?.id}`}
             labelClassName={`${streetFormProps.labelClassName} ${street ? 'invailid-label' : 'vailid-label'}`}
             propLabelInfo={street}
+            value={addressInput.streetName}
             handler={(event) => updateData({ streetName: event.currentTarget.value })}
           />
           <InputForm
@@ -146,6 +147,7 @@ export const EditCustomerAddress = ({ address, addressTypes, buttons, update, sh
             id={`${buildingFormProps.id}-${address?.id}`}
             labelClassName={`${buildingFormProps.labelClassName} ${building ? 'invailid-label' : 'vailid-label'}`}
             propLabelInfo={building}
+            value={addressInput.building}
             handler={(event) => updateData({ building: event.currentTarget.value })}
           />
           <InputForm
@@ -153,6 +155,7 @@ export const EditCustomerAddress = ({ address, addressTypes, buttons, update, sh
             id={`${buildingFormProps.id}-${address?.id}`}
             labelClassName={`${buildingFormProps.labelClassName} ${apart ? 'invailid-label' : 'vailid-label'}`}
             propLabelInfo={apart}
+            value={addressInput.apartment}
             handler={(event) => updateData({ apartment: event.currentTarget.value })}
           />
           <InputForm
@@ -160,6 +163,7 @@ export const EditCustomerAddress = ({ address, addressTypes, buttons, update, sh
             id={`${postalFormProps.id}-${address?.id}`}
             labelClassName={`${postalFormProps.labelClassName} ${postal ? 'invailid-label' : 'vailid-label'}`}
             propLabelInfo={postal}
+            value={addressInput.postalCode}
             handler={(event) => updateData({ postalCode: event.currentTarget.value })}
           />
         </>
