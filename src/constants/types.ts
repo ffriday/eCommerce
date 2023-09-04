@@ -232,3 +232,9 @@ export interface Pagination {
     right: boolean;
   };
 }
+
+export enum ButtonCodes {
+  update = 'account__update',
+  remove = 'account__remove',
+  add = 'account__add',
+}

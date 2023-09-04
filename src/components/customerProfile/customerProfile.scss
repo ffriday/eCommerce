@@ -82,6 +82,23 @@
     cursor: pointer;
     filter: opacity(90%);
   }
+  &__buttons {
+    display: flex;
+    flex-direction: row;
+  }
+  &__update {
+    width: 150px;
+    margin-left: 10px;
+  }
+  &__remove {
+    width: 150px;
+    margin-right: 10px;
+  }
+}
+
+.checkbox__wrapper {
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .account__addresses div:last-of-type {

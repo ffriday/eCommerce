@@ -19,7 +19,9 @@ import {
 import InputForm from '../inputForm/inputForm';
 import { IAddressTypes } from './profileTypes';
 import { checkInput } from '../../constants/formValidation';
-import { AddressErrors } from '../../constants/types';
+import { AddressErrors, ButtonCodes } from '../../constants/types';
+import Checkbox from '../checkbox/checkbox';
+import SubmitButton from '../submitButton/submitButton';
 
 interface IAddressButtons {
   add: boolean;
@@ -28,8 +30,8 @@ interface IAddressButtons {
 }
 
 interface ICustomerAddress extends ICustomerReaction {
-  address: Address;
-  addressTypes: IAddressTypes;
+  address?: Address;
+  addressTypes?: IAddressTypes;
   buttons: Partial<IAddressButtons>;
 }
 
@@ -41,7 +43,7 @@ const addressPreview = (address: Address | undefined, countries: Record<string, 
   return res;
 };
 
-export const EditCustomerAddress = ({ address, addressTypes, buttons, update, showError }: Partial<ICustomerAddress>) => {
+export const EditCustomerAddress = ({ address, addressTypes, buttons, update, showError }: ICustomerAddress) => {
   const api = useContext(apiContext);
 
   const countries = useMemo(
@@ -63,9 +65,21 @@ export const EditCustomerAddress = ({ address, addressTypes, buttons, update, sh
   const [apart, setApart] = useState('');
   const [postal, setPostal] = useState('');
 
-  const [addressInput, setAddressInput] = useState<Partial<BaseAddress>>({ city: '', ...address });
+  const [action, setAction] = useState('');
+  const [addressInput, setAddressInput] = useState<Partial<BaseAddress>>({
+    city: '',
+    streetName: '',
+    building: '',
+    apartment: '',
+    postalCode: '',
+    ...address,
+    country: address ? countries[address.country as string] : '',
+  });
+  const [addressParams, setAddressParams] = useState<IAddressTypes>(
+    addressTypes ? addressTypes : { billing: [''], shipping: [''], defaultBilling: '', defaultShipping: '' },
+  );
 
-  const [submit, setSubmit] = useState(true);
+  const [submit, setSubmit] = useState(false);
 
   const toggleAddress = () => setActive(!active);
 
@@ -104,8 +118,61 @@ export const EditCustomerAddress = ({ address, addressTypes, buttons, update, sh
       if (err) error = true;
       setPostal(err);
     }
+    Object.values(addressInput).forEach((el) => {
+      if (el === '') error = true;
+    });
     setAddressInput({ ...addressInput, ...newData });
     setSubmit(!error);
+  };
+
+  const checkAddressParams = (arr: string[], id: string | undefined) => {
+    let res = false;
+    if (id !== undefined) res = arr.includes(id);
+    return res;
+  };
+
+  const setParams = (param: string[], checked: boolean | undefined) => {
+    let res = param;
+    if (address?.id !== undefined) {
+      if (checked) {
+        if (!param.includes(address.id)) res.push(address.id);
+      } else {
+        const index = param.indexOf(address.id);
+        res = res.splice(index, 1);
+      }
+    }
+    return res;
+  };
+
+  const submitForm = async (event: React.FormEvent) => {
+    event.preventDefault();
+    showError('');
+    try {
+      if (action === ButtonCodes.remove) {
+        if (address?.id) await api.removeAddress(address.id, false, false, true);
+      }
+      if (action === ButtonCodes.update) {
+        if (address?.id) {
+          await api.changeAddress({ ...addressInput, country: countryMAP[addressInput.country as string] }, address.id);
+          // const ship = addressParams.shipping.includes(address.id);
+          // const bill = addressParams.billing.includes(address.id);
+          // await api.changeAddressParams(address.id, ship, bill, Boolean(addressParams.defaultShipping), Boolean(addressParams.defaultBilling));
+        }
+      }
+      if (action === ButtonCodes.add) {
+        const res = await api.addAddress({ ...addressInput, country: countryMAP[addressInput.country as string] });
+        if (res.body.id) {
+          const ship = addressParams.shipping.includes(res.body.id);
+          const bill = addressParams.billing.includes(res.body.id);
+          await api.changeAddressParams(res.body.id, ship, bill, Boolean(addressParams.defaultShipping), Boolean(addressParams.defaultBilling));
+        }
+      }
+      update();
+    } catch (error) {
+      if (error) {
+        showError(error.toString());
+      }
+    }
   };
 
   return (
@@ -114,7 +181,7 @@ export const EditCustomerAddress = ({ address, addressTypes, buttons, update, sh
         {addressPreview(address, countries)}
       </p>
       {active && (
-        <>
+        <form className='account__data' onSubmit={(event) => submitForm(event)}>
           <InputForm
             {...countryFormProps}
             id={`${countryFormProps.id}-${address?.id}`}
@@ -166,82 +233,59 @@ export const EditCustomerAddress = ({ address, addressTypes, buttons, update, sh
             value={addressInput.postalCode}
             handler={(event) => updateData({ postalCode: event.currentTarget.value })}
           />
-        </>
+          <div>
+            <Checkbox
+              id={`checkbox-shipment ${address?.id}`}
+              handler={(value) => setAddressParams({ ...addressParams, shipping: setParams(addressParams.shipping, value) })}
+              checked={checkAddressParams(addressParams.shipping, address?.id)}
+              classNameWrapper='account__checkbox-defaultAddress'
+              title='Для доставки'
+            />
+            <Checkbox
+              id={`checkbox-billing ${address?.id}`}
+              handler={(value) => setAddressParams({ ...addressParams, billing: setParams(addressParams.billing, value) })}
+              checked={checkAddressParams(addressParams.billing, address?.id)}
+              classNameWrapper='account__checkbox-defaultAddress'
+              title='Для выставления счета'
+            />
+            <Checkbox
+              id={`checkbox-defaultShipping ${address?.id}`}
+              handler={(value) => {
+                if (address && address.id && address.id === addressParams.defaultShipping) {
+                  const def = value ? address.id : '';
+                  setAddressParams({ ...addressParams, defaultShipping: def });
+                }
+              }}
+              checked={address?.id ? addressParams.defaultShipping === address.id : false}
+              classNameWrapper='account__checkbox-defaultAddress'
+              title='По умолчанию для доставки'
+            />
+            <Checkbox
+              id={`checkbox-defaultBilling ${address?.id}`}
+              handler={(value) => {
+                if (address && address.id && address.id === addressParams.defaultBilling) {
+                  const def = value ? address.id : '';
+                  setAddressParams({ ...addressParams, defaultBilling: def });
+                }
+              }}
+              checked={address?.id ? addressParams.defaultBilling === address.id : false}
+              classNameWrapper='account__checkbox-defaultAddress'
+              title='По умолчанию для выставления счета'
+            />
+          </div>
+          <div className='account__buttons'>
+            {buttons?.remove ? (
+              <SubmitButton text={'Удалить'} disabled={false} className={ButtonCodes.remove} handler={() => setAction(ButtonCodes.remove)} />
+            ) : null}
+            {buttons?.edit ? (
+              <SubmitButton text={'Обновить'} disabled={!submit} className={ButtonCodes.update} handler={() => setAction(ButtonCodes.update)} />
+            ) : null}
+            {buttons?.add ? (
+              <SubmitButton text={'Добавить'} disabled={!submit} className={ButtonCodes.add} handler={() => setAction(ButtonCodes.add)} />
+            ) : null}
+          </div>
+        </form>
       )}
-
-      {/* <InputForm
-        {...cityFormProps}
-        id={`${cityFormProps.id}-${className}`}
-        labelClassName={`${cityFormProps.labelClassName} ${context.validateArr[arrKey].city.className || ''}`}
-        propLabelInfo={context.validateArr[arrKey].city.err}
-        disabled={isDisabled}
-        handler={(event) => {
-          const status = checkInput(event.currentTarget.value, cityPattern);
-          status.className = status.err.length ? ' invailid-label' : ' vailid-label';
-          const adress = { ...context.validateArr[arrKey], city: status };
-          context.setValidateArr({ ...context.validateArr, [arrKey]: adress });
-        }}
-      />
-      <InputForm
-        {...streetFormProps}
-        id={`${streetFormProps.id}-${className}`}
-        labelClassName={`${streetFormProps.labelClassName} ${context.validateArr[arrKey].street.className || ''}`}
-        propLabelInfo={context.validateArr[arrKey].street.err}
-        disabled={isDisabled}
-        handler={(event) => {
-          const status = checkInput(event.currentTarget.value, streetPattern);
-          status.className = status.err.length ? ' invailid-label' : ' vailid-label';
-          const adress = { ...context.validateArr[arrKey], street: status };
-          context.setValidateArr({ ...context.validateArr, [arrKey]: adress });
-        }}
-      />
-      <div className='register__home'>
-        <InputForm
-          {...buildingFormProps}
-          id={`${buildingFormProps.id}-${className}`}
-          labelClassName={`${buildingFormProps.labelClassName} ${context.validateArr[arrKey].building.className || ''}`}
-          propLabelInfo={context.validateArr[arrKey].building.err}
-          disabled={isDisabled}
-          handler={(event) => {
-            const status = checkInput(event.currentTarget.value, buildingapartPattern);
-            status.className = status.err.length ? ' invailid-label' : ' vailid-label';
-            const adress = { ...context.validateArr[arrKey], building: status };
-            context.setValidateArr({ ...context.validateArr, [arrKey]: adress });
-          }}
-        />
-        <InputForm
-          {...apartFormProps}
-          id={`${apartFormProps.id}-${className}`}
-          labelClassName={`${apartFormProps.labelClassName} ${context.validateArr[arrKey].apart.className || ''}`}
-          propLabelInfo={context.validateArr[arrKey].apart.err}
-          disabled={isDisabled}
-          handler={(event) => {
-            const status = checkInput(event.currentTarget.value, buildingapartPattern);
-            status.className = status.err.length ? ' invailid-label' : ' vailid-label';
-            const adress = { ...context.validateArr[arrKey], apart: status };
-            context.setValidateArr({ ...context.validateArr, [arrKey]: adress });
-          }}
-        />
-      </div>
-      <InputForm
-        {...postalFormProps}
-        id={`${postalFormProps.id}-${className}`}
-        labelClassName={`${postalFormProps.labelClassName} ${context.validateArr[arrKey].postal.className || ''}`}
-        propLabelInfo={context.validateArr[arrKey].postal.err}
-        disabled={isDisabled}
-        handler={(event) => {
-          const status = checkInput(event.currentTarget.value, postalPattern);
-          status.className = status.err.length ? ' invailid-label' : ' vailid-label';
-          const adress = { ...context.validateArr[arrKey], postal: status };
-          context.setValidateArr({ ...context.validateArr, [arrKey]: adress });
-        }}
-      />
-      <Checkbox
-        id={`checkbox ${className}`}
-        handler={() => defaultAddress(arrKey)}
-        classNameWrapper='register__checkbox-defaultAddress'
-        title='Сделать адресом по умолчанию'
-      /> */}
     </div>
   );
 };

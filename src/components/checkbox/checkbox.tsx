@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 interface ICheckbox {
   id: string;
-  handler: () => void;
+  handler: (value?: boolean) => void;
   title: string;
   className?: string;
   classNameWrapper?: string;
@@ -12,14 +12,15 @@ interface ICheckbox {
     path: string;
     text: string;
   };
+  checked?: boolean;
 }
 
 const Checkbox = (props: ICheckbox) => {
   const linkClass = props.link ? 'checkbox__link' : 'disable';
-  const [isSelected, setIsSelected] = useState(false);
+  const [isSelected, setIsSelected] = useState(props.checked !== undefined ? props.checked : false);
   const action = () => {
     setIsSelected(!isSelected);
-    props.handler();
+    props.handler(isSelected);
   };
 
   return (
