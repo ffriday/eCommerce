@@ -80,7 +80,11 @@ export default class ApiClient extends ApiBase {
       this.api.userData.token = token;
       this.api.userData.isLogged = true;
       this.api.userData.refreshToken = refreshToken;
-      this.api.tokenApi = this.api.createApi({ token: this.api.existingTokenMiddleware, authorization: `Bearer ${this.api.userData.token}` });
+      try {
+        this.api.tokenApi = this.api.createApi({ token: this.api.existingTokenMiddleware, authorization: `Bearer ${this.api.userData.token}` });
+      } catch (error) {
+        this.logOutCustomer();
+      }
     }
   };
 
