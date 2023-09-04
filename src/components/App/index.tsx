@@ -11,6 +11,7 @@ import ApiClient from '../../constants/apiClient/apiClient';
 import { eCommerceEnv } from '../../constants/ecommerce.env';
 import ProductCatalog from '../catalog/catalog';
 import { CustomerProfile } from '../customerProfile/customerProfile';
+import { Product } from '../product/product';
 import { RoutePath } from '../../constants/types';
 
 const api = new ApiClient(eCommerceEnv);
@@ -41,6 +42,7 @@ export default function App() {
           <Route path={`/${RoutePath.register}`} element={<RegisterForm />} />
           <Route path={`/${RoutePath.catalog}`} element={<ProductCatalog />} />
           <Route path={`/${RoutePath.account}`} element={<CustomerProfile />} />
+          <Route path={`/${RoutePath.product}`} element={<Product />} />
           <Route path='*' element={<Notfound />} />
         </Routes>
       </BrowserRouter>

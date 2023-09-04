@@ -7,7 +7,7 @@ import { ICatalogApiData } from './types';
 import { IProductsQuery } from './apiClient/apiClientTypes';
 
 interface IGetProductData {
-  productVariant?: number;
+  productVariant?: boolean;
 }
 interface IGetProductDataById extends IGetProductData {
   id: string;
@@ -28,20 +28,35 @@ export default class ProductAdapter {
     }
     return '';
   };
-  private getProductCardData = (data: Product, productVariant = 0): ICardApiData => {
+  private getProductCardData = (data: Product, productVariant = false): ICardApiData => {
+    console.log(data);
     const id = data.id;
-    const image: string | undefined = data.masterData.current.masterVariant.images?.[productVariant]?.url;
+    const key = data.key;
+    const image: string | undefined = productVariant
+      ? data.masterData.current.variants[0].images?.[0].url
+      : data.masterData.current.masterVariant.images?.[0].url;
+    console.log(image);
+    if (!image) {
+      console.log('no image');
+    }
     const name: string = data.masterData.current.name[language.ru];
     const description: string | undefined = data.masterData.current.description?.[language.ru];
     let price = '';
     const priceData = data.masterData.current.masterVariant.prices;
     if (priceData && priceData.length > 0) {
-      const centAmount: number | undefined = data.masterData.current.masterVariant.prices[productVariant]?.value.centAmount;
-      const fractionDigits: number | undefined = data.masterData.current.masterVariant.prices[productVariant]?.value.fractionDigits;
+      const centAmount: number | undefined = data.masterData.current.masterVariant.prices[0]?.value.centAmount;
+      const fractionDigits: number | undefined = data.masterData.current.masterVariant.prices[0]?.value.fractionDigits;
+      price = this.getPrice(centAmount, fractionDigits);
+    }
+    const varPriceData = data.masterData.current.variants[0]?.prices;
+    if (productVariant && varPriceData && varPriceData.length > 0) {
+      const centAmount: number | undefined = varPriceData[0]?.value.centAmount;
+      const fractionDigits: number | undefined = varPriceData[0]?.value.fractionDigits;
       price = this.getPrice(centAmount, fractionDigits);
     }
     return {
       id: id,
+      key: key,
       image: image,
       name: name,
       description: description,
@@ -49,7 +64,7 @@ export default class ProductAdapter {
     };
   };
 
-  public getCatalog = async (productsQueryParams: IProductsQuery, productVariant = 0): Promise<ICatalogApiData> => {
+  public getCatalog = async (productsQueryParams: IProductsQuery, productVariant = false): Promise<ICatalogApiData> => {
     try {
       const res = await this.api.getProducts(productsQueryParams);
       if (res.statusCode !== 200) {
@@ -64,7 +79,7 @@ export default class ProductAdapter {
     }
   };
 
-  public getProductByKey = async ({ key, productVariant = 0 }: IGetProductDataByKey): Promise<ICardApiData> => {
+  public getProductByKey = async ({ key, productVariant = false }: IGetProductDataByKey): Promise<ICardApiData> => {
     try {
       const res = (await this.api.getProduct({ key: key })) as ClientResponse<Product>;
 
@@ -79,7 +94,7 @@ export default class ProductAdapter {
     }
   };
 
-  public getProductById = async ({ id, productVariant = 0 }: IGetProductDataById): Promise<ICardApiData> => {
+  public getProductById = async ({ id, productVariant = false }: IGetProductDataById): Promise<ICardApiData> => {
     try {
       const res = (await this.api.getProduct({ id: id })) as ClientResponse<Product>;
       if (res.statusCode !== 200) {

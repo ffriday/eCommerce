@@ -1,0 +1,112 @@
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+@import '../../styles/templates.scss';
+
+.product {
+  @include product-info($product-width, $product-height);
+  &__container {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    flex-wrap: wrap;
+  }
+  &__heading {
+    margin-bottom: 20px;
+    font-size: $product-heading-font-size;
+  }
+  &__description {
+    padding-bottom: 20px;
+    margin-bottom: 40px;
+    border-bottom: 1px;
+    border-color: #adadad;
+    border-style: solid;
+    font-size: $product-description-font-size;
+  }
+  &__variants {
+    font-size: $product-variants-font-size;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 112px;
+    &-info {
+      margin-bottom: 20px;
+    }
+    &-labels {
+      display: flex;
+      gap: 15px;
+    }
+    &-label {
+      padding: 10px 16px;
+      border-radius: 40px;
+      border: 1.5px solid #ccc;
+      &--active {
+        border-color: #5ca182;
+        color: #5ca182;
+      }
+    }
+  }
+  &__button {
+    @include submitButton($product-btn-width, $product-btn-height);
+  }
+  &__bottom-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  &__prices {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: $product-price-font-size;
+  }
+  &__price {
+    &--discounted {
+      color: $product-price-discounted-color;
+      font-weight: $product-price-discounted-font-weight;
+    }
+    &--disable {
+      text-decoration: line-through;
+      margin-bottom: 5px;
+    }
+  }
+}
+.slider {
+  cursor: pointer;
+  &__box {
+    width: 350px;
+    position: relative;
+  }
+  width: 100%;
+  height: auto;
+  &__tooltip {
+    position: absolute;
+    top: 10%;
+    left: 45%;
+    transform: translateX(-50%);
+    background-color: #6d6d6d;
+    color: #d6d6d6;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 11px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease-in-out;
+    z-index: 40;
+  }
+}
+
+.slider__box:hover .slider__tooltip {
+  opacity: 1;
+}
+@media only screen and (max-width: 870px) {
+  .product {
+    max-width: 350px;
+    &__variants {
+      margin-bottom: 30px;
+    }
+    &__container {
+      flex-direction: column-reverse;
+      align-items: center;
+    }
+  }
+}
