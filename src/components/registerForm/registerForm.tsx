@@ -290,7 +290,7 @@ const RegisterStep2: FC<{ className: string }> = ({ className }) => {
 const AddressInputs: FC<IAddressInput> = ({ caption, className, arrKey, isDisabled = false }) => {
   const context = useContext(RegisterContext) as IRegisterContext;
 
-  const defaultAdвress = (arrKey: RegiserInputNames) => {
+  const defaultAddress = (arrKey: RegiserInputNames) => {
     if (arrKey === RegiserInputNames.shipment) {
       context.setDefaultShipping(!context.defaultShipping);
     }
@@ -388,7 +388,7 @@ const AddressInputs: FC<IAddressInput> = ({ caption, className, arrKey, isDisabl
       />
       <Checkbox
         id={`checkbox ${className}`}
-        handler={() => defaultAdвress(arrKey)}
+        handler={() => defaultAddress(arrKey)}
         classNameWrapper='register__checkbox-defaultAddress'
         title='Сделать адресом по умолчанию'
       />

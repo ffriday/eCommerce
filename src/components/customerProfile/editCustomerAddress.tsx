@@ -1,11 +1,25 @@
-import { Address } from '@commercetools/platform-sdk';
+import { Address, BaseAddress } from '@commercetools/platform-sdk';
 import './customerProfile.scss';
 import { useContext, useMemo, useState } from 'react';
 import { apiContext } from '../App';
 import { ICustomerReaction } from './customerProfile';
-import { countryFormProps, countryMAP } from '../registerForm/formProps';
+import {
+  buildingFormProps,
+  buildingapartPattern,
+  cityFormProps,
+  cityPattern,
+  countryAutocomplete,
+  countryFormProps,
+  countryMAP,
+  postalFormProps,
+  postalPattern,
+  streetFormProps,
+  streetPattern,
+} from '../registerForm/formProps';
 import InputForm from '../inputForm/inputForm';
 import { IAddressTypes } from './profileTypes';
+import { checkInput } from '../../constants/formValidation';
+import { AddressErrors } from '../../constants/types';
 
 interface IAddressButtons {
   add: boolean;
@@ -32,6 +46,17 @@ export const EditCustomerAddress = ({ address, addressTypes, buttons, update, sh
 
   const [active, setActive] = useState(false);
 
+  const [country, setCountry] = useState('');
+  const [city, setCity] = useState('');
+  const [street, setStreet] = useState('');
+  const [building, setBuilding] = useState('');
+  const [apart, setApart] = useState('');
+  const [postal, setPostal] = useState('');
+
+  const [addressInput, setAddressInput] = useState<Partial<BaseAddress>>({ ...(address && { city: '' }) });
+
+  const [submit, setSubmit] = useState(true);
+
   const countries = useMemo(
     () =>
       Object.entries(countryMAP).reduce((acc: Record<string, string>, [key, value]) => {
@@ -41,29 +66,106 @@ export const EditCustomerAddress = ({ address, addressTypes, buttons, update, sh
     [],
   );
 
+  const toggleAddress = () => setActive(!active);
+  // const toggleAddress = async () => {
+  //   const a = await api.getProductFiltered({}, {});
+  //   console.log(a);
+  //   if (a) console.log(a.body.results[0].masterVariant.images[0].url);
+  //   a.body.results.forEach(el => console.log(el.name));
+  // };
+
+  const updateData = (newData: Partial<Address>) => {
+    let error = false;
+    if (newData.country) {
+      if (!countryAutocomplete.dataList.includes(newData.country)) {
+        error = true;
+        setCountry(AddressErrors.countryFromList);
+      } else {
+        setCountry('');
+      }
+    }
+    if (newData.city) {
+      const { err } = checkInput(newData.city, cityPattern);
+      if (err) error = true;
+      setCity(err);
+    }
+    if (newData.streetName) {
+      const { err } = checkInput(newData.streetName, streetPattern);
+      if (err) error = true;
+      setStreet(err);
+    }
+    if (newData.building) {
+      const { err } = checkInput(newData.building, buildingapartPattern);
+      if (err) error = true;
+      setBuilding(err);
+    }
+    if (newData.apartment) {
+      const { err } = checkInput(newData.apartment, buildingapartPattern);
+      if (err) error = true;
+      setApart(err);
+    }
+    if (newData.postalCode) {
+      const { err } = checkInput(newData.postalCode, postalPattern);
+      if (err) error = true;
+      setPostal(err);
+    }
+    setAddressInput({ ...addressInput, ...newData });
+    setSubmit(!error);
+  };
+
   return (
     <div>
-      {!active ? <p className='account__addressCaption'>{addressPreview(address, countries)}</p> : ''}
+      <p onClick={toggleAddress} className='account__addressCaption'>
+        {addressPreview(address, countries)}
+      </p>
+      {active && (
+        <>
+          <InputForm
+            {...countryFormProps}
+            id={`${countryFormProps.id}-${address?.id}`}
+            labelClassName={`${countryFormProps.labelClassName} ${country ? 'invailid-label' : 'vailid-label'}`}
+            propLabelInfo={country}
+            handler={(event) => updateData({ country: event.currentTarget.value })}
+          />
+          <InputForm
+            {...cityFormProps}
+            id={`${cityFormProps.id}-${address?.id}`}
+            labelClassName={`${cityFormProps.labelClassName} ${city ? 'invailid-label' : 'vailid-label'}`}
+            propLabelInfo={city}
+            handler={(event) => updateData({ city: event.currentTarget.value })}
+          />
+          <InputForm
+            {...streetFormProps}
+            id={`${streetFormProps.id}-${address?.id}`}
+            labelClassName={`${streetFormProps.labelClassName} ${street ? 'invailid-label' : 'vailid-label'}`}
+            propLabelInfo={street}
+            handler={(event) => updateData({ streetName: event.currentTarget.value })}
+          />
+          <InputForm
+            {...buildingFormProps}
+            id={`${buildingFormProps.id}-${address?.id}`}
+            labelClassName={`${buildingFormProps.labelClassName} ${building ? 'invailid-label' : 'vailid-label'}`}
+            propLabelInfo={building}
+            handler={(event) => updateData({ building: event.currentTarget.value })}
+          />
+          <InputForm
+            {...buildingFormProps}
+            id={`${buildingFormProps.id}-${address?.id}`}
+            labelClassName={`${buildingFormProps.labelClassName} ${apart ? 'invailid-label' : 'vailid-label'}`}
+            propLabelInfo={apart}
+            handler={(event) => updateData({ apartment: event.currentTarget.value })}
+          />
+          <InputForm
+            {...postalFormProps}
+            id={`${postalFormProps.id}-${address?.id}`}
+            labelClassName={`${postalFormProps.labelClassName} ${postal ? 'invailid-label' : 'vailid-label'}`}
+            propLabelInfo={postal}
+            handler={(event) => updateData({ postalCode: event.currentTarget.value })}
+          />
+        </>
+      )}
 
-      {/* <p className='account__addressCaption'>{caption}</p>
-      <InputForm
-        {...countryFormProps}
-        id={`${countryFormProps.id}-${className}`}
-        labelClassName={`${countryFormProps.labelClassName} ${context.validateArr.shipment?.country.className || ''}`}
-        propLabelInfo={context.validateArr.shipment?.country.err}
-        disabled={isDisabled}
-        handler={(event) => {
-          const error = !countryAutocomplete.dataList.includes(event.currentTarget.value) ? AddressErrors.countryFromList : '';
-          const status: IValueStatus = {
-            val: !error ? countryMAP[event.currentTarget.value] : '',
-            err: error,
-            className: error.length ? ' invailid-label' : ' vailid-label',
-          };
-          const adress = { ...context.validateArr[arrKey], country: status };
-          context.setValidateArr({ ...context.validateArr, [arrKey]: adress });
-        }}
-      />
-      <InputForm
+      {/* <InputForm
         {...cityFormProps}
         id={`${cityFormProps.id}-${className}`}
         labelClassName={`${cityFormProps.labelClassName} ${context.validateArr[arrKey].city.className || ''}`}
