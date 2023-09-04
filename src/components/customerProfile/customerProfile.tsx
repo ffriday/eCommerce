@@ -8,6 +8,7 @@ import { ICustomerInfo, IParsedCustomer } from './profileTypes';
 import { Address } from '@commercetools/platform-sdk';
 import { CustomerData } from './customerData';
 import { CustomerAddress } from './customerAddress';
+import { CustomerPassword } from './customerPassword';
 
 const getCustomer = async (api: ApiClient): Promise<IParsedCustomer> => {
   const customer = await api.getCustomerInfo();
@@ -58,6 +59,7 @@ export const CustomerProfile = () => {
     <div className='account'>
       <h1 className='account__heading'>{`Профиль пользователя ${customerInfo.name} ${customerInfo.surename}`}</h1>
       <CustomerData customerInfo={customerInfo} update={update} showError={showError} />
+      <CustomerPassword update={update} showError={showError} />
       <CustomerAddress customerAddress={customerAddress} update={update} />
       {error ? <span className='account__errorMessage'>{error}</span> : null}
       <button
