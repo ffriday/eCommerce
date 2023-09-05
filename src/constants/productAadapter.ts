@@ -1,11 +1,11 @@
 import ApiClient from './apiClient/apiClient';
 import { language } from './types';
 import { GetPrice } from './types';
-import { ClientResponse, Product } from '@commercetools/platform-sdk';
+import { ClientResponse, Product, ProductProjectionPagedSearchResponse } from '@commercetools/platform-sdk';
 import { ICardApiData } from './types';
 import { ICatalogApiData } from './types';
 import { IProductsQuery } from './apiClient/apiClientTypes';
-
+import { IProductFilter } from './apiClient/apiClientTypes';
 interface IGetProductData {
   productVariant?: boolean;
 }
@@ -63,15 +63,46 @@ export default class ProductAdapter {
       price: price,
     };
   };
-
-  public getCatalog = async (productsQueryParams: IProductsQuery, productVariant = false): Promise<ICatalogApiData> => {
+  private getCatalogData = (data: ProductProjectionPagedSearchResponse, productVariant = 0): ICardApiData[] => {
+    const id = data.results.map((product) => product.id);
+    const key = data.results.map((product) => product.key);
+    const image = data.results.map((product) => product.masterVariant.images?.[productVariant]?.url);
+    const name = data.results.map((product) => product.name[language.ru]);
+    const description = data.results.map((product) => product.description?.[language.ru]);
+    const priceData = data.results.map((product) => product.masterVariant.prices);
+    const prices: string[] = [];
+    if (priceData && priceData.length > 0) {
+      const centAmount = data.results.map((product) => product.masterVariant.prices?.[productVariant]?.value.centAmount);
+      const fractionDigits = data.results.map((product) => product.masterVariant.prices?.[productVariant]?.value.fractionDigits);
+      for (let i = 0; i < centAmount.length; i++) {
+        const price = this.getPrice(centAmount[i], fractionDigits[i]);
+        prices.push(price);
+      }
+    }
+    const catalog: ICardApiData[] = id.map((item, index) => {
+      return {
+        id: item[index],
+        key: key[index],
+        image: image[index],
+        name: name[index],
+        description: description[index],
+        price: prices[index],
+      };
+    });
+    return catalog;
+  };
+  public getCatalog = async (
+    queryArgs?: Partial<IProductsQuery>,
+    queryFilter?: Partial<IProductFilter>,
+    productVariant = 0,
+  ): Promise<ICatalogApiData> => {
     try {
-      const res = await this.api.getProducts(productsQueryParams);
+      const res = await this.api.getProductFiltered(queryArgs, queryFilter);
       if (res.statusCode !== 200) {
         throw new Error(`Failed to load catalog. Status code: ${res.statusCode}`);
       }
       const totalCount: number | undefined = res.body.total;
-      const products = res.body.results.map((data) => this.getProductCardData(data, productVariant));
+      const products = this.getCatalogData(res.body, productVariant);
       return { products, totalCount };
     } catch (error) {
       const typedError = error as Error;
