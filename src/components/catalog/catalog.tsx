@@ -6,8 +6,11 @@ import { ICatalogApiData } from '../../constants/types';
 import CatalogList from './catalogList';
 import CatalogNavigation from './catalogNavigation';
 import { useMediaQuery } from '@react-hook/media-query';
-
-export default function ProductCatalog() {
+import { IProductFilter } from '../../constants/apiClient/apiClientTypes';
+interface ICatalog {
+  queryFilter?: Partial<IProductFilter> | undefined;
+}
+export default function ProductCatalog({ queryFilter }: ICatalog) {
   const isMediumDevice = useMediaQuery('only screen and (min-width: 503px) and (max-width: 800px)');
   const isSmallDevice = useMediaQuery('only screen and (max-width : 502px)');
   const mobileLimit = 2;
@@ -44,7 +47,7 @@ export default function ProductCatalog() {
   useEffect(() => {
     const getData = async () => {
       const offset: number = (page - 1) * limit;
-      const catalogData: ICatalogApiData = await productAdapter.getCatalog({ limit: limit, offset: offset });
+      const catalogData: ICatalogApiData = await productAdapter.getCatalog({ limit: limit, offset: offset }, queryFilter);
       setCatalogData(catalogData);
     };
     getData();
