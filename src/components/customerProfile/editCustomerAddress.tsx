@@ -168,6 +168,16 @@ export const EditCustomerAddress = ({ address, addressTypes, buttons, update, sh
                 Boolean(addressParams.defaultBilling),
               );
             }
+            setAddressInput({
+              city: '',
+              streetName: '',
+              building: '',
+              apartment: '',
+              postalCode: '',
+              country: '',
+            });
+            setCountryState('');
+            setActive(false);
             update();
           }, 300);
         }
@@ -189,7 +199,6 @@ export const EditCustomerAddress = ({ address, addressTypes, buttons, update, sh
           update();
         }, 300);
       }
-      update();
     } catch (error) {
       if (error) {
         showError(error.toString());

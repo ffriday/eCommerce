@@ -51,6 +51,14 @@ export interface IUserValidate<T> {
   bill: IAddress<T>;
 }
 
+export enum RoutePath {
+  account = 'account',
+  login = 'login',
+  register = 'registration',
+  catalog = 'catalog',
+  product = 'catalog/:key',
+}
+
 export enum EmailErrors {
   leadingTrailingSpace = 'Не должно быть начальных или конечных пробелов',
   notInLatin = 'Email должен быть на латинице',
@@ -108,21 +116,6 @@ export enum HTTPResponseCode {
   ok = 200,
 }
 
-export enum RoutePath {
-  account = 'account',
-  login = 'login',
-  register = 'registration',
-  catalog = 'catalog',
-}
-
-export enum RoutePath {
-  account = 'account',
-  login = 'login',
-  register = 'registration',
-  catalog = 'catalog',
-  product = 'catalog/:key',
-}
-
 export interface ICardApiData {
   id: string;
   key: string | undefined;
@@ -162,4 +155,17 @@ export enum ButtonCodes {
   update = 'account__update',
   remove = 'account__remove',
   add = 'account__add',
+}
+
+export interface ICheckbox {
+  id: string;
+  handler: (value?: boolean) => void;
+  title: string;
+  className?: string;
+  classNameWrapper?: string;
+  link?: {
+    path: string;
+    text: string;
+  };
+  checked?: boolean;
 }

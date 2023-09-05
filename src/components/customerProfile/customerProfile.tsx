@@ -72,7 +72,7 @@ export const CustomerProfile = () => {
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [changeCustomer]);
 
   return (
     <div className='account'>

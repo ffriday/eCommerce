@@ -1,19 +1,7 @@
 import './checkbox.scss';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-
-interface ICheckbox {
-  id: string;
-  handler: (value?: boolean) => void;
-  title: string;
-  className?: string;
-  classNameWrapper?: string;
-  link?: {
-    path: string;
-    text: string;
-  };
-  checked?: boolean;
-}
+import { ICheckbox } from '../../constants/types';
 
 const Checkbox = (props: ICheckbox) => {
   const linkClass = props.link ? 'checkbox__link' : 'disable';
