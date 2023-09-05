@@ -132,15 +132,16 @@ export const EditCustomerAddress = ({ address, addressTypes, buttons, update, sh
   };
 
   const setParams = (param: string[], checked: boolean | undefined) => {
-    let res = param;
+    const res = param;
     if (address?.id !== undefined) {
       if (checked) {
         if (!param.includes(address.id)) res.push(address.id);
       } else {
         const index = param.indexOf(address.id);
-        res = res.splice(index, 1);
+        res.splice(index, 1);
       }
     }
+    updateData(addressInput);
     return res;
   };
 
@@ -150,22 +151,43 @@ export const EditCustomerAddress = ({ address, addressTypes, buttons, update, sh
     try {
       if (action === ButtonCodes.remove) {
         if (address?.id) await api.removeAddress(address.id, false, false, true);
+        window.setTimeout(async () => update(), 300);
       }
       if (action === ButtonCodes.update) {
         if (address?.id) {
-          await api.changeAddress({ ...addressInput, country: countryMAP[addressInput.country as string] }, address.id);
-          // const ship = addressParams.shipping.includes(address.id);
-          // const bill = addressParams.billing.includes(address.id);
-          // await api.changeAddressParams(address.id, ship, bill, Boolean(addressParams.defaultShipping), Boolean(addressParams.defaultBilling));
+          const res = await api.changeAddress({ ...addressInput, country: countryMAP[addressInput.country as string] }, address.id);
+          window.setTimeout(async () => {
+            if (res.body.id && address.id) {
+              const ship = addressParams.shipping.includes(address.id);
+              const bill = addressParams.billing.includes(address.id);
+              await api.changeAddressParams(
+                address.id,
+                ship,
+                bill,
+                Boolean(addressParams.defaultShipping),
+                Boolean(addressParams.defaultBilling),
+              );
+            }
+            update();
+          }, 300);
         }
       }
       if (action === ButtonCodes.add) {
         const res = await api.addAddress({ ...addressInput, country: countryMAP[addressInput.country as string] });
-        if (res.body.id) {
-          const ship = addressParams.shipping.includes(res.body.id);
-          const bill = addressParams.billing.includes(res.body.id);
-          await api.changeAddressParams(res.body.id, ship, bill, Boolean(addressParams.defaultShipping), Boolean(addressParams.defaultBilling));
-        }
+        window.setTimeout(async () => {
+          if (res.body.id) {
+            const ship = addressParams.shipping.includes(res.body.id);
+            const bill = addressParams.billing.includes(res.body.id);
+            await api.changeAddressParams(
+              res.body.id,
+              ship,
+              bill,
+              Boolean(addressParams.defaultShipping),
+              Boolean(addressParams.defaultBilling),
+            );
+          }
+          update();
+        }, 300);
       }
       update();
     } catch (error) {
@@ -236,14 +258,14 @@ export const EditCustomerAddress = ({ address, addressTypes, buttons, update, sh
           <div>
             <Checkbox
               id={`checkbox-shipment ${address?.id}`}
-              handler={(value) => setAddressParams({ ...addressParams, shipping: setParams(addressParams.shipping, value) })}
+              handler={(value) => setAddressParams({ ...addressParams, shipping: setParams(addressParams.shipping, !value) })}
               checked={checkAddressParams(addressParams.shipping, address?.id)}
               classNameWrapper='account__checkbox-defaultAddress'
               title='Для доставки'
             />
             <Checkbox
               id={`checkbox-billing ${address?.id}`}
-              handler={(value) => setAddressParams({ ...addressParams, billing: setParams(addressParams.billing, value) })}
+              handler={(value) => setAddressParams({ ...addressParams, billing: setParams(addressParams.billing, !value) })}
               checked={checkAddressParams(addressParams.billing, address?.id)}
               classNameWrapper='account__checkbox-defaultAddress'
               title='Для выставления счета'
@@ -255,6 +277,7 @@ export const EditCustomerAddress = ({ address, addressTypes, buttons, update, sh
                   const def = value ? address.id : '';
                   setAddressParams({ ...addressParams, defaultShipping: def });
                 }
+                updateData(addressInput);
               }}
               checked={address?.id ? addressParams.defaultShipping === address.id : false}
               classNameWrapper='account__checkbox-defaultAddress'
@@ -267,6 +290,7 @@ export const EditCustomerAddress = ({ address, addressTypes, buttons, update, sh
                   const def = value ? address.id : '';
                   setAddressParams({ ...addressParams, defaultBilling: def });
                 }
+                updateData(addressInput);
               }}
               checked={address?.id ? addressParams.defaultBilling === address.id : false}
               classNameWrapper='account__checkbox-defaultAddress'
