@@ -1,7 +1,5 @@
 import { Address } from '@commercetools/platform-sdk';
 import './customerProfile.scss';
-// import { useContext } from 'react';
-// import { apiContext } from '../App';
 import { ICustomerReaction } from './customerProfile';
 import { EditCustomerAddress } from './editCustomerAddress';
 import { IAddressTypes } from './profileTypes';

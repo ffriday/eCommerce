@@ -125,3 +125,14 @@
     cursor: pointer;
   }
 }
+
+@mixin product-info($width, $height) {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: $product-background-color;
+  width: $width;
+  height: $height;
+  font-family: $product-font-family;
+  color: $product-text-color;
+}

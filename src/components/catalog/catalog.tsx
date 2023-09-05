@@ -5,9 +5,18 @@ import { apiContext } from '../App';
 import { ICatalogApiData } from '../../constants/types';
 import CatalogList from './catalogList';
 import CatalogNavigation from './catalogNavigation';
+import { useMediaQuery } from '@react-hook/media-query';
+
 export default function ProductCatalog() {
-  const limit = 2;
+  const isMediumDevice = useMediaQuery('only screen and (min-width: 503px) and (max-width: 800px)');
+  const isSmallDevice = useMediaQuery('only screen and (max-width : 502px)');
+  const mobileLimit = 2;
+  const mediumLimit = 4;
+  const desktopLimit = 8;
+  const limit = isMediumDevice ? mediumLimit : isSmallDevice ? mobileLimit : desktopLimit;
+
   const startPage = 1;
+
   // const storedPage = localStorage.getItem('page');
   // const startPage = storedPage ? Number(storedPage) : 1;
   const [catalogData, setCatalogData] = useState<ICatalogApiData>({ products: [], totalCount: 0 });
@@ -22,15 +31,16 @@ export default function ProductCatalog() {
     const totalCount = catalogData.products ? getTotalPageCount(catalogData.totalCount) : 0;
     const newPage = nextPage <= totalCount ? nextPage : current;
     // localStorage.setItem('page', `${newPage}`);
-    setPage(newPage), [page, catalogData];
+    setPage(newPage);
   };
   const prevButtonHandler = () => {
     const current: number = page;
     const prevPage: number = current - 1;
     const newPage = prevPage > 0 ? prevPage : current;
-    localStorage.setItem('page', `${newPage}`);
-    setPage(prevPage > 0 ? prevPage : current), [page];
+    // localStorage.setItem('page', `${newPage}`);
+    setPage(newPage);
   };
+
   useEffect(() => {
     const getData = async () => {
       const offset: number = (page - 1) * limit;
@@ -38,13 +48,21 @@ export default function ProductCatalog() {
       setCatalogData(catalogData);
     };
     getData();
-  }, [productAdapter, page]);
+  }, [productAdapter, page, limit]);
 
   return (
     <section className='catalog__section'>
       <div className='container'>
         <CatalogList catalogData={catalogData} />
-        <CatalogNavigation catalogData={catalogData} page={page} limit={limit} prevHandler={prevButtonHandler} nextHandler={nextButtonHandler} />
+        {
+          <CatalogNavigation
+            catalogData={catalogData}
+            page={page}
+            limit={limit}
+            prevHandler={prevButtonHandler}
+            nextHandler={nextButtonHandler}
+          />
+        }
       </div>
     </section>
   );
