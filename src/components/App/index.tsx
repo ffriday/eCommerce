@@ -17,11 +17,11 @@ import ProductAdapter from '../../constants/productAadapter';
 
 const api = new ApiClient(eCommerceEnv);
 export const apiContext = createContext(api);
-const test = async () => {
-  console.log(api.categories);
-  const adapter = new ProductAdapter(api);
-  const res = await adapter.getCatalog({ limit: 20 }, { categoryId: api.categories.flowerarrangements });
-};
+// const test = async () => {
+//   console.log(api.categories);
+//   const adapter = new ProductAdapter(api);
+//   const res = await adapter.getCatalog({ limit: 20 }, { categoryId: api.categories.flowerarrangements });
+// };
 
 // const f = async () => {
 //   const addr = await api.getProductFiltered({}, { currency: SortParams.USD, discount: true });
@@ -43,7 +43,7 @@ export default function App() {
     <apiContext.Provider value={api}>
       <BrowserRouter>
         <Header />
-        <button onClick={test}>click</button>
+        {/* <button onClick={test}>click</button> */}
         <Routes>
           <Route path='/' element={<Main />} />
           <Route path={`/${RoutePath.login}`} element={<LoginForm />} />
