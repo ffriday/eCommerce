@@ -13,9 +13,15 @@ import ProductCatalog from '../catalog/catalog';
 import { CustomerProfile } from '../customerProfile/customerProfile';
 import { Product } from '../product/product';
 import { RoutePath } from '../../constants/types';
+import ProductAdapter from '../../constants/productAadapter';
 
 const api = new ApiClient(eCommerceEnv);
 export const apiContext = createContext(api);
+const test = async () => {
+  console.log(api.categories);
+  const adapter = new ProductAdapter(api);
+  const res = await adapter.getCatalog({ limit: 20 }, { categoryId: api.categories.flowerarrangements });
+};
 
 // const f = async () => {
 //   const addr = await api.getProductFiltered({}, { currency: SortParams.USD, discount: true });
@@ -37,11 +43,24 @@ export default function App() {
     <apiContext.Provider value={api}>
       <BrowserRouter>
         <Header />
+        <button onClick={test}>click</button>
         <Routes>
           <Route path='/' element={<Main />} />
           <Route path={`/${RoutePath.login}`} element={<LoginForm />} />
           <Route path={`/${RoutePath.register}`} element={<RegisterForm />} />
           <Route path={`/${RoutePath.catalog}`} element={<ProductCatalog />} />
+          <Route
+            path={`/${RoutePath.arrangmentcategory}`}
+            element={<ProductCatalog queryFilter={{ categoryId: '66ce170c-bfbd-4fe0-b0c7-9826d8aba68e' }} />}
+          />
+          <Route
+            path={`/${RoutePath.bouquetscategory}`}
+            element={<ProductCatalog queryFilter={{ categoryId: '6537ef03-3ae8-4fad-a594-c1a5e2342131' }} />}
+          />
+          <Route
+            path={`/${RoutePath.giftbasketcategory}`}
+            element={<ProductCatalog queryFilter={{ categoryId: 'ecb20a4c-70a3-43b8-abcb-8eb28b17bce7' }} />}
+          />
           <Route path={`/${RoutePath.account}`} element={<CustomerProfile />} />
           <Route path={`/${RoutePath.product}`} element={<Product />} />
           <Route path='*' element={<Notfound />} />
