@@ -51,11 +51,11 @@ export default function App() {
           <Route path={`/${RoutePath.catalog}`} element={<ProductCatalog />} />
           <Route
             path={`/${RoutePath.arrangmentcategory}`}
-            element={<ProductCatalog queryFilter={{ categoryId: '66ce170c-bfbd-4fe0-b0c7-9826d8aba68e' }} />}
+            element={<ProductCatalog queryFilter={{ categoryId: '6537ef03-3ae8-4fad-a594-c1a5e2342131' }} />}
           />
           <Route
             path={`/${RoutePath.bouquetscategory}`}
-            element={<ProductCatalog queryFilter={{ categoryId: '6537ef03-3ae8-4fad-a594-c1a5e2342131' }} />}
+            element={<ProductCatalog queryFilter={{ categoryId: '66ce170c-bfbd-4fe0-b0c7-9826d8aba68e' }} />}
           />
           <Route
             path={`/${RoutePath.giftbasketcategory}`}

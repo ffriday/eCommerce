@@ -25,15 +25,15 @@ export const Header: FC = () => {
   };
 
   const routes: IRoute[] = [
-    { title: 'Каталог', href: RoutePath.catalog, classNames: routeClassNames },
+    { title: 'Каталог', href: `/${RoutePath.catalog}`, classNames: routeClassNames },
     { title: 'О нас', href: '/about', classNames: routeClassNames },
     { title: 'Контакты', href: '/contacts', classNames: routeClassNames },
   ];
 
   const tabs: IRoute[] = [
-    { title: 'букеты', href: RoutePath.bouquetscategory, classNames: tabsClassNames },
-    { title: 'композиции', href: RoutePath.arrangmentcategory, classNames: tabsClassNames },
-    { title: 'подарочные наборы', href: RoutePath.giftbasketcategory, classNames: tabsClassNames },
+    { title: 'букеты', href: `/${RoutePath.bouquetscategory}`, classNames: tabsClassNames },
+    { title: 'композиции', href: `/${RoutePath.arrangmentcategory}`, classNames: tabsClassNames },
+    { title: 'подарочные наборы', href: `/${RoutePath.giftbasketcategory}`, classNames: tabsClassNames },
     { title: 'акции', href: '/shares', classNames: tabsClassNames },
     { title: 'новинки', href: '/novelties', classNames: tabsClassNames },
   ];
