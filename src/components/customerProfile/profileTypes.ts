@@ -7,7 +7,15 @@ export interface ICustomerInfo {
   birthDate: string;
 }
 
+export interface IAddressTypes {
+  billing: string[];
+  shipping: string[];
+  defaultBilling: string;
+  defaultShipping: string;
+}
+
 export interface IParsedCustomer {
   info: ICustomerInfo;
   address?: Address[];
+  addressTypes?: IAddressTypes;
 }

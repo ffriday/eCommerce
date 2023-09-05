@@ -71,6 +71,44 @@
     margin-bottom: $login-email-margin-bottom;
     margin-top: $login-email-margin-bottom;
   }
+  &__addressCaption {
+    background: url(../../assets/account/pencil-edit.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: right;
+    padding-right: 25px;
+  }
+  &__addressCaption:hover {
+    cursor: pointer;
+    filter: opacity(90%);
+  }
+  &__buttons {
+    display: flex;
+    flex-direction: row;
+  }
+  &__update {
+    width: 150px;
+    margin-left: 10px;
+  }
+  &__remove {
+    width: 150px;
+    margin-right: 10px;
+  }
+}
+
+.checkbox__wrapper {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.account__addresses div:last-of-type {
+  .account__addressCaption {
+    background: url(../../assets/account/plus.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: right;
+    padding-right: 25px;
+  }
 }
 
 .inputForm__wrapper {

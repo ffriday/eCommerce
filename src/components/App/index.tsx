@@ -19,6 +19,7 @@ export const apiContext = createContext(api);
 
 // const f = async () => {
 //   const addr = await api.getProductFiltered({}, { currency: SortParams.USD, discount: true });
+//   const addr = await api.getProductFiltered({}, { currency: SortParams.USD, discount: true });
 //   console.log(addr);
 // };
 

@@ -6,12 +6,10 @@ import { dateFormProps, emailFormProps, emailPattern, firstNameFormProps, lastNa
 import './customerProfile.scss';
 import { checkDate, checkInput } from '../../constants/formValidation';
 import SubmitButton from '../submitButton/submitButton';
-import { IShowError } from '../../constants/types';
+import { ICustomerReaction } from './customerProfile';
 
-interface ICustomerData {
+interface ICustomerData extends ICustomerReaction {
   customerInfo: ICustomerInfo;
-  update: () => void;
-  showError: IShowError;
 }
 
 export const CustomerData = ({ customerInfo, update, showError }: ICustomerData) => {
