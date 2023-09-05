@@ -53,7 +53,7 @@ export const CustomerProfile = () => {
 
   useEffect(() => {
     // Redirect if user not logged in
-    if (api.api.userData.isLogged) navigate(`/${RoutePath.account}`);
+    if (!api.api.userData.isLogged) navigate(`/${RoutePath.login}`);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

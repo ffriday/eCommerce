@@ -46,13 +46,12 @@ export default function ProductCatalog({ queryFilter }: ICatalog) {
 
   useEffect(() => {
     const getData = async () => {
-      console.log(api);
       const offset: number = (page - 1) * limit;
       const catalogData: ICatalogApiData = await productAdapter.getCatalog({ limit: limit, offset: offset }, queryFilter);
       setCatalogData(catalogData);
     };
     getData();
-  }, [productAdapter, page, limit]);
+  }, [productAdapter, page, limit, queryFilter]);
 
   return (
     <section className='catalog__section'>

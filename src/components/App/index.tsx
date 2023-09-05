@@ -13,7 +13,7 @@ import ProductCatalog from '../catalog/catalog';
 import { CustomerProfile } from '../customerProfile/customerProfile';
 import { Product } from '../product/product';
 import { RoutePath } from '../../constants/types';
-import ProductAdapter from '../../constants/productAadapter';
+// import ProductAdapter from '../../constants/productAadapter';
 
 const api = new ApiClient(eCommerceEnv);
 export const apiContext = createContext(api);
