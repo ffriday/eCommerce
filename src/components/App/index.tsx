@@ -48,18 +48,18 @@ export default function App() {
           <Route path='/' element={<Main />} />
           <Route path={`/${RoutePath.login}`} element={<LoginForm />} />
           <Route path={`/${RoutePath.register}`} element={<RegisterForm />} />
-          <Route path={`/${RoutePath.catalog}`} element={<ProductCatalog />} />
+          <Route key='catalog' path={`/${RoutePath.catalog}`} element={<ProductCatalog />} />
           <Route
             path={`/${RoutePath.arrangmentcategory}`}
-            element={<ProductCatalog queryFilter={{ categoryId: '6537ef03-3ae8-4fad-a594-c1a5e2342131' }} />}
+            element={<ProductCatalog key='catalog1' queryFilter={{ categoryId: '6537ef03-3ae8-4fad-a594-c1a5e2342131' }} />}
           />
           <Route
             path={`/${RoutePath.bouquetscategory}`}
-            element={<ProductCatalog queryFilter={{ categoryId: '66ce170c-bfbd-4fe0-b0c7-9826d8aba68e' }} />}
+            element={<ProductCatalog key='catalog2' queryFilter={{ categoryId: '66ce170c-bfbd-4fe0-b0c7-9826d8aba68e' }} />}
           />
           <Route
             path={`/${RoutePath.giftbasketcategory}`}
-            element={<ProductCatalog queryFilter={{ categoryId: 'ecb20a4c-70a3-43b8-abcb-8eb28b17bce7' }} />}
+            element={<ProductCatalog key='catalog3' queryFilter={{ categoryId: 'ecb20a4c-70a3-43b8-abcb-8eb28b17bce7' }} />}
           />
           <Route path={`/${RoutePath.account}`} element={<CustomerProfile />} />
           <Route path={`/${RoutePath.product}`} element={<Product />} />
