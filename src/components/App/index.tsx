@@ -62,7 +62,10 @@ export default function App() {
             element={<ProductCatalog key='catalog3' queryFilter={{ categoryId: 'ecb20a4c-70a3-43b8-abcb-8eb28b17bce7' }} />}
           />
           <Route path={`/${RoutePath.account}`} element={<CustomerProfile />} />
-          <Route path={`/${RoutePath.product}`} element={<Product />} />
+          <Route key='product' path={`/${RoutePath.product}`} element={<Product />} />
+          <Route key='product1' path={`/${RoutePath.arrangmentcategoryprod}`} element={<Product />} />
+          <Route key='product2' path={`/${RoutePath.bouquetscategoryprod}`} element={<Product />} />
+          <Route key='product3' path={`/${RoutePath.giftbasketcategoryprod}`} element={<Product />} />
           <Route path='*' element={<Notfound />} />
         </Routes>
       </BrowserRouter>

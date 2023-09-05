@@ -60,6 +60,9 @@ export enum RoutePath {
   arrangmentcategory = 'catalog/flowerarrangements',
   bouquetscategory = 'catalog/bouquets',
   giftbasketcategory = 'catalog/categorygiftbasket',
+  arrangmentcategoryprod = 'catalog/flowerarrangements/:key',
+  bouquetscategoryprod = 'catalog/bouquets/:key',
+  giftbasketcategoryprod = 'catalog/categorygiftbasket/:key',
 }
 
 export enum EmailErrors {
