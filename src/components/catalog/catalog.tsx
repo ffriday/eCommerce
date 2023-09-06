@@ -7,6 +7,7 @@ import CatalogList from './catalogList';
 import CatalogNavigation from './catalogNavigation';
 import { useMediaQuery } from '@react-hook/media-query';
 import { IProductFilter } from '../../constants/apiClient/apiClientTypes';
+import FilterAndSort from './filterAndSort';
 interface ICatalog {
   queryFilter?: Partial<IProductFilter> | undefined;
 }
@@ -24,6 +25,10 @@ export default function ProductCatalog({ queryFilter }: ICatalog) {
   // const startPage = storedPage ? Number(storedPage) : 1;
   const [catalogData, setCatalogData] = useState<ICatalogApiData>({ products: [], totalCount: 0 });
   const [page, setPage] = useState<number>(startPage);
+  const [priceToValue, setPriceToValue] = useState('');
+  const [priceFromValue, setPriceFromValue] = useState('');
+  const [priceToQuery, setPriceToQuery] = useState('100000000');
+  const [priceFromQuery, setPriceFromQuery] = useState('0');
 
   const api = useContext(apiContext);
   const productAdapter = useMemo(() => new ProductAdapter(api), [api]);
@@ -36,26 +41,46 @@ export default function ProductCatalog({ queryFilter }: ICatalog) {
     // localStorage.setItem('page', `${newPage}`);
     setPage(newPage);
   };
+  const filterPriceHandler = () => {
+    setPriceFromQuery(priceFromValue);
+    setPriceToQuery(priceToValue);
+  };
+  const inputPriceFilterhandler = (event: React.FormEvent) => {
+    const target = event.target as HTMLFormElement;
+    if (target.id === 'from') {
+      setPriceFromValue(target.value);
+    } else if (target.id === 'to') {
+      setPriceToValue(target.value);
+    }
+  };
   const prevButtonHandler = () => {
     const current: number = page;
     const prevPage: number = current - 1;
     const newPage = prevPage > 0 ? prevPage : current;
-    // localStorage.setItem('page', `${newPage}`);
     setPage(newPage);
   };
 
   useEffect(() => {
     const getData = async () => {
       const offset: number = (page - 1) * limit;
-      const catalogData: ICatalogApiData = await productAdapter.getCatalog({ limit: limit, offset: offset }, queryFilter);
+      const catalogData: ICatalogApiData = await productAdapter.getCatalog(
+        { limit: limit, offset: offset },
+        { ...queryFilter, price: { from: +priceFromQuery * 100, to: +priceToQuery * 100 } },
+      );
       setCatalogData(catalogData);
     };
     getData();
-  }, [productAdapter, page, limit, queryFilter]);
+  }, [productAdapter, page, limit, queryFilter, priceFromQuery, priceToQuery]);
 
   return (
     <section className='catalog__section'>
       <div className='container'>
+        <FilterAndSort
+          priceFromValue={priceFromValue}
+          priceToValue={priceToValue}
+          filterPriceHandler={filterPriceHandler}
+          inputPriceFilterhandler={inputPriceFilterhandler}
+        />
         <CatalogList catalogData={catalogData} />
         {
           <CatalogNavigation

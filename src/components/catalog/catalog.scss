@@ -1,5 +1,6 @@
 @import '../../styles/variables.scss';
 @import '../../styles/templates.scss';
+@import '../../styles/mixins.scss';
 .catalog {
   &__body {
     padding-top: 40px;
@@ -48,6 +49,30 @@
   &__right {
     background-image: url('../../assets/catalog/rightButton.svg');
     margin-left: 40px;
+  }
+}
+.filter {
+  height: 46px;
+  width: 100%;
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
+  font-size: 12px;
+  &__btn {
+    cursor: pointer;
+    @extend %buttonHover;
+  }
+  &__inputs {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 10px;
+  }
+  &__price-from {
+    @include inputForm(90px, 15px);
+  }
+  &__price-to {
+    @include inputForm(90px, 15px);
   }
 }
 

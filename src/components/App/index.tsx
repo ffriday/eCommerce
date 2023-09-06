@@ -14,13 +14,14 @@ import { CustomerProfile } from '../customerProfile/customerProfile';
 import { Product } from '../product/product';
 import { RoutePath } from '../../constants/types';
 // import ProductAdapter from '../../constants/productAadapter';
+// import { SortParams } from '../../constants/apiClient/apiClientTypes';
 
 const api = new ApiClient(eCommerceEnv);
 export const apiContext = createContext(api);
 // const test = async () => {
 //   console.log(api.categories);
 //   const adapter = new ProductAdapter(api);
-//   const res = await adapter.getCatalog({ limit: 20 }, { categoryId: api.categories.flowerarrangements });
+//   const res = await adapter.getCatalog({ limit: 20 }, { categoryId: api.categories.flowerarrangements, price: { from: 3000, to: 4000 } });
 // };
 
 // const f = async () => {
