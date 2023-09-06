@@ -175,3 +175,5 @@ export interface ICheckbox {
   };
   checked?: boolean;
 }
+
+export type IFilterEvent = (event: React.FormEvent) => void;

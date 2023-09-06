@@ -8,6 +8,7 @@ import CatalogNavigation from './catalogNavigation';
 import { useMediaQuery } from '@react-hook/media-query';
 import { IProductFilter } from '../../constants/apiClient/apiClientTypes';
 import FilterAndSort from './filterAndSort';
+import { ICardApiData } from '../../constants/types';
 interface ICatalog {
   queryFilter?: Partial<IProductFilter> | undefined;
 }
@@ -29,7 +30,7 @@ export default function ProductCatalog({ queryFilter }: ICatalog) {
   const [priceFromValue, setPriceFromValue] = useState('');
   const [priceToQuery, setPriceToQuery] = useState('100000000');
   const [priceFromQuery, setPriceFromQuery] = useState('0');
-
+  const [filterPrice, setFilterPrice] = useState(false);
   const api = useContext(apiContext);
   const productAdapter = useMemo(() => new ProductAdapter(api), [api]);
   const getTotalPageCount = (totalCount: number | undefined): number => Math.ceil(totalCount ? totalCount / limit : 1);
@@ -44,6 +45,7 @@ export default function ProductCatalog({ queryFilter }: ICatalog) {
   const filterPriceHandler = () => {
     setPriceFromQuery(priceFromValue);
     setPriceToQuery(priceToValue);
+    setFilterPrice(true);
   };
   const inputPriceFilterhandler = (event: React.FormEvent) => {
     const target = event.target as HTMLFormElement;
@@ -67,10 +69,13 @@ export default function ProductCatalog({ queryFilter }: ICatalog) {
         { limit: limit, offset: offset },
         { ...queryFilter, price: { from: +priceFromQuery * 100, to: +priceToQuery * 100 } },
       );
-      setCatalogData(catalogData);
+      const priceFilterProducts: ICardApiData[] = catalogData.products.filter(
+        (el) => +el.price >= +priceFromQuery && +el.price <= +priceToQuery,
+      );
+      filterPrice ? setCatalogData({ products: priceFilterProducts, totalCount: priceFilterProducts.length }) : setCatalogData(catalogData);
     };
     getData();
-  }, [productAdapter, page, limit, queryFilter, priceFromQuery, priceToQuery]);
+  }, [productAdapter, page, limit, queryFilter, priceFromQuery, priceToQuery, filterPrice]);
 
   return (
     <section className='catalog__section'>

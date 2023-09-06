@@ -3,15 +3,13 @@ import './catalog.scss';
 // import ProductCard from '../card/card';
 // import { ICatalogApiData } from '../../constants/types';
 import InputForm from '../inputForm/inputForm';
+import { IInputhandler } from '../../constants/types';
 
-// interface IFiterSortPanel {
-// //   catalogData: ICatalogApiData;
-// }
 interface IFiterSortPanel {
   priceFromValue: string;
   priceToValue: string;
   filterPriceHandler: () => void;
-  inputPriceFilterhandler: (event: React.FormEvent) => void;
+  inputPriceFilterhandler: IInputhandler;
 }
 
 const FiterSortPanel = ({ priceFromValue, priceToValue, filterPriceHandler, inputPriceFilterhandler }: IFiterSortPanel) => {
