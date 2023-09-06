@@ -57,6 +57,12 @@ export enum RoutePath {
   register = 'registration',
   catalog = 'catalog',
   product = 'catalog/:key',
+  arrangmentcategory = 'catalog/flowerarrangements',
+  bouquetscategory = 'catalog/bouquets',
+  giftbasketcategory = 'catalog/categorygiftbasket',
+  arrangmentcategoryprod = 'catalog/flowerarrangements/:key',
+  bouquetscategoryprod = 'catalog/bouquets/:key',
+  giftbasketcategoryprod = 'catalog/categorygiftbasket/:key',
 }
 
 export enum EmailErrors {
