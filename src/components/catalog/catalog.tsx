@@ -69,7 +69,7 @@ export default function ProductCatalog({ queryFilter }: ICatalog) {
       const offset: number = (page - 1) * limit;
       const catalogData: ICatalogApiData = await productAdapter.getCatalog(
         { limit: limit, offset: offset },
-        { ...queryFilter, price: { from: +priceFromQuery * 100, to: +priceToQuery * 100 } },
+        { ...queryFilter, price: { from: Number(priceFromQuery) * 100, to: Number(priceToQuery) * 100 } },
       );
       const priceFilterProducts: ICardApiData[] = catalogData.products.filter(
         (el) => +el.price >= +priceFromQuery && +el.price <= +priceToQuery,
