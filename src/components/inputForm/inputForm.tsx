@@ -19,6 +19,8 @@ export interface IInputForm {
   propLabelInfo?: string;
   disabled?: boolean;
   autocomplete?: IInputAutocomplete;
+  min?: number;
+  max?: number;
 }
 const InputForm = ({
   name,
@@ -32,6 +34,8 @@ const InputForm = ({
   propLabelInfo = '',
   disabled = false,
   autocomplete,
+  min,
+  max,
 }: IInputForm) => {
   const [inputType, setInputType] = useState(type);
   const [hidePassword, setHidePassword] = useState('');
@@ -59,6 +63,8 @@ const InputForm = ({
         onInput={handler}
         disabled={disabled}
         {...(autocomplete !== undefined ? { list: autocomplete.listName, autoComplete: autocomplete.listName } : {})}
+        min={min}
+        max={max}
       />
       {autocomplete !== undefined ? (
         <datalist id={autocomplete.listName}>
