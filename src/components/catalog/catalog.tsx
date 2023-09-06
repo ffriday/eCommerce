@@ -74,7 +74,7 @@ export default function ProductCatalog({ queryFilter }: ICatalog) {
       const priceFilterProducts: ICardApiData[] = catalogData.products.filter(
         (el) => +el.price >= +priceFromQuery && +el.price <= +priceToQuery,
       );
-      filterPrice ? setCatalogData({ products: priceFilterProducts, totalCount: priceFilterProducts.length }) : setCatalogData(catalogData);
+      filterPrice ? setCatalogData({ products: priceFilterProducts, totalCount: catalogData.totalCount }) : setCatalogData(catalogData);
     };
     getData();
   }, [productAdapter, page, limit, queryFilter, priceFromQuery, priceToQuery, filterPrice]);
