@@ -43,9 +43,11 @@ export default function ProductCatalog({ queryFilter }: ICatalog) {
     setPage(newPage);
   };
   const filterPriceHandler = () => {
-    setPriceFromQuery(priceFromValue);
-    setPriceToQuery(priceToValue);
-    setFilterPrice(true);
+    if (priceFromValue && priceToValue) {
+      setPriceFromQuery(priceFromValue);
+      setPriceToQuery(priceToValue);
+      setFilterPrice(true);
+    }
   };
   const inputPriceFilterhandler = (event: React.FormEvent) => {
     const target = event.target as HTMLFormElement;
