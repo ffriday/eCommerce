@@ -28,6 +28,8 @@ const FiterSortPanel = ({ priceFromValue, priceToValue, filterPriceHandler, inpu
             id='from'
             placeholder='от .. '
             inputClassName='filter__price-from'
+            min={1}
+            max={100}
           />
           <InputForm
             name='to'
@@ -37,6 +39,8 @@ const FiterSortPanel = ({ priceFromValue, priceToValue, filterPriceHandler, inpu
             id='to'
             placeholder='до .. '
             inputClassName='filter__price-to'
+            min={1}
+            max={100}
           />
         </div>
       </form>
