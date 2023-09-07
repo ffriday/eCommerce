@@ -12,17 +12,17 @@ const SliderButton: FC<ISliderButton> = ({ text, handler, firstStep = true, clas
   const defaultClassName = 'slider__button';
   const activeClassName = 'active';
   const classNames = className ? `${defaultClassName} ${className}` : defaultClassName;
-  const [state, setState] = useState(firstStep);
+  const [isFirstState, setIsFirstState] = useState(firstStep);
 
   const action = () => {
-    setState(!state);
+    setIsFirstState(!isFirstState);
     handler();
   };
 
   return (
     <div className={classNames} onClick={action}>
-      <div className={state ? activeClassName : ''}>{text.first}</div>
-      <div className={!state ? activeClassName : ''}>{text.second}</div>
+      <div className={isFirstState ? activeClassName : ''}>{text.first}</div>
+      <div className={!isFirstState ? activeClassName : ''}>{text.second}</div>
     </div>
   );
 };

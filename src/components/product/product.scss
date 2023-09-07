@@ -3,6 +3,7 @@
 @import '../../styles/templates.scss';
 
 .product {
+  padding-right: 20px;
   @include product-info($product-width, $product-height);
   &__container {
     display: flex;
@@ -71,12 +72,17 @@
 }
 .slider {
   cursor: pointer;
+  img {
+    border-radius: 5%;
+  }
+
   &__box {
     width: 350px;
     position: relative;
   }
-  width: 100%;
+  width: 95%;
   height: auto;
+
   &__tooltip {
     position: absolute;
     top: 10%;

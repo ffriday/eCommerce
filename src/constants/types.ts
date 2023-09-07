@@ -73,6 +73,7 @@ export enum EmailErrors {
   noTopLevelDomain = 'Отсутствует домен вернего уровня (например: "@xxx.xx")',
   shortDomain = 'Слишком короткое имя домена',
   notCorrect = 'введите корректный email',
+  noAccount = 'Нет пользователя с введенным логином и паролем',
 }
 
 export enum PasswordErrors {
@@ -86,6 +87,7 @@ export enum PasswordErrors {
   missingSpecialChar = 'Рекомендуется использовать специальный символ',
   leadingTrailingSpace = 'Не должно быть начальных или конечных пробелов',
   notMatch = 'Пароли не совпадают',
+  noAccount = 'Нет пользователя с введенным логином и паролем',
 }
 
 export enum NameErrors {

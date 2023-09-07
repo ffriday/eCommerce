@@ -1,8 +1,8 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Scrollbar, A11y, EffectCube } from 'swiper';
 import { ICardApiData } from '../../constants/types';
+import { useMediaQuery } from '@react-hook/media-query';
 import 'swiper/css/navigation';
-// Import Swiper styles
 
 import 'swiper/swiper-bundle.min.css';
 import './product.scss';
@@ -10,14 +10,16 @@ import './product.scss';
 interface ISlider {
   sliders: ICardApiData[];
   swiperHandler: () => void;
-  clickHandler: () => void;
+  clickHandler?: () => void;
+  clickDoubleHandler?: () => void;
 }
-export const Slider = ({ sliders, swiperHandler, clickHandler }: ISlider) => {
+export const Slider = ({ sliders, swiperHandler, clickHandler, clickDoubleHandler }: ISlider) => {
+  const isSmallDevice = useMediaQuery('only screen and (max-width : 670px)');
   return (
-    <div className='slider' onDoubleClick={clickHandler}>
+    <div className='slider' onDoubleClick={clickDoubleHandler} onClick={clickHandler}>
       <Swiper
         modules={[Navigation, Pagination, Scrollbar, A11y, EffectCube]}
-        navigation
+        navigation={!isSmallDevice}
         spaceBetween={50}
         slidesPerView={1}
         onSlideChange={swiperHandler}

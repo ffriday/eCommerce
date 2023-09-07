@@ -2,13 +2,14 @@ import { useState, useEffect, useMemo, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import ProductAdapter from '../../constants/productAadapter';
 import { apiContext } from '../App';
-import './product.scss';
+
 import ProductInfo from './productInfo';
 import Modal from 'react-modal';
 import { useMediaQuery } from '@react-hook/media-query';
 
 import { ICardApiData } from '../../constants/types';
 import { Slider } from './productSlider';
+import './product.scss';
 export const Product = () => {
   const { key } = useParams();
   const isSmallDevice = useMediaQuery('only screen and (max-width : 670px)');
@@ -65,9 +66,12 @@ export const Product = () => {
   return (
     <div className='product__container container'>
       <div className='slider__box'>
-        {' '}
-        {!modalIsOpen && <Slider sliders={productsData} swiperHandler={swiperHandler} clickHandler={openModal} />}{' '}
-        <div className='slider__tooltip'>Двойным кликом можно изменить массштаб</div>
+        {!modalIsOpen && isSmallDevice ? (
+          <Slider sliders={productsData} swiperHandler={swiperHandler} clickHandler={openModal} />
+        ) : (
+          <Slider sliders={productsData} swiperHandler={swiperHandler} clickDoubleHandler={openModal} />
+        )}
+        {!isSmallDevice && <div className='slider__tooltip'>Двойным кликом можно изменить массштаб</div>}
       </div>
 
       {!modalIsOpen && <ProductInfo isActiveLabelClass={isVariant} cardApiData={productData} />}
@@ -96,7 +100,11 @@ export const Product = () => {
             background: 'rgba(0, 0, 0, 0)',
           },
         }}>
-        <Slider sliders={productsData} swiperHandler={swiperHandler} clickHandler={closeModal} />
+        {isSmallDevice ? (
+          <Slider sliders={productsData} swiperHandler={swiperHandler} clickHandler={closeModal} />
+        ) : (
+          <Slider sliders={productsData} swiperHandler={swiperHandler} clickDoubleHandler={closeModal} />
+        )}
       </Modal>
     </div>
   );
