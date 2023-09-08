@@ -1,9 +1,11 @@
-import { useState } from 'react';
-import './main.scss';
+import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
+import './main.scss';
+import { apiContext } from '../App';
 
 export default function Main() {
-  const [isLogged, setIsLogged] = useState(Boolean(window.localStorage.getItem('customerID')));
+  const api = useContext(apiContext);
+  const [isLogged, setIsLogged] = useState(api.api.userData.isLogged);
 
   return (
     <div className='main'>
@@ -13,7 +15,7 @@ export default function Main() {
           <button
             className='main__btn-reg'
             onClick={() => {
-              window.localStorage.setItem('customerID', '');
+              api.logOutCustomer();
               setIsLogged(!isLogged);
             }}>
             Разлогиниться

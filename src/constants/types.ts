@@ -51,6 +51,20 @@ export interface IUserValidate<T> {
   bill: IAddress<T>;
 }
 
+export enum RoutePath {
+  account = 'account',
+  login = 'login',
+  register = 'registration',
+  catalog = 'catalog',
+  product = 'catalog/:key',
+  arrangmentcategory = 'catalog/flowerarrangements',
+  bouquetscategory = 'catalog/bouquets',
+  giftbasketcategory = 'catalog/categorygiftbasket',
+  arrangmentcategoryprod = 'catalog/flowerarrangements/:key',
+  bouquetscategoryprod = 'catalog/bouquets/:key',
+  giftbasketcategoryprod = 'catalog/categorygiftbasket/:key',
+}
+
 export enum EmailErrors {
   leadingTrailingSpace = 'Не должно быть начальных или конечных пробелов',
   notInLatin = 'Email должен быть на латинице',
@@ -59,6 +73,7 @@ export enum EmailErrors {
   noTopLevelDomain = 'Отсутствует домен вернего уровня (например: "@xxx.xx")',
   shortDomain = 'Слишком короткое имя домена',
   notCorrect = 'введите корректный email',
+  noAccount = 'Нет пользователя с введенным логином и паролем',
 }
 
 export enum PasswordErrors {
@@ -72,6 +87,7 @@ export enum PasswordErrors {
   missingSpecialChar = 'Рекомендуется использовать специальный символ',
   leadingTrailingSpace = 'Не должно быть начальных или конечных пробелов',
   notMatch = 'Пароли не совпадают',
+  noAccount = 'Нет пользователя с введенным логином и паролем',
 }
 
 export enum NameErrors {
@@ -101,3 +117,65 @@ export enum RegiserInputNames {
   shipment = 'shipment',
   bill = 'bill',
 }
+
+export enum HTTPResponseCode {
+  logged = 200,
+  registerd = 201,
+  ok = 200,
+}
+
+export interface ICardApiData {
+  id: string;
+  key: string | undefined;
+  image: string | undefined;
+  name: string;
+  description: string | undefined;
+  price: string;
+}
+export enum language {
+  en = 'en-US',
+  ru = 'ru-BY',
+}
+
+export type GetPrice = (centAmount?: number, fractionDigits?: number) => string;
+
+export type IShowError = (error: string) => void;
+
+export interface ICatalogApiData {
+  products: ICardApiData[];
+  totalCount: number | undefined;
+}
+// =====================================================
+export interface Pagination {
+  nextPageHandler: () => void;
+  prevPageHandler: () => void;
+  navigation?: {
+    current: number;
+    total: number;
+  };
+  disable: {
+    left: boolean;
+    right: boolean;
+  };
+}
+
+export enum ButtonCodes {
+  update = 'account__update',
+  remove = 'account__remove',
+  add = 'account__add',
+}
+
+export interface ICheckbox {
+  id: string;
+  handler: (value?: boolean) => void;
+  title: string;
+  className?: string;
+  classNameWrapper?: string;
+  link?: {
+    path: string;
+    text: string;
+  };
+  checked?: boolean;
+}
+
+export type IFilterEvent = (event: React.FormEvent) => void;

@@ -109,3 +109,30 @@
   font-weight: $font-weight-login-subtitle;
   line-height: normal;
 }
+
+@mixin card($width, $height) {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: $card-background-color;
+  width: $width;
+  height: $height;
+  font-family: $card-font-family;
+  color: $card-text-color;
+  font-size: $card-font-size;
+  &:hover {
+    color: $card-text-hover-color;
+    cursor: pointer;
+  }
+}
+
+@mixin product-info($width, $height) {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: $product-background-color;
+  width: $width;
+  height: $height;
+  font-family: $product-font-family;
+  color: $product-text-color;
+}
