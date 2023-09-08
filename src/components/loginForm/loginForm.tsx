@@ -18,7 +18,34 @@ interface IInputLabel {
   labelInfo: string;
   labelClassNameInvailid: string;
 }
+const ListOfValidationRulesOfLogin: IListOfValidationRules = {
+  email: [
+    { pattern: /^(?!(\s|\S*\s$))\S+$/, error: EmailErrors.leadingTrailingSpace },
+    {
+      pattern: /^[A-Za-z@{|}_~!#$%^=&*+?.\\\d/]+$/,
+      error: EmailErrors.notInLatin,
+    },
+    {
+      pattern: /^[A-Z0-9{|}_~!#$%^=&*+?.\\/]+@[A-Z0-9.-]+$/i,
+      error: EmailErrors.noTopLevelDomain,
+    },
+    {
+      pattern: /^[A-Z0-9{|}_~!#$%^=&*+?.\\/]+@[A-Z0-9.-]+\.\w{2,4}$/i,
+      error: EmailErrors.shortDomain,
+    },
+  ],
 
+  password: [
+    { pattern: /^(?!(\s|\S*\s$))\S+$/, error: PasswordErrors.leadingTrailingSpace },
+    { pattern: /[A-Za-z\d].*/, error: PasswordErrors.notInLatin },
+    { pattern: /^(?=.{8,})/, error: PasswordErrors.tooShort },
+    // { pattern: /^[^A-Za-z0-9]*$/, error: PasswordErrors.missingLetter },
+    { pattern: /[A-Z]/, error: PasswordErrors.missingUppercase },
+    { pattern: /[a-z]/, error: PasswordErrors.missingLowercase },
+    { pattern: /[0-9]/, error: PasswordErrors.missingDigit },
+    // { pattern: /[!@#$%^&*]/, error: PasswordErrors.missingSpecialChar },
+  ],
+};
 const LoginForm = () => {
   const navigation = useNavigate();
   const [email, setEmail] = useState('');
@@ -34,35 +61,6 @@ const LoginForm = () => {
     if (api.api.userData.isLogged) navigation(`/${RoutePath.account}`);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const ListOfValidationRulesOfLogin: IListOfValidationRules = {
-    email: [
-      { pattern: /^(?!(\s|\S*\s$))\S+$/, error: EmailErrors.leadingTrailingSpace },
-      {
-        pattern: /^[A-Za-z@{|}_~!#$%^=&*+?.\\\d/]+$/,
-        error: EmailErrors.notInLatin,
-      },
-      {
-        pattern: /^[A-Z0-9{|}_~!#$%^=&*+?.\\/]+@[A-Z0-9.-]+$/i,
-        error: EmailErrors.noTopLevelDomain,
-      },
-      {
-        pattern: /^[A-Z0-9{|}_~!#$%^=&*+?.\\/]+@[A-Z0-9.-]+\.\w{2,4}$/i,
-        error: EmailErrors.shortDomain,
-      },
-    ],
-
-    password: [
-      { pattern: /^(?!(\s|\S*\s$))\S+$/, error: PasswordErrors.leadingTrailingSpace },
-      { pattern: /[A-Za-z\d].*/, error: PasswordErrors.notInLatin },
-      { pattern: /^(?=.{8,})/, error: PasswordErrors.tooShort },
-      // { pattern: /^[^A-Za-z0-9]*$/, error: PasswordErrors.missingLetter },
-      { pattern: /[A-Z]/, error: PasswordErrors.missingUppercase },
-      { pattern: /[a-z]/, error: PasswordErrors.missingLowercase },
-      { pattern: /[0-9]/, error: PasswordErrors.missingDigit },
-      // { pattern: /[!@#$%^&*]/, error: PasswordErrors.missingSpecialChar },
-    ],
-  };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -83,14 +81,14 @@ const LoginForm = () => {
         if (res.statusCode === HTTPResponseCode.logged) {
           navigation('/');
         } else {
-          setEmailLabel({ labelInfo: 'Нет пользователя с введенным логином и паролем', labelClassNameInvailid: 'invailid-label' });
+          setEmailLabel({ labelInfo: EmailErrors.noAccount, labelClassNameInvailid: 'invailid-label' });
         }
       } catch (error) {
         const typedError = error as Error;
 
-        if (typedError.message === 'Account with the given credentials not found.') {
-          setEmailLabel({ labelInfo: 'Нет пользователя с введенным логином и паролем', labelClassNameInvailid: 'invailid-label' });
-          setPasswordLabel({ labelInfo: 'Нет пользователя с введенным логином и паролем', labelClassNameInvailid: 'invailid-label' });
+        if (typedError) {
+          setEmailLabel({ labelInfo: EmailErrors.noAccount, labelClassNameInvailid: 'invailid-label' });
+          setPasswordLabel({ labelInfo: PasswordErrors.noAccount, labelClassNameInvailid: 'invailid-label' });
         }
       }
     }
@@ -103,8 +101,8 @@ const LoginForm = () => {
     };
     const errorsData: IFormErrors = validation(formData, ListOfValidationRulesOfLogin);
     if (!target.value) {
-      setEmailLabel({ labelInfo: target.id === 'email' ? '' : '', labelClassNameInvailid: 'disable' });
-      setPasswordLabel({ labelInfo: target.id === 'password' ? '' : '', labelClassNameInvailid: 'disable' });
+      setEmailLabel({ labelInfo: '', labelClassNameInvailid: 'disable' });
+      setPasswordLabel({ labelInfo: '', labelClassNameInvailid: 'disable' });
     }
     if (target.value) {
       setEmailLabel({ labelInfo: target.id === 'email' ? 'Ваш email' : '', labelClassNameInvailid: '' });
