@@ -13,6 +13,7 @@ import { CustomerProfile } from '../customerProfile/customerProfile';
 import { Product } from '../product/product';
 import { RoutePath } from '../../constants/types';
 import Layout from '../Layout/Layout';
+import { Basket } from '../basket/basket';
 
 const api = new ApiClient(eCommerceEnv);
 export const apiContext = createContext(api);
@@ -27,6 +28,7 @@ export default function App() {
             <Route path={`/${RoutePath.login}`} element={<LoginForm />} />
             <Route path={`/${RoutePath.register}`} element={<RegisterForm />} />
             <Route key='catalog' path={`/${RoutePath.catalog}`} element={<ProductCatalog />} />
+            <Route path={`/${RoutePath.basket}`} element={<Basket />} />
             <Route
               path={`/${RoutePath.arrangmentcategory}`}
               element={<ProductCatalog key='catalog1' queryFilter={{ categoryId: '6537ef03-3ae8-4fad-a594-c1a5e2342131' }} />}
