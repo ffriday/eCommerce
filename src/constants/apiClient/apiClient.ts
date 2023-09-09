@@ -1,6 +1,14 @@
 import { IeCommerceEnv } from '../ecommerce.env';
 import { QueryParam } from '@commercetools/sdk-client-v2';
-import { BaseAddress, CustomerDraft, MyCustomerSignin, MyCustomerUpdate, MyCustomerUpdateAction } from '@commercetools/platform-sdk';
+import {
+  BaseAddress,
+  Cart,
+  ClientResponse,
+  CustomerDraft,
+  MyCustomerSignin,
+  MyCustomerUpdate,
+  MyCustomerUpdateAction,
+} from '@commercetools/platform-sdk';
 import { HTTPResponseCode } from '../types';
 import {
   ICategory,
@@ -322,5 +330,42 @@ export default class ApiClient extends ApiBase {
         body: customerUpdate,
       })
       .execute();
+  };
+
+  // Cart
+
+  private createCart = (currency: string) => {
+    const api = this.api.getAvalibleApi();
+
+    return api
+      .me()
+      .carts()
+      .post({
+        body: {
+          currency,
+        },
+      })
+      .execute();
+  };
+
+  private getActiveCart = () => {
+    const api = this.api.getAvalibleApi();
+
+    return api.me().activeCart().get().execute();
+  };
+
+  public getCart = async (currency: string = SortParams.USD) => {
+    const api = this.api.getAvalibleApi();
+    let cart: ClientResponse<Cart> | null = null;
+    try {
+      cart = await this.getActiveCart();
+    } catch (error) {
+      try {
+        cart = await this.createCart(currency);
+      } catch (error) {
+        throw new Error('Cart not found');
+      }
+    }
+    return cart;
   };
 }
