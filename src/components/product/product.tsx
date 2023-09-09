@@ -18,8 +18,19 @@ export const Product = () => {
   const productAdapter = useMemo(() => new ProductAdapter(api), [api]);
 
   const [isVariant, setIsVariant] = useState(false);
-  const [productData, setProductData] = useState<ICardApiData | undefined>({ image: '', name: '', description: '', price: '', id: '', key: '' });
-  const [productsData, setProductsData] = useState<ICardApiData[]>([{ image: '', name: '', description: '', price: '', id: '', key: '' }]);
+  const [productData, setProductData] = useState<ICardApiData | undefined>({
+    image: '',
+    name: '',
+    description: '',
+    price: '',
+    id: '',
+    key: '',
+    isDiscounted: false,
+    discPrice: '',
+  });
+  const [productsData, setProductsData] = useState<ICardApiData[]>([
+    { image: '', name: '', description: '', price: '', id: '', key: '', isDiscounted: false, discPrice: '' },
+  ]);
   const swiperHandler = async () => {
     setIsVariant(!isVariant);
   };
@@ -74,7 +85,7 @@ export const Product = () => {
         {!isSmallDevice && <div className='slider__tooltip'>Двойным кликом можно изменить массштаб</div>}
       </div>
 
-      {!modalIsOpen && <ProductInfo isActiveLabelClass={isVariant} cardApiData={productData} />}
+      {!modalIsOpen && <ProductInfo isActiveLabelClass={isVariant} cardApiData={productData} discounted={productData?.isDiscounted} />}
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}

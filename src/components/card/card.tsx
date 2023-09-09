@@ -14,7 +14,7 @@ interface IProductCard {
 export default function ProductCard({
   discounted,
   link,
-  cardApiData = { image: '', name: '', description: '', price: '', id: '', key: '' },
+  cardApiData = { image: '', name: '', description: '', price: '', id: '', key: '', isDiscounted: false, discPrice: '' },
 }: IProductCard) {
   const data = cardApiData;
   const disableClassName = discounted ? 'card__price--disable' : '';
@@ -27,7 +27,7 @@ export default function ProductCard({
         {' '}
         <div className='card__prices'>
           <span className={disableClassName}> {`${data?.price} USD/шт. `}</span>
-          {discounted && <span className={'card__price card__price--discounted'}>{`${data?.price} USD/шт. `}</span>}
+          {discounted && <span className={'card__price card__price--discounted'}>{`${data?.discPrice} USD/шт. `}</span>}
         </div>
         <button className='card__button'>В корзину</button>
       </div>

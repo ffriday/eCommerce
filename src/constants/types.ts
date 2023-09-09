@@ -131,6 +131,8 @@ export interface ICardApiData {
   name: string;
   description: string | undefined;
   price: string;
+  isDiscounted: boolean;
+  discPrice: string;
 }
 export enum language {
   en = 'en-US',
