@@ -9,10 +9,15 @@ export const Basket = () => {
   const [cart, setCart] = useState<ClientResponse<Cart> | null>(null);
 
   const loadCart = useCallback(async () => setCart(await api.getCart()), [api]);
+  // const customer = useCallback(async () => await cart?.body.customerId ? api.getCustomerInfo(), [api]);
 
   useEffect(() => {
     loadCart();
   }, [loadCart]);
+
+  // useEffect(() => {
+
+  // }, [cart]);
 
   return (
     <div className='basket'>
