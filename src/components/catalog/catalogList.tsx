@@ -13,7 +13,9 @@ const CatalogList = ({ catalogData }: ICatalogList) => {
       {catalogData && (
         <div className='catalog__body'>
           {catalogData.products.map((item) => {
-            return <ProductCard link={item.key || ''} cardApiData={item} key={item.id + Date.now() * Math.random()} />;
+            return (
+              <ProductCard link={item.key || ''} cardApiData={item} key={item.id + Date.now() * Math.random()} discounted={item.isDiscounted} />
+            );
           })}
         </div>
       )}

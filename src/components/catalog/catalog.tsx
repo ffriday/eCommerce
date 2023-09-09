@@ -71,9 +71,12 @@ export default function ProductCatalog({ queryFilter }: ICatalog) {
         { limit: limit, offset: offset },
         { ...queryFilter, price: { from: Number(priceFromQuery) * 100, to: Number(priceToQuery) * 100 } },
       );
-      const priceFilterProducts: ICardApiData[] = catalogData.products.filter(
-        (el) => +el.price >= +priceFromQuery && +el.price <= +priceToQuery,
-      );
+      const priceFilterProducts: ICardApiData[] = catalogData.products.filter((el) => {
+        if (el.isDiscounted) {
+          return +el.discPrice >= +priceFromQuery && +el.discPrice <= +priceToQuery;
+        }
+        return +el.price >= +priceFromQuery && +el.price <= +priceToQuery;
+      });
       filterPrice ? setCatalogData({ products: priceFilterProducts, totalCount: catalogData.totalCount }) : setCatalogData(catalogData);
     };
     getData();

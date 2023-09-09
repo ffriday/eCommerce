@@ -41,18 +41,29 @@ export default class ProductAdapter {
     }
     const name: string = data.masterData.current.name[language.ru];
     const description: string | undefined = data.masterData.current.description?.[language.ru];
+
     let price = '';
+    let discPrice = '';
+    let isDiscounted: boolean = false;
     const priceData = data.masterData.current.masterVariant.prices;
     if (priceData && priceData.length > 0) {
+      isDiscounted = Boolean(data.masterData.current.masterVariant.prices[0]?.discounted?.discount.id);
       const centAmount: number | undefined = data.masterData.current.masterVariant.prices[0]?.value.centAmount;
       const fractionDigits: number | undefined = data.masterData.current.masterVariant.prices[0]?.value.fractionDigits;
       price = this.getPrice(centAmount, fractionDigits);
+      const discCentAmount: number | undefined = data.masterData.current.masterVariant.prices[0]?.discounted?.value.centAmount;
+      const discFractionDigits: number | undefined = data.masterData.current.masterVariant.prices[0]?.discounted?.value.fractionDigits;
+      discPrice = this.getPrice(discCentAmount, discFractionDigits);
     }
     const varPriceData = data.masterData.current.variants[0]?.prices;
     if (productVariant && varPriceData && varPriceData.length > 0) {
+      isDiscounted = Boolean(varPriceData[0]?.discounted?.discount.id);
       const centAmount: number | undefined = varPriceData[0]?.value.centAmount;
       const fractionDigits: number | undefined = varPriceData[0]?.value.fractionDigits;
       price = this.getPrice(centAmount, fractionDigits);
+      const discCentAmount: number | undefined = varPriceData[0]?.discounted?.value.centAmount;
+      const discFractionDigits: number | undefined = varPriceData[0]?.discounted?.value.fractionDigits;
+      discPrice = this.getPrice(discCentAmount, discFractionDigits);
     }
     return {
       id: id,
@@ -61,6 +72,8 @@ export default class ProductAdapter {
       name: name,
       description: description,
       price: price,
+      isDiscounted: isDiscounted,
+      discPrice: discPrice,
     };
   };
   private getCatalogData = (data: ProductProjectionPagedSearchResponse, productVariant = 0): ICardApiData[] => {
@@ -69,14 +82,26 @@ export default class ProductAdapter {
     const image = data.results.map((product) => product.masterVariant.images?.[productVariant]?.url);
     const name = data.results.map((product) => product.name[language.ru]);
     const description = data.results.map((product) => product.description?.[language.ru]);
+    const isDiscountedList: boolean[] = data.results.map((product) =>
+      Boolean(product.masterVariant.prices?.[productVariant].discounted?.discount.id),
+    );
     const priceData = data.results.map((product) => product.masterVariant.prices);
     const prices: string[] = [];
+    const discontPrices: string[] = [];
     if (priceData && priceData.length > 0) {
       const centAmount = data.results.map((product) => product.masterVariant.prices?.[productVariant]?.value.centAmount);
       const fractionDigits = data.results.map((product) => product.masterVariant.prices?.[productVariant]?.value.fractionDigits);
+      const discCentAmount = data.results.map((product) => product.masterVariant.prices?.[productVariant]?.discounted?.value.centAmount);
+      const discFractionDigits = data.results.map((product) => product.masterVariant.prices?.[productVariant]?.discounted?.value.fractionDigits);
       for (let i = 0; i < centAmount.length; i++) {
         const price = this.getPrice(centAmount[i], fractionDigits[i]);
         prices.push(price);
+        if (discCentAmount && discFractionDigits) {
+          const discontPrice = this.getPrice(discCentAmount[i], discFractionDigits[i]);
+          discontPrices.push(discontPrice);
+        } else {
+          discontPrices.push('');
+        }
       }
     }
     const catalog: ICardApiData[] = id.map((item, index) => {
@@ -87,6 +112,8 @@ export default class ProductAdapter {
         name: name[index],
         description: description[index],
         price: prices[index],
+        isDiscounted: isDiscountedList[index],
+        discPrice: discontPrices[index],
       };
     });
     return catalog;

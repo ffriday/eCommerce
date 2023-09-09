@@ -27,7 +27,9 @@ function ProductInfo({ discounted, cardApiData, isActiveLabelClass }: ProductInf
         {' '}
         <div className='product__prices'>
           <span className={disableClassName}> {`${data?.price} USD/шт. `}</span>
-          {discounted && <span className={'product__price product__price--discounted'}>{`${data?.price} USD/шт. `}</span>}
+          {discounted && (
+            <span className={'product__price product__price--discounted'}>{`${discounted ? data?.discPrice : data?.price} USD/шт. `}</span>
+          )}
         </div>
         <button className='product__button'>В корзину</button>
       </div>
