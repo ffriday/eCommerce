@@ -17,6 +17,7 @@ export const Basket = () => {
 
   const [cart, setCart] = useState<IProduct[]>([]);
   const [emptyCart, setEmptyCart] = useState(true);
+  const [total, setTotal] = useState(0);
 
   const loadCart = useCallback(async () => {
     const cart = await api.getCart();
@@ -30,6 +31,7 @@ export const Basket = () => {
           quantity: Number(lineItem.quantity),
         }));
         setCart(items);
+        setTotal(cart.body.totalPrice.centAmount / 100); // cents to USD
         setEmptyCart(false);
       } else {
         setEmptyCart(true);
@@ -103,7 +105,9 @@ export const Basket = () => {
               </li>
             ))}
           </ul>
-          <button onClick={async () => await clearCart()}>CLEAR CART</button>
+          <p>{`TOTAL: ${total}`}</p>
+          <button onClick={async () => await clearCart()}>CLEAR CART</button>-
+          <button onClick={async () => await api.recalculateCart()}>RECALCULATE</button>
         </div>
       )}
     </div>

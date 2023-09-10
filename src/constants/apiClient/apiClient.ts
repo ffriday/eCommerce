@@ -6,6 +6,7 @@ import {
   ClientResponse,
   CustomerDraft,
   MyCartAddLineItemAction,
+  MyCartRecalculateAction,
   MyCartRemoveLineItemAction,
   MyCartUpdateAction,
   MyCustomerSignin,
@@ -419,9 +420,16 @@ export default class ApiClient extends ApiBase {
           lineItemId: lineItem.id,
           quantity: Number(lineItem.quantity),
         }));
-        console.log(actions);
         await this.cartAction(actions);
       }
     }
+  };
+
+  public recalculateCart = async () => {
+    const action: MyCartRecalculateAction = {
+      action: 'recalculate',
+      updateProductData: true,
+    };
+    return this.cartAction([action]);
   };
 }
