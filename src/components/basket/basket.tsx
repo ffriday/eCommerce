@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useState } from 'react';
 import './basket.scss';
 import { apiContext } from '../App';
-import { HTTPResponseCode } from '../../constants/types';
+import { HTTPResponseCode, RoutePath } from '../../constants/types';
 import { SortParams } from '../../constants/apiClient/apiClientTypes';
 
 interface IProduct {
@@ -61,6 +61,15 @@ export const Basket = () => {
     [api, loadCart],
   );
 
+  const clearCart = useCallback(async () => {
+    try {
+      await api.clearCart();
+      await loadCart();
+    } catch (err) {
+      throw new Error(`${err}`);
+    }
+  }, [api, loadCart]);
+
   useEffect(() => {
     loadCart();
   }, [loadCart]);
@@ -70,26 +79,32 @@ export const Basket = () => {
       <h1 className='basket__heading'>CART</h1>
       <button onClick={() => addItem('693bd86c-6500-41c2-aa99-d169f4026976')}>ADD TEST ITEM</button>
       {emptyCart ? (
-        <h1 className='basket__heading'>CART IS EMPTY</h1>
+        <div>
+          <h1 className='basket__heading'>CART IS EMPTY</h1>
+          <a href={`/${RoutePath.catalog}`}>GO TO CATALOG</a>
+        </div>
       ) : (
-        <ul>
-          {cart.map(({ productId, lineItemId, name, quantity, price }) => (
-            <li key={`li-${productId}`}>
-              {`Product: ${name}, amount: ${quantity}, price: ${price}`}
-              <button key={`buttonAdd-${productId}`} onClick={async () => await addItem(productId)}>
-                ADD
-              </button>
-              -
-              <button key={`buttonRemove-${lineItemId}`} onClick={async () => await removeItem(lineItemId)}>
-                REMOVE
-              </button>
-              -
-              <button key={`buttonRemoveAll-${lineItemId}`} onClick={async () => await removeItem(lineItemId, quantity)}>
-                REMOVEALL
-              </button>
-            </li>
-          ))}
-        </ul>
+        <div>
+          <ul>
+            {cart.map(({ productId, lineItemId, name, quantity, price }) => (
+              <li key={`li-${productId}`}>
+                {`Product: ${name}, amount: ${quantity}, price: ${price}`}
+                <button key={`buttonAdd-${productId}`} onClick={async () => await addItem(productId)}>
+                  ADD
+                </button>
+                -
+                <button key={`buttonRemove-${lineItemId}`} onClick={async () => await removeItem(lineItemId)}>
+                  REMOVE
+                </button>
+                -
+                <button key={`buttonRemoveAll-${lineItemId}`} onClick={async () => await removeItem(lineItemId, quantity)}>
+                  REMOVEALL
+                </button>
+              </li>
+            ))}
+          </ul>
+          <button onClick={async () => await clearCart()}>CLEAR CART</button>
+        </div>
       )}
     </div>
   );

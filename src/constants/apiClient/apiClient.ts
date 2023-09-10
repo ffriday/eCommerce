@@ -371,7 +371,7 @@ export default class ApiClient extends ApiBase {
     return cart;
   };
 
-  private cartAction = async (action: MyCartUpdateAction) => {
+  private cartAction = async (action: MyCartUpdateAction[]) => {
     const api = this.api.getAvalibleApi();
     const cart = await this.getCart();
     let version = 0;
@@ -384,7 +384,7 @@ export default class ApiClient extends ApiBase {
       .post({
         body: {
           version,
-          actions: [action],
+          actions: action,
         },
       })
       .execute();
@@ -397,7 +397,7 @@ export default class ApiClient extends ApiBase {
       variantId,
       quantity,
     };
-    return this.cartAction(action);
+    return this.cartAction([action]);
   };
 
   public removeProductFromCart = async (productId: string, quantity = 1) => {
@@ -406,6 +406,22 @@ export default class ApiClient extends ApiBase {
       lineItemId: productId,
       quantity,
     };
-    return this.cartAction(action);
+    return this.cartAction([action]);
+  };
+
+  public clearCart = async () => {
+    const cart = await this.getCart();
+
+    if (cart.statusCode === HTTPResponseCode.ok) {
+      if (cart.body.lineItems.length > 0) {
+        const actions: MyCartRemoveLineItemAction[] = cart.body.lineItems.map((lineItem) => ({
+          action: 'removeLineItem',
+          lineItemId: lineItem.id,
+          quantity: Number(lineItem.quantity),
+        }));
+        console.log(actions);
+        await this.cartAction(actions);
+      }
+    }
   };
 }
