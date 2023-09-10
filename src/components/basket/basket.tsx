@@ -32,7 +32,8 @@ export const Basket = () => {
       }
     }
   }, [api]);
-  const addItem = useCallback(async () => await api.addProductToCart('', '693bd86c-6500-41c2-aa99-d169f4026976'), [api]);
+
+  const addItem = useCallback(async () => await api.addProductToCart('693bd86c-6500-41c2-aa99-d169f4026976'), [api]);
 
   useEffect(() => {
     loadCart();
@@ -42,10 +43,9 @@ export const Basket = () => {
     <div className='basket'>
       <h1 className='basket__heading'>CART</h1>
       <button onClick={addItem}>TEST</button>
-      <button onClick={() => setR(r + 1)}>TEST2</button>
       <ul>
         {cart.map(({ id, name, quantity, price }) => (
-          <li key={id}>{`Product ${name}, amount ${quantity}, price ${price}`}</li>
+          <li key={id}>{`Product: ${name}, amount: ${quantity}, price: ${price}`}</li>
         ))}
       </ul>
     </div>

@@ -61,6 +61,7 @@ export default class ApiClient extends ApiBase {
     const signIn: MyCustomerSignin = {
       email,
       password,
+      activeCartSignInMode: 'MergeWithExistingCustomerCart',
     };
 
     const res = await this.api.passwordApi
@@ -352,7 +353,6 @@ export default class ApiClient extends ApiBase {
 
   private getActiveCart = () => {
     const api = this.api.getAvalibleApi();
-
     return api.me().activeCart().get().execute();
   };
 
@@ -364,27 +364,17 @@ export default class ApiClient extends ApiBase {
       try {
         cart = await this.createCart(currency);
       } catch (error) {
-        throw new Error('Cart not found');
+        throw new Error('No CART');
       }
     }
     return cart;
   };
 
-  public addProductToCart = async (cartId: string, productId: string) => {
+  private cartAction = async (action: MyCartUpdateAction) => {
     const api = this.api.getAvalibleApi();
-
-    const cart = await api.me().activeCart().get().execute();
-
+    const cart = await this.getCart();
     let version = 0;
-    if (cart.statusCode === HTTPResponseCode.ok) {
-      version = cart.body.version;
-    }
-
-    const action: MyCartAddLineItemAction = {
-      action: 'addLineItem',
-      productId: productId,
-    };
-    console.log('CART', cart);
+    if (cart.statusCode === HTTPResponseCode.ok) version = cart.body.version;
 
     return api
       .me()
@@ -397,5 +387,15 @@ export default class ApiClient extends ApiBase {
         },
       })
       .execute();
+  };
+
+  public addProductToCart = async (productId: string, variantId = 1, quantity = 1) => {
+    const action: MyCartAddLineItemAction = {
+      action: 'addLineItem',
+      productId: productId,
+      variantId,
+      quantity,
+    };
+    return this.cartAction(action);
   };
 }
