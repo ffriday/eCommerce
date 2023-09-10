@@ -5,6 +5,8 @@ import {
   Cart,
   ClientResponse,
   CustomerDraft,
+  MyCartAddLineItemAction,
+  MyCartUpdateAction,
   MyCustomerSignin,
   MyCustomerUpdate,
   MyCustomerUpdateAction,
@@ -355,7 +357,6 @@ export default class ApiClient extends ApiBase {
   };
 
   public getCart = async (currency: string = SortParams.USD) => {
-    const api = this.api.getAvalibleApi();
     let cart: ClientResponse<Cart> | null = null;
     try {
       cart = await this.getActiveCart();
@@ -367,5 +368,34 @@ export default class ApiClient extends ApiBase {
       }
     }
     return cart;
+  };
+
+  public addProductToCart = async (cartId: string, productId: string) => {
+    const api = this.api.getAvalibleApi();
+
+    const cart = await api.me().activeCart().get().execute();
+
+    let version = 0;
+    if (cart.statusCode === HTTPResponseCode.ok) {
+      version = cart.body.version;
+    }
+
+    const action: MyCartAddLineItemAction = {
+      action: 'addLineItem',
+      productId: productId,
+    };
+    console.log('CART', cart);
+
+    return api
+      .me()
+      .carts()
+      .withId({ ID: cart.body.id })
+      .post({
+        body: {
+          version,
+          actions: [action],
+        },
+      })
+      .execute();
   };
 }
