@@ -1,12 +1,12 @@
 import { useCallback, useContext, useEffect, useState } from 'react';
 import './basket.scss';
 import { apiContext } from '../App';
-import { Cart, ClientResponse, LocalizedString } from '@commercetools/platform-sdk';
 import { HTTPResponseCode } from '../../constants/types';
 import { SortParams } from '../../constants/apiClient/apiClientTypes';
 
 interface IProduct {
-  id: string;
+  productId: string;
+  lineItemId: string;
   name: string;
   price: number;
   quantity: number;
@@ -16,24 +16,50 @@ export const Basket = () => {
   const api = useContext(apiContext);
 
   const [cart, setCart] = useState<IProduct[]>([]);
-  const [r, setR] = useState(0);
+  const [emptyCart, setEmptyCart] = useState(true);
 
   const loadCart = useCallback(async () => {
     const cart = await api.getCart();
     if (cart.statusCode === HTTPResponseCode.ok) {
       if (cart.body.lineItems.length > 0) {
         const items: IProduct[] = cart.body.lineItems.map((lineItem) => ({
-          id: lineItem.id,
+          productId: lineItem.productId,
+          lineItemId: lineItem.id,
           name: lineItem.name[SortParams.searchRU],
-          price: Number(lineItem.price.value.centAmount) / 100,
+          price: Number(lineItem.price.value.centAmount) / 100, // cents to USD
           quantity: Number(lineItem.quantity),
         }));
         setCart(items);
+        setEmptyCart(false);
+      } else {
+        setEmptyCart(true);
       }
     }
   }, [api]);
 
-  const addItem = useCallback(async () => await api.addProductToCart('693bd86c-6500-41c2-aa99-d169f4026976'), [api]);
+  const addItem = useCallback(
+    async (id: string) => {
+      try {
+        await api.addProductToCart(id);
+        await loadCart();
+      } catch (err) {
+        throw new Error(`${err}`);
+      }
+    },
+    [api, loadCart],
+  );
+
+  const removeItem = useCallback(
+    async (id: string, quantity = 1) => {
+      try {
+        await api.removeProductFromCart(id, quantity);
+        await loadCart();
+      } catch (err) {
+        throw new Error(`${err}`);
+      }
+    },
+    [api, loadCart],
+  );
 
   useEffect(() => {
     loadCart();
@@ -42,12 +68,29 @@ export const Basket = () => {
   return (
     <div className='basket'>
       <h1 className='basket__heading'>CART</h1>
-      <button onClick={addItem}>TEST</button>
-      <ul>
-        {cart.map(({ id, name, quantity, price }) => (
-          <li key={id}>{`Product: ${name}, amount: ${quantity}, price: ${price}`}</li>
-        ))}
-      </ul>
+      <button onClick={() => addItem('693bd86c-6500-41c2-aa99-d169f4026976')}>ADD TEST ITEM</button>
+      {emptyCart ? (
+        <h1 className='basket__heading'>CART IS EMPTY</h1>
+      ) : (
+        <ul>
+          {cart.map(({ productId, lineItemId, name, quantity, price }) => (
+            <li key={`li-${productId}`}>
+              {`Product: ${name}, amount: ${quantity}, price: ${price}`}
+              <button key={`buttonAdd-${productId}`} onClick={async () => await addItem(productId)}>
+                ADD
+              </button>
+              -
+              <button key={`buttonRemove-${lineItemId}`} onClick={async () => await removeItem(lineItemId)}>
+                REMOVE
+              </button>
+              -
+              <button key={`buttonRemoveAll-${lineItemId}`} onClick={async () => await removeItem(lineItemId, quantity)}>
+                REMOVEALL
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

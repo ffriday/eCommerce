@@ -6,6 +6,7 @@ import {
   ClientResponse,
   CustomerDraft,
   MyCartAddLineItemAction,
+  MyCartRemoveLineItemAction,
   MyCartUpdateAction,
   MyCustomerSignin,
   MyCustomerUpdate,
@@ -394,6 +395,15 @@ export default class ApiClient extends ApiBase {
       action: 'addLineItem',
       productId: productId,
       variantId,
+      quantity,
+    };
+    return this.cartAction(action);
+  };
+
+  public removeProductFromCart = async (productId: string, quantity = 1) => {
+    const action: MyCartRemoveLineItemAction = {
+      action: 'removeLineItem',
+      lineItemId: productId,
       quantity,
     };
     return this.cartAction(action);
