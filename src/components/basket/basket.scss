@@ -1,0 +1,132 @@
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+
+.basket {
+  margin-bottom: $loging-padding-top-bottom;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  &__data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  &__heading {
+    @include loginHeading($login-heading-size);
+    margin-bottom: $login-heading-margin-bottom;
+    font-size: 1em;
+    font-weight: bold;
+  }
+  &__subtitle {
+    @include loginSubtitle($login-subtitle-size);
+    margin-bottom: 10px;
+  }
+  &__slider {
+    margin-bottom: $login-subtitle-margin-bottom;
+    margin-top: $register-slider-margin-top;
+  }
+  &__email {
+    margin-bottom: $login-email-margin-bottom;
+  }
+  &__password {
+    margin-bottom: $login-password-margin-bottom;
+  }
+  &__checkbox {
+    margin-top: $input-form-margin-bottom;
+  }
+  &__home {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    div > input {
+      width: calc(#{$inputForm-width} / 2 - 10px);
+    }
+  }
+  &__loginLink {
+    @include labelLinkTextFont($checkbox-label-color);
+    a {
+      @include labelLinkFont($checkbox-link-color);
+    }
+  }
+  &__submit {
+    margin-bottom: $login-link-margin-top;
+    margin-top: $login-link-margin-top;
+  }
+  &__logout {
+    @include submitButton(234px, 57px);
+    padding: 20px 75px;
+    margin-top: 20px;
+  }
+  &__addressCaption {
+    @include loginSubtitle($login-subtitle-size);
+    text-align: left;
+    margin-top: $login-link-margin-top;
+  }
+  &__step-hidden {
+    display: none;
+  }
+  &__errorMessage {
+    color: red;
+    margin-bottom: $login-email-margin-bottom;
+    margin-top: $login-email-margin-bottom;
+  }
+  &__addressCaption {
+    background: url(../../assets/account/pencil-edit.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: right;
+    padding-right: 25px;
+  }
+  &__addressCaption:hover {
+    cursor: pointer;
+    filter: opacity(90%);
+  }
+  &__buttons {
+    display: flex;
+    flex-direction: row;
+  }
+  &__update {
+    width: 150px;
+    margin-left: 10px;
+  }
+  &__remove {
+    width: 150px;
+    margin-right: 10px;
+  }
+}
+
+.checkbox__wrapper {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.account__addresses div:last-of-type {
+  .account__addressCaption {
+    background: url(../../assets/account/plus.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: right;
+    padding-right: 25px;
+  }
+}
+
+.inputForm__wrapper {
+  margin-bottom: $input-form-margin-bottom;
+  > &:last-of-type {
+    margin-bottom: 0;
+  }
+}
+
+@media only screen and (max-width: 715px) {
+  .account {
+    margin-left: $loging-padding-left-right-mobile;
+    margin-right: $loging-padding-left-right-mobile;
+    &__heading {
+      @include loginHeading($login-heading-size-mobile);
+    }
+    &__subtitle {
+      @include loginSubtitle($login-subtitle-size-mobile);
+    }
+  }
+}

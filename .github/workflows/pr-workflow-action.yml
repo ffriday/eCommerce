@@ -6,7 +6,7 @@ on:
   push:
     branches: ['actions-configuration']
   pull_request:
-    branches: ['develop', 'release/catalog-product-profile']
+    branches: ['develop', 'release/catalog-product-profile', 'release/basket-about_us' ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:

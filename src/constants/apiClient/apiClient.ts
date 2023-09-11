@@ -1,6 +1,18 @@
 import { IeCommerceEnv } from '../ecommerce.env';
 import { QueryParam } from '@commercetools/sdk-client-v2';
-import { BaseAddress, CustomerDraft, MyCustomerSignin, MyCustomerUpdate, MyCustomerUpdateAction } from '@commercetools/platform-sdk';
+import {
+  BaseAddress,
+  Cart,
+  ClientResponse,
+  CustomerDraft,
+  MyCartAddLineItemAction,
+  MyCartRecalculateAction,
+  MyCartRemoveLineItemAction,
+  MyCartUpdateAction,
+  MyCustomerSignin,
+  MyCustomerUpdate,
+  MyCustomerUpdateAction,
+} from '@commercetools/platform-sdk';
 import { HTTPResponseCode } from '../types';
 import {
   ICategory,
@@ -51,6 +63,7 @@ export default class ApiClient extends ApiBase {
     const signIn: MyCustomerSignin = {
       email,
       password,
+      activeCartSignInMode: 'MergeWithExistingCustomerCart',
     };
 
     const res = await this.api.passwordApi
@@ -322,5 +335,101 @@ export default class ApiClient extends ApiBase {
         body: customerUpdate,
       })
       .execute();
+  };
+
+  // Cart
+
+  private createCart = (currency: string) => {
+    const api = this.api.getAvalibleApi();
+
+    return api
+      .me()
+      .carts()
+      .post({
+        body: {
+          currency,
+        },
+      })
+      .execute();
+  };
+
+  private getActiveCart = () => {
+    const api = this.api.getAvalibleApi();
+    return api.me().activeCart().get().execute();
+  };
+
+  public getCart = async (currency: string = SortParams.USD) => {
+    let cart: ClientResponse<Cart> | null = null;
+    try {
+      cart = await this.getActiveCart();
+    } catch (error) {
+      try {
+        cart = await this.createCart(currency);
+      } catch (error) {
+        throw new Error('No CART');
+      }
+    }
+    return cart;
+  };
+
+  private cartAction = async (action: MyCartUpdateAction[]) => {
+    const api = this.api.getAvalibleApi();
+    const cart = await this.getCart();
+    let version = 0;
+    if (cart.statusCode === HTTPResponseCode.ok) version = cart.body.version;
+
+    return api
+      .me()
+      .carts()
+      .withId({ ID: cart.body.id })
+      .post({
+        body: {
+          version,
+          actions: action,
+        },
+      })
+      .execute();
+  };
+
+  public addProductToCart = async (productId: string, variantId = 1, quantity = 1) => {
+    const action: MyCartAddLineItemAction = {
+      action: 'addLineItem',
+      productId: productId,
+      variantId,
+      quantity,
+    };
+    return this.cartAction([action]);
+  };
+
+  public removeProductFromCart = async (productId: string, quantity = 1) => {
+    const action: MyCartRemoveLineItemAction = {
+      action: 'removeLineItem',
+      lineItemId: productId,
+      quantity,
+    };
+    return this.cartAction([action]);
+  };
+
+  public clearCart = async () => {
+    const cart = await this.getCart();
+
+    if (cart.statusCode === HTTPResponseCode.ok) {
+      if (cart.body.lineItems.length > 0) {
+        const actions: MyCartRemoveLineItemAction[] = cart.body.lineItems.map((lineItem) => ({
+          action: 'removeLineItem',
+          lineItemId: lineItem.id,
+          quantity: Number(lineItem.quantity),
+        }));
+        await this.cartAction(actions);
+      }
+    }
+  };
+
+  public recalculateCart = async () => {
+    const action: MyCartRecalculateAction = {
+      action: 'recalculate',
+      updateProductData: true,
+    };
+    return this.cartAction([action]);
   };
 }

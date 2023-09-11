@@ -24,21 +24,21 @@ const dropDownMenuClassNames: IRouteClasses = {
 
 const routes: IRoute[] = [
   { title: 'Каталог', href: `/${RoutePath.catalog}`, classNames: routeClassNames },
-  { title: 'О нас', href: '/about', classNames: routeClassNames },
-  { title: 'Контакты', href: '/contacts', classNames: routeClassNames },
+  { title: 'О нас', href: `/${RoutePath.about}`, classNames: routeClassNames },
+  { title: 'Контакты', href: `/${RoutePath.contacts}`, classNames: routeClassNames },
 ];
 
 const tabs: IRoute[] = [
   { title: 'букеты', href: `/${RoutePath.bouquetscategory}`, classNames: tabsClassNames },
   { title: 'композиции', href: `/${RoutePath.arrangmentcategory}`, classNames: tabsClassNames },
   { title: 'подарочные наборы', href: `/${RoutePath.giftbasketcategory}`, classNames: tabsClassNames },
-  { title: 'акции', href: '/shares', classNames: tabsClassNames },
-  { title: 'новинки', href: '/novelties', classNames: tabsClassNames },
+  { title: 'акции', href: `/${RoutePath.shares}`, classNames: tabsClassNames },
+  { title: 'новинки', href: `/${RoutePath.novelties}`, classNames: tabsClassNames },
 ];
 
 const menuLinks: IMenuLink[] = [
-  { title: 'профиль', href: '/login', alt: 'Profile icon', icon: Profile, classNames: { container: 'menu__item' } },
-  { title: 'корзина', href: '/market', alt: 'Market icon', icon: Market, classNames: { container: 'menu__item' } },
+  { title: 'профиль', href: `/${RoutePath.login}`, alt: 'Profile icon', icon: Profile, classNames: { container: 'menu__item' } },
+  { title: 'корзина', href: `/${RoutePath.basket}`, alt: 'Market icon', icon: Market, classNames: { container: 'menu__item' } },
 ];
 export const Header: FC = () => {
   const [BurgerBtnActive, setBurgerBtnActive] = useState({ classname: '', isActive: false });
@@ -71,12 +71,12 @@ export const Header: FC = () => {
     BurgerBtnActive.isActive && setIsWrapperActive(false);
   };
   const dropDownMenu: IRouteDropDown[] = [
-    { title: 'Личный кабинет', href: '/login', classNames: dropDownMenuClassNames },
-    { title: 'Каталог', href: '/catalog', classNames: dropDownMenuClassNames },
-    { title: 'О нас', href: '/about', classNames: dropDownMenuClassNames },
-    { title: 'Aкции', href: '/shares', classNames: dropDownMenuClassNames },
-    { title: 'Новинки', href: '/novelties', classNames: dropDownMenuClassNames },
-    { title: 'Контакты', href: '/contacts', classNames: dropDownMenuClassNames },
+    { title: 'Личный кабинет', href: `/${RoutePath.login}`, classNames: dropDownMenuClassNames },
+    { title: 'Каталог', href: `/${RoutePath.catalog}`, classNames: dropDownMenuClassNames },
+    { title: 'О нас', href: `/${RoutePath.about}`, classNames: dropDownMenuClassNames },
+    { title: 'Aкции', href: `/${RoutePath.shares}`, classNames: dropDownMenuClassNames },
+    { title: 'Новинки', href: `/${RoutePath.novelties}`, classNames: dropDownMenuClassNames },
+    { title: 'Контакты', href: `/${RoutePath.contacts}`, classNames: dropDownMenuClassNames },
   ];
   return (
     <>
