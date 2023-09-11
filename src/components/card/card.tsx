@@ -1,5 +1,5 @@
 import './card.scss';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { ICardApiData } from '../../constants/types';
 import { Link } from 'react-router-dom';
 import { apiContext } from '../App';
@@ -15,6 +15,7 @@ export default function ProductCard({
   link,
   cardApiData = { image: '', name: '', description: '', price: '', id: '', key: '', isDiscounted: false, discPrice: '' },
 }: IProductCard) {
+  const [isInBusket, setIsInBusket] = useState(false);
   const api = useContext(apiContext);
   const addItem = async (id: string, variantId: number) => {
     try {
@@ -27,6 +28,7 @@ export default function ProductCard({
   const addToBasketBtnHandler = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     await addItem(data.id, 2);
+    setIsInBusket(!isInBusket);
   };
 
   const disableClassName = discounted ? 'card__price--disable' : '';
@@ -41,7 +43,7 @@ export default function ProductCard({
           <span className={disableClassName}> {`${data?.price} USD/шт. `}</span>
           {discounted && <span className={'card__price card__price--discounted'}>{`${data?.discPrice} USD/шт. `}</span>}
         </div>
-        <button className='card__button' onClick={addToBasketBtnHandler}>
+        <button disabled={isInBusket} className='card__button' onClick={addToBasketBtnHandler}>
           В корзину
         </button>
       </div>
