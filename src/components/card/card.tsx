@@ -1,9 +1,8 @@
-// import { useState, useEffect, useMemo, useContext } from 'react';
 import './card.scss';
+import { useContext } from 'react';
 import { ICardApiData } from '../../constants/types';
 import { Link } from 'react-router-dom';
-// import ProductAdapter from '../../constants/productAadapter';
-// import { apiContext } from '../App';
+import { apiContext } from '../App';
 
 interface IProductCard {
   cardApiData?: ICardApiData;
@@ -16,7 +15,20 @@ export default function ProductCard({
   link,
   cardApiData = { image: '', name: '', description: '', price: '', id: '', key: '', isDiscounted: false, discPrice: '' },
 }: IProductCard) {
+  const api = useContext(apiContext);
+  const addItem = async (id: string, variantId: number) => {
+    try {
+      await api.addProductToCart(id, variantId);
+    } catch (err) {
+      throw new Error(`${err}`);
+    }
+  };
   const data = cardApiData;
+  const addToBasketBtnHandler = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    await addItem(data.id, 2);
+  };
+
   const disableClassName = discounted ? 'card__price--disable' : '';
   return (
     <Link to={link} className='card'>
@@ -29,7 +41,9 @@ export default function ProductCard({
           <span className={disableClassName}> {`${data?.price} USD/шт. `}</span>
           {discounted && <span className={'card__price card__price--discounted'}>{`${data?.discPrice} USD/шт. `}</span>}
         </div>
-        <button className='card__button'>В корзину</button>
+        <button className='card__button' onClick={addToBasketBtnHandler}>
+          В корзину
+        </button>
       </div>
     </Link>
   );

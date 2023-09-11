@@ -106,7 +106,7 @@ export default class ProductAdapter {
     }
     const catalog: ICardApiData[] = id.map((item, index) => {
       return {
-        id: item[index],
+        id: id[index],
         key: key[index],
         image: image[index],
         name: name[index],
