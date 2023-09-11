@@ -1,4 +1,7 @@
+import { apiContext } from '../App';
+import { useContext, useState, useEffect, useCallback } from 'react';
 import { ICardApiData } from '../../constants/types';
+import { HTTPResponseCode } from '../../constants/types';
 import './product.scss';
 
 interface ProductInfo {
@@ -9,6 +12,23 @@ interface ProductInfo {
 
 function ProductInfo({ discounted, cardApiData, isActiveLabelClass }: ProductInfo) {
   const data = cardApiData;
+  const api = useContext(apiContext);
+  const handler = async () => {
+    await isInBusket();
+  };
+  const isInBusket = useCallback(async () => {
+    const cart = await api.getCart();
+    if (cart.statusCode === HTTPResponseCode.ok) {
+      const itemInBusket = cart.body.lineItems.filter((lineItem) => lineItem.productId === data?.id);
+      setInBusket(itemInBusket.length > 0);
+    }
+  }, [api, handler]);
+  const [inBusket, setInBusket] = useState(false);
+
+  useEffect(() => {
+    isInBusket();
+  }, []);
+
   const disableClassName = discounted ? 'card__price--disable' : '';
   const activeLabelClass = 'product__variants-label--active';
   return (
@@ -31,7 +51,9 @@ function ProductInfo({ discounted, cardApiData, isActiveLabelClass }: ProductInf
             <span className={'product__price product__price--discounted'}>{`${discounted ? data?.discPrice : data?.price} USD/шт. `}</span>
           )}
         </div>
-        <button className='product__button'>В корзину</button>
+        <button className='product__button' onClick={async () => await isInBusket()}>
+          {inBusket ? 'Удалить из корзины' : 'В корзину'}
+        </button>
       </div>
     </div>
   );
