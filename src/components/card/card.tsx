@@ -41,7 +41,7 @@ export default function ProductCard({
 
   const addToBasketBtnHandler = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    await addItem(data.id, 2);
+    await addItem(data.id, 1);
     setInBusket(!inBusket);
   };
 
