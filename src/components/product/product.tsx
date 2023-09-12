@@ -10,6 +10,9 @@ import { useMediaQuery } from '@react-hook/media-query';
 import { ICardApiData } from '../../constants/types';
 import { Slider } from './productSlider';
 import './product.scss';
+const variantOfProduct1 = 1;
+const variantOfProduct2 = 2;
+
 export const Product = () => {
   const { key } = useParams();
   const isSmallDevice = useMediaQuery('only screen and (max-width : 670px)');
@@ -74,6 +77,7 @@ export const Product = () => {
     };
     getData();
   }, [productAdapter, isVariant, key]);
+
   return (
     <div className='product__container container'>
       <div className='slider__box'>
@@ -85,7 +89,14 @@ export const Product = () => {
         {!isSmallDevice && <div className='slider__tooltip'>Двойным кликом можно изменить массштаб</div>}
       </div>
 
-      {!modalIsOpen && <ProductInfo isActiveLabelClass={isVariant} cardApiData={productData} discounted={productData?.isDiscounted} />}
+      {!modalIsOpen && (
+        <ProductInfo
+          isActiveLabelClass={isVariant}
+          cardApiData={productData}
+          discounted={productData?.isDiscounted}
+          variant={isVariant ? variantOfProduct1 : variantOfProduct2}
+        />
+      )}
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}

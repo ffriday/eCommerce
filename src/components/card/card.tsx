@@ -17,18 +17,18 @@ export default function ProductCard({
   cardApiData = { image: '', name: '', description: '', price: '', id: '', key: '', isDiscounted: false, discPrice: '' },
 }: IProductCard) {
   const api = useContext(apiContext);
-  const isInBusket = useCallback(async () => {
-    const cart = await api.getCart();
-    if (cart.statusCode === HTTPResponseCode.ok) {
-      const itemInBusket = cart.body.lineItems.filter((lineItem) => lineItem.productId === data?.id);
-      setInBusket(itemInBusket.length > 0);
-    }
-  }, [api]);
+  // const isInBusket = useCallback(async () => {
+  //   const cart = await api.getCart();
+  //   if (cart.statusCode === HTTPResponseCode.ok) {
+  //     const itemInBusket = cart.body.lineItems.filter((lineItem) => lineItem.productId === data?.id);
+  //     setInBusket(itemInBusket.length > 0);
+  //   }
+  // }, [api]);
 
   const [inBusket, setInBusket] = useState(false);
-  useEffect(() => {
-    isInBusket();
-  }, []);
+  // useEffect(() => {
+  //   isInBusket();
+  // }, []);
 
   const addItem = async (id: string, variantId: number) => {
     try {
@@ -38,6 +38,7 @@ export default function ProductCard({
     }
   };
   const data = cardApiData;
+
   const addToBasketBtnHandler = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     await addItem(data.id, 2);

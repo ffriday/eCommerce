@@ -29,7 +29,6 @@ export default class ProductAdapter {
     return '';
   };
   private getProductCardData = (data: Product, productVariant = false): ICardApiData => {
-    console.log(data);
     const id = data.id;
     const key = data.key;
     const image: string | undefined = productVariant
