@@ -1,35 +1,26 @@
-import { useContext, useEffect, useState, useCallback } from 'react';
+import { useContext, useState } from 'react';
 import { ICardApiData } from '../../constants/types';
 import { Link } from 'react-router-dom';
 import { apiContext } from '../App';
-import { HTTPResponseCode } from '../../constants/types';
+
+import { IMouthhandler } from '../../constants/types';
 import './card.scss';
 
 interface IProductCard {
   cardApiData?: ICardApiData;
   link: string;
   discounted?: boolean;
+  inBusket: boolean;
 }
 
 export default function ProductCard({
   discounted,
   link,
   cardApiData = { image: '', name: '', description: '', price: '', id: '', key: '', isDiscounted: false, discPrice: '' },
+  inBusket,
 }: IProductCard) {
+  const [ProdInBusket, setProdInBusket] = useState(inBusket);
   const api = useContext(apiContext);
-  // const isInBusket = useCallback(async () => {
-  //   const cart = await api.getCart();
-  //   if (cart.statusCode === HTTPResponseCode.ok) {
-  //     const itemInBusket = cart.body.lineItems.filter((lineItem) => lineItem.productId === data?.id);
-  //     setInBusket(itemInBusket.length > 0);
-  //   }
-  // }, [api]);
-
-  const [inBusket, setInBusket] = useState(false);
-  // useEffect(() => {
-  //   isInBusket();
-  // }, []);
-
   const addItem = async (id: string, variantId: number) => {
     try {
       await api.addProductToCart(id, variantId);
@@ -42,7 +33,7 @@ export default function ProductCard({
   const addToBasketBtnHandler = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     await addItem(data.id, 1);
-    setInBusket(!inBusket);
+    setProdInBusket(!ProdInBusket);
   };
 
   const disableClassName = discounted ? 'card__price--disable' : '';
@@ -57,7 +48,7 @@ export default function ProductCard({
           <span className={disableClassName}> {`${data?.price} USD/шт. `}</span>
           {discounted && <span className={'card__price card__price--discounted'}>{`${data?.discPrice} USD/шт. `}</span>}
         </div>
-        <button disabled={inBusket} className='card__button' onClick={addToBasketBtnHandler}>
+        <button disabled={ProdInBusket} className='card__button' onClick={addToBasketBtnHandler}>
           В корзину
         </button>
       </div>
