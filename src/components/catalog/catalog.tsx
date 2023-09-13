@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, useCallback, useMemo } from 'react';
+import { useContext, useEffect, useState, useMemo } from 'react';
 import './catalog.scss';
 import ProductAdapter from '../../constants/productAadapter';
 import { apiContext } from '../App';
@@ -10,7 +10,6 @@ import { IProductFilter } from '../../constants/apiClient/apiClientTypes';
 import FilterAndSort from './filterAndSort';
 import { ICardApiData } from '../../constants/types';
 import { HTTPResponseCode } from '../../constants/types';
-import { get } from 'http';
 interface ICatalog {
   queryFilter?: Partial<IProductFilter> | undefined;
 }
@@ -33,7 +32,6 @@ export default function ProductCatalog({ queryFilter }: ICatalog) {
   const [priceToQuery, setPriceToQuery] = useState('100000000');
   const [priceFromQuery, setPriceFromQuery] = useState('0');
   const [filterPrice, setFilterPrice] = useState(false);
-  const [inBusket, setInBusket] = useState(false);
   const [ids, setIds] = useState<string[]>([]);
   const api = useContext(apiContext);
   const productAdapter = useMemo(() => new ProductAdapter(api), [api]);
@@ -66,46 +64,46 @@ export default function ProductCatalog({ queryFilter }: ICatalog) {
     const newPage = prevPage > 0 ? prevPage : current;
     setPage(newPage);
   };
-  const isInBusket = async (catalogData: ICatalogApiData) => {
-    const cart = await api.getCart();
-    const lineItems = [...cart.body.lineItems];
-
-    if (cart.statusCode === HTTPResponseCode.ok) {
-      return catalogData.products.map((itemInBusket) => {
-        const filterLine = lineItems.filter((lineItem) => lineItem.productId === itemInBusket?.id);
-
-        if (filterLine.length > 0) {
-          return itemInBusket.id;
-        }
-        return '';
-      });
-    }
-    return [];
-  };
-  const setIdsFunc = async (catalogData: ICatalogApiData) => {
-    const ids = await isInBusket(catalogData);
-
-    setIds(ids);
-  };
-  const getData = async () => {
-    const offset: number = (page - 1) * limit;
-    const catalogData: ICatalogApiData = await productAdapter.getCatalog(
-      { limit: limit, offset: offset },
-      { ...queryFilter, price: { from: Number(priceFromQuery) * 100, to: Number(priceToQuery) * 100 } },
-    );
-    const priceFilterProducts: ICardApiData[] = catalogData.products.filter((el) => {
-      if (el.isDiscounted) {
-        return +el.discPrice >= +priceFromQuery && +el.discPrice <= +priceToQuery;
-      }
-      return +el.price >= +priceFromQuery && +el.price <= +priceToQuery;
-    });
-    filterPrice ? setCatalogData({ products: priceFilterProducts, totalCount: catalogData.totalCount }) : setCatalogData(catalogData);
-    await setIdsFunc(catalogData);
-  };
 
   useEffect(() => {
+    const isInBusket = async (catalogData: ICatalogApiData) => {
+      const cart = await api.getCart();
+      const lineItems = [...cart.body.lineItems];
+
+      if (cart.statusCode === HTTPResponseCode.ok) {
+        return catalogData.products.map((itemInBusket) => {
+          const filterLine = lineItems.filter((lineItem) => lineItem.productId === itemInBusket?.id);
+
+          if (filterLine.length > 0) {
+            return itemInBusket.id;
+          }
+          return '';
+        });
+      }
+      return [];
+    };
+    const setIdsFunc = async (catalogData: ICatalogApiData) => {
+      const ids = await isInBusket(catalogData);
+
+      setIds(ids);
+    };
+    const getData = async () => {
+      const offset: number = (page - 1) * limit;
+      const catalogData: ICatalogApiData = await productAdapter.getCatalog(
+        { limit: limit, offset: offset },
+        { ...queryFilter, price: { from: Number(priceFromQuery) * 100, to: Number(priceToQuery) * 100 } },
+      );
+      const priceFilterProducts: ICardApiData[] = catalogData.products.filter((el) => {
+        if (el.isDiscounted) {
+          return +el.discPrice >= +priceFromQuery && +el.discPrice <= +priceToQuery;
+        }
+        return +el.price >= +priceFromQuery && +el.price <= +priceToQuery;
+      });
+      filterPrice ? setCatalogData({ products: priceFilterProducts, totalCount: catalogData.totalCount }) : setCatalogData(catalogData);
+      await setIdsFunc(catalogData);
+    };
     getData();
-  }, [productAdapter, page, limit, queryFilter, priceFromQuery, priceToQuery, filterPrice]);
+  }, [api, productAdapter, page, limit, queryFilter, priceFromQuery, priceToQuery, filterPrice]);
 
   return (
     <section className='catalog__section'>
@@ -116,7 +114,7 @@ export default function ProductCatalog({ queryFilter }: ICatalog) {
           filterPriceHandler={filterPriceHandler}
           inputPriceFilterhandler={inputPriceFilterhandler}
         />
-        <CatalogList catalogData={catalogData} inBusket={inBusket} ids={ids} />
+        <CatalogList catalogData={catalogData} ids={ids} />
         {
           <CatalogNavigation
             catalogData={catalogData}

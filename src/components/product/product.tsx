@@ -85,7 +85,7 @@ export const Product = () => {
       throw new Error(`${err}`);
     }
   };
-  const addToBasketBtnHandler = async (event: React.MouseEvent<HTMLButtonElement>) => {
+  const addToBasketBtnHandler = async () => {
     if (productData) {
       try {
         await addItem(productData.id, isVariant ? variantOfProduct1 : variantOfProduct2);
@@ -102,7 +102,6 @@ export const Product = () => {
         const res = await api.getCart();
         const lineId = res.body.lineItems.filter((item) => item.productId === productData.id)[0].id;
         const variant = res.body.lineItems.filter((item) => item.productId === productData.id)[0].variant.id;
-        console.log(variant);
         return { lineId, variant };
       }
     } catch (err) {
@@ -120,7 +119,7 @@ export const Product = () => {
       throw new Error(`${err}`);
     }
   };
-  const removeFromBasketBtnHandler = async (event: React.MouseEvent<HTMLButtonElement>) => {
+  const removeFromBasketBtnHandler = async () => {
     if (productData) {
       try {
         await removeItem();
@@ -132,7 +131,6 @@ export const Product = () => {
   };
   const isInBusket = async () => {
     const cart = await api.getCart();
-    console.log(cart);
     if (cart.statusCode === HTTPResponseCode.ok) {
       let variantIdToCheck: number;
       if (isVariant) {
@@ -155,10 +153,12 @@ export const Product = () => {
   };
   useEffect(() => {
     getData();
+    // eslint-disable-next-line
   }, [productAdapter, isVariant, key]);
 
   useEffect(() => {
     isInBusket();
+    // eslint-disable-next-line
   }, [getData, isVariant]);
   return (
     <div className='product__container container'>

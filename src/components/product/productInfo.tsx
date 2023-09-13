@@ -1,5 +1,3 @@
-import { apiContext } from '../App';
-import { useContext, useState, useEffect, useCallback } from 'react';
 import { ICardApiData } from '../../constants/types';
 import { IMouthhandler } from '../../constants/types';
 import './product.scss';
@@ -15,7 +13,6 @@ interface ProductInfo {
 
 function ProductInfo({ discounted, cardApiData, isActiveLabelClass, addToBasketBtnHandler, removeFromBasketBtnHandler, inBusket }: ProductInfo) {
   const data = cardApiData;
-  const api = useContext(apiContext);
 
   const disableClassName = discounted ? 'card__price--disable' : '';
   const activeLabelClass = 'product__variants-label--active';

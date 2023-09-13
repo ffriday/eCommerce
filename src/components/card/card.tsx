@@ -3,7 +3,6 @@ import { ICardApiData } from '../../constants/types';
 import { Link } from 'react-router-dom';
 import { apiContext } from '../App';
 
-import { IMouthhandler } from '../../constants/types';
 import './card.scss';
 
 interface IProductCard {

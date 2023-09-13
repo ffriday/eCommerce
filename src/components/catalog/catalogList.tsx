@@ -1,9 +1,7 @@
-import { memo, useContext } from 'react';
+import { memo } from 'react';
 import './catalog.scss';
 import ProductCard from '../card/card';
 import { ICatalogApiData } from '../../constants/types';
-import { IMouthhandler } from '../../constants/types';
-import { apiContext } from '../App';
 interface ICatalogList {
   catalogData: ICatalogApiData;
   inBusket?: boolean;
@@ -11,7 +9,6 @@ interface ICatalogList {
 }
 
 const CatalogList = ({ catalogData, inBusket = false, ids }: ICatalogList) => {
-  console.log(ids);
   return (
     <>
       {catalogData && (
