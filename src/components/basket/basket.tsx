@@ -10,6 +10,7 @@ interface IProduct {
   name: string;
   price: number;
   quantity: number;
+  image: string | undefined;
 }
 
 export const Basket = () => {
@@ -29,8 +30,10 @@ export const Basket = () => {
           name: lineItem.name[SortParams.searchRU],
           price: Number(lineItem.price.value.centAmount) / 100, // cents to USD
           quantity: Number(lineItem.quantity),
+          image: lineItem.variant.images?.[0].url,
         }));
         setCart(items);
+        console.log(items);
         setTotal(cart.body.totalPrice.centAmount / 100); // cents to USD
         setEmptyCart(false);
       } else {
@@ -88,9 +91,10 @@ export const Basket = () => {
       ) : (
         <div>
           <ul>
-            {cart.map(({ productId, lineItemId, name, quantity, price }) => (
+            {cart.map(({ productId, lineItemId, name, quantity, price, image }) => (
               <li key={`li-${productId}`}>
                 {`Product: ${name}, amount: ${quantity}, price: ${price}`}
+                <img style={{ width: '60px', height: '60px' }} src={image} />
                 <button key={`buttonAdd-${productId}`} onClick={async () => await addItem(productId)}>
                   ADD
                 </button>
