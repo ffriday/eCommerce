@@ -33,7 +33,6 @@ export const Basket = () => {
           image: lineItem.variant.images?.[0].url,
         }));
         setCart(items);
-        console.log(items);
         setTotal(cart.body.totalPrice.centAmount / 100); // cents to USD
         setEmptyCart(false);
       } else {
