@@ -8,6 +8,7 @@ import {
   MyCartAddDiscountCodeAction,
   MyCartAddLineItemAction,
   MyCartRecalculateAction,
+  MyCartRemoveDiscountCodeAction,
   MyCartRemoveLineItemAction,
   MyCartUpdateAction,
   MyCustomerSignin,
@@ -444,6 +445,17 @@ export default class ApiClient extends ApiBase {
     const action: MyCartAddDiscountCodeAction = {
       action: 'addDiscountCode',
       code: promo,
+    };
+    return this.cartAction([action]);
+  };
+
+  public removePromoCode = async (promoId: string) => {
+    const action: MyCartRemoveDiscountCodeAction = {
+      action: 'removeDiscountCode',
+      discountCode: {
+        typeId: 'discount-code',
+        id: promoId,
+      },
     };
     return this.cartAction([action]);
   };
