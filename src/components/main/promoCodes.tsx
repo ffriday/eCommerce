@@ -3,6 +3,7 @@ import { apiContext } from '../App';
 import { HTTPResponseCode } from '../../constants/types';
 import { CartDiscount } from '@commercetools/platform-sdk';
 import { PromocodeItem } from './promoCodeItem';
+import './promocode.scss';
 
 export const Promocodes = () => {
   const api = useContext(apiContext);
@@ -26,7 +27,7 @@ export const Promocodes = () => {
     <>
       {promocodes.length > 0 ? (
         <div>
-          <p>Промокоды:</p>
+          <p className='promo__heading'>Промокоды:</p>
           <ul>
             {promocodes.map((code) => (
               <PromocodeItem key={code.id} code={code} />

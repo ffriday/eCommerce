@@ -1,6 +1,3 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
-import { apiContext } from '../App';
-import { HTTPResponseCode } from '../../constants/types';
 import { CartDiscount } from '@commercetools/platform-sdk';
 import { SortParams } from '../../constants/apiClient/apiClientTypes';
 
@@ -8,10 +5,12 @@ interface IPromoCodeItem {
   code: CartDiscount;
 }
 
-export const PromocodeItem = ({ code: { id, name, description, key } }: IPromoCodeItem) => {
+export const PromocodeItem = ({ code: { name, description, key } }: IPromoCodeItem) => {
   return (
-    <li>
-      <strong>{name[SortParams.searchEN]}</strong>
+    <li className='promo__item'>
+      <p className='promo__name'>{name[SortParams.searchEN]}</p>
+      <p className='promo__description'>{description && description[SortParams.searchEN]}</p>
+      <p className='promo__key'>{key && key}</p>
     </li>
   );
 };
