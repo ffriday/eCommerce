@@ -136,3 +136,26 @@ $product-price-font-size: 18px;
 $product-price-discounted-color: rgb(145, 0, 0);
 $product-price-discounted-hover-color: rgb(206, 0, 0);
 $product-price-discounted-font-weight: 700;
+
+// basket
+$basket-item-height: 150px;
+$basket-item-padding-top: 26px;
+$basket-item-padding-bottom: 26px;
+$basket-item-img-width: 100px;
+$basket-item-img-height: 100px;
+$basket-item-variants-height: 37px;
+$basket-item-variants-color: #5ca182;
+$basket-item-btn-remove-width: 10px;
+$basket-item-btn-remove-height: 3px;
+$basket-item-btn-remove-url: '../../assets/basket/-.svg';
+$basket-item-btn-add-width: 12px;
+$basket-item-btn-add-height: 12px;
+$basket-item-btn-add-url: '../../assets/basket/+.svg';
+$basket-item-btn-remove-all-width: 24px;
+$basket-item-btn-remove-all-height: 24px;
+$basket-item-btn-remove-all-url: '../../assets/basket/remove-all.svg';
+$basket-item-count-color: #ccc;
+$basket-item-btn-back-width: 160px;
+$basket-item-btn-back-height: 60px;
+$basket-btn-width: 120px;
+$basket-btn-height: 50px;

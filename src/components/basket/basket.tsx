@@ -13,7 +13,7 @@ export const Basket = () => {
   const [cart, setCart] = useState<IBasketProduct[]>([]);
   const [emptyCart, setEmptyCart] = useState(true);
   const [total, setTotal] = useState(0);
-
+  const [isAddingToBasket, setIsAddingToBasket] = useState(false);
   const loadCart = useCallback(async () => {
     const cart = await api.getCart();
     if (cart.statusCode === HTTPResponseCode.ok) {
@@ -68,7 +68,30 @@ export const Basket = () => {
       throw new Error(`${err}`);
     }
   }, [api, loadCart]);
-
+  const clearCartHandler = async () => {
+    if (!isAddingToBasket) {
+      setIsAddingToBasket(true);
+      try {
+        await clearCart();
+      } catch (err) {
+        throw new Error(`${err}`);
+      } finally {
+        setIsAddingToBasket(false);
+      }
+    }
+  };
+  const recalculateHandler = async () => {
+    if (!isAddingToBasket) {
+      setIsAddingToBasket(true);
+      try {
+        await api.recalculateCart();
+      } catch (err) {
+        throw new Error(`${err}`);
+      } finally {
+        setIsAddingToBasket(false);
+      }
+    }
+  };
   useEffect(() => {
     loadCart();
   }, [loadCart]);
@@ -103,10 +126,10 @@ export const Basket = () => {
           </ul>
           <div className='basket__bottom-box'>
             <p>{`Стоимость товаров: ${total}$`}</p>
-            <button className='basket__btn' onClick={async () => await api.recalculateCart()}>
+            <button className='basket__btn' onClick={recalculateHandler}>
               Пересчитать стоимость
             </button>
-            <button className='basket__btn' onClick={async () => await clearCart()}>
+            <button className='basket__btn' onClick={clearCartHandler}>
               Очистить корзину
             </button>
           </div>

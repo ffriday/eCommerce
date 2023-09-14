@@ -1,6 +1,7 @@
 import { IBasketProduct } from '../../constants/types';
 import { BasketItemAddOrRemType } from '../../constants/types';
 import { BasketItemRemoveAllType } from '../../constants/types';
+import { useState } from 'react';
 
 interface IBasketProductComponent extends IBasketProduct {
   addItem: BasketItemAddOrRemType;
@@ -19,6 +20,43 @@ export const BasketProduct = ({
   removeItem,
   removeAllItems,
 }: IBasketProductComponent) => {
+  const [isAddingToBasket, setIsAddingToBasket] = useState(false);
+  const removeItemHandler = async () => {
+    if (!isAddingToBasket) {
+      setIsAddingToBasket(true);
+      try {
+        await removeItem(lineItemId);
+      } catch (err) {
+        throw new Error(`${err}`);
+      } finally {
+        setIsAddingToBasket(false);
+      }
+    }
+  };
+  const addItemHandler = async () => {
+    if (!isAddingToBasket) {
+      setIsAddingToBasket(true);
+      try {
+        await addItem(productId);
+      } catch (err) {
+        throw new Error(`${err}`);
+      } finally {
+        setIsAddingToBasket(false);
+      }
+    }
+  };
+  const removeAllItemHandler = async () => {
+    if (!isAddingToBasket) {
+      setIsAddingToBasket(true);
+      try {
+        await removeAllItems(lineItemId, quantity);
+      } catch (err) {
+        throw new Error(`${err}`);
+      } finally {
+        setIsAddingToBasket(false);
+      }
+    }
+  };
   return (
     <li className='basket__item'>
       <div className='basket__left-block'>
@@ -34,13 +72,13 @@ export const BasketProduct = ({
       </div>
       <div className='basket__right-block'>
         <div className='basket__control-box'>
-          <button className='basket__remove' onClick={async () => await removeItem(lineItemId)}></button>
+          <button className='basket__remove' onClick={removeItemHandler}></button>
           <div className='basket__count'>{quantity}</div>
 
-          <button className='basket__add' onClick={async () => await addItem(productId)}></button>
+          <button className='basket__add' onClick={addItemHandler}></button>
         </div>
         <div className='basket__price'>{price} $/шт.</div>
-        <button className='basket__remove-all' onClick={async () => await removeAllItems(lineItemId, quantity)}></button>
+        <button className='basket__remove-all' onClick={removeAllItemHandler}></button>
       </div>
     </li>
   );
