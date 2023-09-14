@@ -3,20 +3,13 @@ import './basket.scss';
 import { apiContext } from '../App';
 import { HTTPResponseCode, RoutePath } from '../../constants/types';
 import { SortParams } from '../../constants/apiClient/apiClientTypes';
-
-interface IProduct {
-  productId: string;
-  lineItemId: string;
-  name: string;
-  price: number;
-  quantity: number;
-  image: string | undefined;
-}
+import { IBasketProduct } from '../../constants/types';
+import { BasketProduct } from './basketProduct';
 
 export const Basket = () => {
   const api = useContext(apiContext);
 
-  const [cart, setCart] = useState<IProduct[]>([]);
+  const [cart, setCart] = useState<IBasketProduct[]>([]);
   const [emptyCart, setEmptyCart] = useState(true);
   const [total, setTotal] = useState(0);
 
@@ -24,7 +17,7 @@ export const Basket = () => {
     const cart = await api.getCart();
     if (cart.statusCode === HTTPResponseCode.ok) {
       if (cart.body.lineItems.length > 0) {
-        const items: IProduct[] = cart.body.lineItems.map((lineItem) => ({
+        const items: IBasketProduct[] = cart.body.lineItems.map((lineItem) => ({
           productId: lineItem.productId,
           lineItemId: lineItem.id,
           name: lineItem.name[SortParams.searchRU],
@@ -91,21 +84,18 @@ export const Basket = () => {
         <div>
           <ul>
             {cart.map(({ productId, lineItemId, name, quantity, price, image }) => (
-              <li key={`li-${productId}`}>
-                {`Product: ${name}, amount: ${quantity}, price: ${price}`}
-                <img style={{ width: '60px', height: '60px' }} src={image} />
-                <button key={`buttonAdd-${productId}`} onClick={async () => await addItem(productId)}>
-                  ADD
-                </button>
-                -
-                <button key={`buttonRemove-${lineItemId}`} onClick={async () => await removeItem(lineItemId)}>
-                  REMOVE
-                </button>
-                -
-                <button key={`buttonRemoveAll-${lineItemId}`} onClick={async () => await removeItem(lineItemId, quantity)}>
-                  REMOVEALL
-                </button>
-              </li>
+              <BasketProduct
+                key={lineItemId}
+                productId={productId}
+                lineItemId={lineItemId}
+                name={name}
+                quantity={quantity}
+                price={price}
+                image={image}
+                addItem={addItem}
+                removeItem={removeItem}
+                removeAllItems={removeItem}
+              />
             ))}
           </ul>
           <p>{`TOTAL: ${total}`}</p>
