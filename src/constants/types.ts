@@ -140,6 +140,7 @@ export interface ICardApiData {
   isDiscounted: boolean;
   discPrice: string;
 }
+
 export enum language {
   en = 'en-US',
   ru = 'ru-BY',

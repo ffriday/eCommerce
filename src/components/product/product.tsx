@@ -59,8 +59,7 @@ export const Product = () => {
         return;
       }
 
-      product1 = await productAdapter.getProductByKey({ key });
-      product2 = await productAdapter.getProductByKey({ key, productVariant: true });
+      [product1, product2] = await productAdapter.getProductByKey({ key });
     } catch (error) {
       product2 = undefined;
     }
