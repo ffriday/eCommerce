@@ -2,121 +2,110 @@
 @import '../../styles/mixins.scss';
 
 .basket {
-  margin-bottom: $loging-padding-top-bottom;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  &__data {
+  &__item {
+    display: flex;
+
+    justify-content: space-between;
+    padding-top: 26px;
+    padding-bottom: 26px;
+    height: 150px;
+    border-bottom-width: 1px;
+    border-style: solid;
+    border-color: #adadad;
+  }
+  &__image {
+    object-fit: contain;
+    width: 100px;
+    height: 100px;
+  }
+  &__right-block {
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-basis: 50%;
+  }
+
+  &__variant {
+    height: 37px;
+    padding: 10px 16px;
+    border-radius: 40px;
+    border: 1.5px solid #5ca182;
+    color: #5ca182;
+  }
+
+  &__left-block {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-basis: 50%;
+  }
+  &__control-box {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    margin-left: 77px;
+  }
+  &__remove {
+    @include basket-btn(10px, 3px, '../../assets/basket/-.svg');
+    margin-right: 12.5px;
+  }
+  &__add {
+    @include basket-btn(12px, 12px, '../../assets/basket/+.svg');
+    margin-left: 12.5px;
+  }
+  &__remove-all {
+    @include basket-btn(24px, 24px, '../../assets/basket/remove-all.svg');
+  }
+  &__count {
+    padding: 6px 16px;
+    background-color: #ccc;
+    border-radius: 3px;
+  }
+  &__btn-back {
+    padding: 22px 15px;
+    @include submitButton(160px, 60px);
+  }
+  &__empty {
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 40px;
   }
   &__heading {
-    @include loginHeading($login-heading-size);
-    margin-bottom: $login-heading-margin-bottom;
-    font-size: 1em;
-    font-weight: bold;
+    padding-bottom: 20px;
+    border-bottom-width: 1px;
+    border-style: solid;
+    border-color: #adadad;
   }
-  &__subtitle {
-    @include loginSubtitle($login-subtitle-size);
-    margin-bottom: 10px;
+  &__btn {
+    @include submitButton(120px, 50px);
   }
-  &__slider {
-    margin-bottom: $login-subtitle-margin-bottom;
-    margin-top: $register-slider-margin-top;
-  }
-  &__email {
-    margin-bottom: $login-email-margin-bottom;
-  }
-  &__password {
-    margin-bottom: $login-password-margin-bottom;
-  }
-  &__checkbox {
-    margin-top: $input-form-margin-bottom;
-  }
-  &__home {
+  &__bottom-box {
+    margin-top: 30px;
     display: flex;
-    flex-direction: row;
     align-items: center;
-    justify-content: space-between;
-    div > input {
-      width: calc(#{$inputForm-width} / 2 - 10px);
+    gap: 20px;
+  }
+}
+
+@media only screen and (max-width: 551px) {
+  .basket {
+    &__item {
+      flex-direction: column;
+      gap: 10px;
+      padding-top: 5px;
+    }
+
+    &__right-block {
+      flex-basis: auto;
+      gap: 10px;
+    }
+
+    &__left-block {
+      flex-basis: auto;
+      gap: 10px;
     }
   }
-  &__loginLink {
-    @include labelLinkTextFont($checkbox-label-color);
-    a {
-      @include labelLinkFont($checkbox-link-color);
-    }
-  }
-  &__submit {
-    margin-bottom: $login-link-margin-top;
-    margin-top: $login-link-margin-top;
-  }
-  &__logout {
-    @include submitButton(234px, 57px);
-    padding: 20px 75px;
-    margin-top: 20px;
-  }
-  &__addressCaption {
-    @include loginSubtitle($login-subtitle-size);
-    text-align: left;
-    margin-top: $login-link-margin-top;
-  }
-  &__step-hidden {
-    display: none;
-  }
-  &__errorMessage {
-    color: red;
-    margin-bottom: $login-email-margin-bottom;
-    margin-top: $login-email-margin-bottom;
-  }
-  &__addressCaption {
-    background: url(../../assets/account/pencil-edit.svg);
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: right;
-    padding-right: 25px;
-  }
-  &__addressCaption:hover {
-    cursor: pointer;
-    filter: opacity(90%);
-  }
-  &__buttons {
-    display: flex;
-    flex-direction: row;
-  }
-  &__update {
-    width: 150px;
-    margin-left: 10px;
-  }
-  &__remove {
-    width: 150px;
-    margin-right: 10px;
-  }
-}
-
-.checkbox__wrapper {
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
-
-.account__addresses div:last-of-type {
-  .account__addressCaption {
-    background: url(../../assets/account/plus.svg);
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: right;
-    padding-right: 25px;
-  }
-}
-
-.inputForm__wrapper {
-  margin-bottom: $input-form-margin-bottom;
-  > &:last-of-type {
-    margin-bottom: 0;
-  }
-}
-
-@media only screen and (max-width: 715px) {
 }

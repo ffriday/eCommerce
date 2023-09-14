@@ -5,6 +5,7 @@ import { HTTPResponseCode, RoutePath } from '../../constants/types';
 import { SortParams } from '../../constants/apiClient/apiClientTypes';
 import { IBasketProduct } from '../../constants/types';
 import { BasketProduct } from './basketProduct';
+import { Link } from 'react-router-dom';
 
 export const Basket = () => {
   const api = useContext(apiContext);
@@ -24,6 +25,7 @@ export const Basket = () => {
           price: Number(lineItem.price.value.centAmount) / 100, // cents to USD
           quantity: Number(lineItem.quantity),
           image: lineItem.variant.images?.[0].url,
+          variantId: lineItem.variant.id,
         }));
         setCart(items);
         setTotal(cart.body.totalPrice.centAmount / 100); // cents to USD
@@ -72,18 +74,18 @@ export const Basket = () => {
   }, [loadCart]);
 
   return (
-    <div className='basket'>
-      <h1 className='basket__heading'>CART</h1>
-      <button onClick={() => addItem('693bd86c-6500-41c2-aa99-d169f4026976')}>ADD TEST ITEM</button>
+    <div className='basket container'>
       {emptyCart ? (
-        <div>
-          <h1 className='basket__heading'>CART IS EMPTY</h1>
-          <a href={`/${RoutePath.catalog}`}>GO TO CATALOG</a>
+        <div className='basket__empty'>
+          <h1 className='basket__heading'>Корзина пуста</h1>
+          <Link className={'basket__btn-back'} to={`/${RoutePath.catalog}`}>
+            Перейти в каталог
+          </Link>
         </div>
       ) : (
-        <div>
+        <>
           <ul>
-            {cart.map(({ productId, lineItemId, name, quantity, price, image }) => (
+            {cart.map(({ productId, lineItemId, name, quantity, price, image, variantId }) => (
               <BasketProduct
                 key={lineItemId}
                 productId={productId}
@@ -92,16 +94,23 @@ export const Basket = () => {
                 quantity={quantity}
                 price={price}
                 image={image}
+                variantId={variantId}
                 addItem={addItem}
                 removeItem={removeItem}
                 removeAllItems={removeItem}
               />
             ))}
           </ul>
-          <p>{`TOTAL: ${total}`}</p>
-          <button onClick={async () => await clearCart()}>CLEAR CART</button>-
-          <button onClick={async () => await api.recalculateCart()}>RECALCULATE</button>
-        </div>
+          <div className='basket__bottom-box'>
+            <p>{`Стоимость товаров: ${total}$`}</p>
+            <button className='basket__btn' onClick={async () => await api.recalculateCart()}>
+              Пересчитать стоимость
+            </button>
+            <button className='basket__btn' onClick={async () => await clearCart()}>
+              Очистить корзину
+            </button>
+          </div>
+        </>
       )}
     </div>
   );

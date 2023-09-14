@@ -196,6 +196,7 @@ export interface IBasketProduct {
   price: number;
   quantity: number;
   image: string | undefined;
+  variantId: number;
 }
 
 export type BasketItemAddOrRemType = (productId: string) => Promise<void>;

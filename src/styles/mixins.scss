@@ -136,3 +136,12 @@
   font-family: $product-font-family;
   color: $product-text-color;
 }
+
+@mixin basket-btn($width, $height, $url) {
+  width: $width;
+  height: $height;
+  background-image: url($url);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-color: transparent;
+}
