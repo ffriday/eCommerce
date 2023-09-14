@@ -5,6 +5,7 @@ import {
   Cart,
   ClientResponse,
   CustomerDraft,
+  MyCartAddDiscountCodeAction,
   MyCartAddLineItemAction,
   MyCartRecalculateAction,
   MyCartRemoveLineItemAction,
@@ -437,5 +438,13 @@ export default class ApiClient extends ApiBase {
     const api = this.api.getAvalibleApi();
 
     return api.cartDiscounts().get().execute();
+  };
+
+  public addPromoCode = async (promo: string) => {
+    const action: MyCartAddDiscountCodeAction = {
+      action: 'addDiscountCode',
+      code: promo,
+    };
+    return this.cartAction([action]);
   };
 }
