@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useContext } from 'react';
+import { useState, useEffect, useMemo, useContext, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import ProductAdapter from '../../constants/productAadapter';
 import { apiContext } from '../App';
@@ -50,7 +50,7 @@ export const Product = () => {
   const [inBusketVar1, setInBusketVar1] = useState(false);
   const [inBusketVar2, setInBusketVar2] = useState(false);
 
-  const getData = async () => {
+  const getData = useCallback(async () => {
     let product1: ICardApiData | undefined;
     let product2: ICardApiData | undefined;
 
@@ -75,7 +75,7 @@ export const Product = () => {
     }
 
     setProductsData(products);
-  };
+  }, [isVariant, key, productAdapter]);
 
   const addItem = async (id: string, variantId: number) => {
     try {
@@ -128,7 +128,7 @@ export const Product = () => {
       }
     }
   };
-  const isInBusket = async () => {
+  const isInBusket = useCallback(async () => {
     const cart = await api.getCart();
     if (cart.statusCode === HTTPResponseCode.ok) {
       let variantIdToCheck: number;
@@ -149,16 +149,13 @@ export const Product = () => {
         setInBusketVar2(isInBasket);
       }
     }
-  };
-  useEffect(() => {
-    getData();
-    // eslint-disable-next-line
-  }, [productAdapter, isVariant, key]);
+  }, [api, isVariant, productData?.id]);
 
   useEffect(() => {
+    getData();
     isInBusket();
-    // eslint-disable-next-line
-  }, [getData, isVariant]);
+  }, [getData, isInBusket]);
+
   return (
     <div className='product__container container'>
       <div className='slider__box'>
