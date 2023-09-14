@@ -12,9 +12,9 @@
     font-weight: bold;
   }
   &__item {
-    margin-bottom: 12px;
-    padding-bottom: 7px;
-    border-bottom: solid 1px $button-enabled-color;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: solid 1.5px $gray2;
   }
   &__name {
     @include loginSubtitle($login-subtitle-size);
@@ -28,7 +28,7 @@
     font-weight: bold;
   }
   &__key::before {
-    content: 'Use promocode: ';
+    content: 'Используй промокод: ';
     font-weight: normal;
   }
 }

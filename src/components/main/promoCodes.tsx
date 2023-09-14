@@ -15,7 +15,7 @@ export const Promocodes = () => {
       body: { count, results },
     } = await api.getCartDiscounts();
     if (statusCode === HTTPResponseCode.ok && count > 0) {
-      setPromcodes(results);
+      setPromcodes(results.filter(({ isActive }) => isActive));
     }
   }, [api]);
 
