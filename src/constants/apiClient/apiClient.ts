@@ -432,4 +432,10 @@ export default class ApiClient extends ApiBase {
     };
     return this.cartAction([action]);
   };
+
+  public getCartDiscounts = async () => {
+    const api = this.api.getAvalibleApi();
+
+    return api.cartDiscounts().get().execute();
+  };
 }
