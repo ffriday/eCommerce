@@ -19,20 +19,22 @@ export const BasketProduct = ({
   removeAllItems,
 }: IBasketProductComponent) => {
   return (
-    <li key={`li-${productId}`}>
-      {`Product: ${name}, amount: ${quantity}, price: ${price}`}
-      <img style={{ width: '60px', height: '60px' }} src={image} />
-      <button key={`buttonAdd-${productId}`} onClick={async () => await addItem(productId)}>
-        ADD
-      </button>
-      -
-      <button key={`buttonRemove-${lineItemId}`} onClick={async () => await removeItem(lineItemId)}>
-        REMOVE
-      </button>
-      -
-      <button key={`buttonRemoveAll-${lineItemId}`} onClick={async () => await removeAllItems(lineItemId, quantity)}>
-        REMOVEALL
-      </button>
+    <li className='basket__item'>
+      <img src={image} alt={`image:${name}`} className='basket__image'></img>
+      <h3 className='basket__name'>{name}</h3>
+      <div className='basket__variant-s'></div>
+      <div className='basket__variant-m'></div>
+      <div className='basket__control-box'>
+        <button className='basket__remove' onClick={async () => await removeItem(lineItemId)}>
+          -
+        </button>
+        <div className='basket__count'>{quantity}</div>
+        <button className='basket__add' onClick={async () => await addItem(productId)}>
+          +
+        </button>
+      </div>
+      <div className='basket__price'>{price}</div>
+      <div className='basket__remove-all' onClick={async () => await removeAllItems(lineItemId, quantity)}></div>
     </li>
   );
 };

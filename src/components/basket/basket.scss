@@ -119,14 +119,4 @@
 }
 
 @media only screen and (max-width: 715px) {
-  .account {
-    margin-left: $loging-padding-left-right-mobile;
-    margin-right: $loging-padding-left-right-mobile;
-    &__heading {
-      @include loginHeading($login-heading-size-mobile);
-    }
-    &__subtitle {
-      @include loginSubtitle($login-subtitle-size-mobile);
-    }
-  }
 }
