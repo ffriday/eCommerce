@@ -13,6 +13,7 @@ export const Basket = () => {
   const [cart, setCart] = useState<IBasketProduct[]>([]);
   const [emptyCart, setEmptyCart] = useState(true);
   const [total, setTotal] = useState(0);
+
   const [isAddingToBasket, setIsAddingToBasket] = useState(false);
   const loadCart = useCallback(async () => {
     const cart = await api.getCart();
@@ -37,9 +38,9 @@ export const Basket = () => {
   }, [api]);
 
   const addItem = useCallback(
-    async (id: string) => {
+    async (id: string, variantId: number) => {
       try {
-        await api.addProductToCart(id);
+        await api.addProductToCart(id, variantId);
         await loadCart();
       } catch (err) {
         throw new Error(`${err}`);

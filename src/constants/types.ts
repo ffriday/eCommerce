@@ -199,5 +199,6 @@ export interface IBasketProduct {
   variantId: number;
 }
 
-export type BasketItemAddOrRemType = (productId: string) => Promise<void>;
+export type BasketItemAddType = (productId: string, variantId: number) => Promise<void>;
+export type BasketItemRemoveType = (productId: string) => Promise<void>;
 export type BasketItemRemoveAllType = (lineItemId: string, quantity: number) => Promise<void>;

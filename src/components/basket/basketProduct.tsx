@@ -1,11 +1,12 @@
 import { IBasketProduct } from '../../constants/types';
-import { BasketItemAddOrRemType } from '../../constants/types';
+import { BasketItemAddType } from '../../constants/types';
+import { BasketItemRemoveType } from '../../constants/types';
 import { BasketItemRemoveAllType } from '../../constants/types';
 import { useState } from 'react';
 
 interface IBasketProductComponent extends IBasketProduct {
-  addItem: BasketItemAddOrRemType;
-  removeItem: BasketItemAddOrRemType;
+  addItem: BasketItemAddType;
+  removeItem: BasketItemRemoveType;
   removeAllItems: BasketItemRemoveAllType;
 }
 export const BasketProduct = ({
@@ -21,11 +22,13 @@ export const BasketProduct = ({
   removeAllItems,
 }: IBasketProductComponent) => {
   const [isAddingToBasket, setIsAddingToBasket] = useState(false);
+  const [viewPrice, setViewPrice] = useState(price);
   const removeItemHandler = async () => {
     if (!isAddingToBasket) {
       setIsAddingToBasket(true);
       try {
         await removeItem(lineItemId);
+        setViewPrice((viewPrice) => viewPrice - price);
       } catch (err) {
         throw new Error(`${err}`);
       } finally {
@@ -37,7 +40,8 @@ export const BasketProduct = ({
     if (!isAddingToBasket) {
       setIsAddingToBasket(true);
       try {
-        await addItem(productId);
+        await addItem(productId, variantId);
+        setViewPrice((viewPrice) => viewPrice + price);
       } catch (err) {
         throw new Error(`${err}`);
       } finally {
@@ -77,7 +81,7 @@ export const BasketProduct = ({
 
           <button className='basket__add' onClick={addItemHandler}></button>
         </div>
-        <div className='basket__price'>{price} $/шт.</div>
+        <div className='basket__price'>{viewPrice} $/шт.</div>
         <button className='basket__remove-all' onClick={removeAllItemHandler}></button>
       </div>
     </li>
