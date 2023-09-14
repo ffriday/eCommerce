@@ -1,18 +1,6 @@
 @import '../../styles/variables.scss';
 @import '../../styles/mixins.scss';
 
-body {
-  background-image: url('../../assets/main/branch_left.png'), url('../../assets/main/branch_right.png');
-  background-position:
-    left bottom,
-    right 20%;
-  background-repeat: no-repeat;
-  background-size:
-    30% auto,
-    30% auto;
-  height: 100%;
-}
-
 #root {
   height: calc(100% - #{$padding-top} * 2);
 }
@@ -28,6 +16,14 @@ body {
   align-items: center;
   justify-content: center;
   height: 100%;
+  background-image: url('../../assets/main/branch_left.png'), url('../../assets/main/branch_right.png');
+  background-position:
+    left bottom,
+    right top;
+  background-repeat: no-repeat;
+  background-size:
+    25% auto,
+    25% auto;
 }
 
 .promo {
