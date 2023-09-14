@@ -46,6 +46,9 @@
     }
   }
   &__button {
+    &--inbusket {
+      background-color: #6e857a;
+    }
     @include submitButton($product-btn-width, $product-btn-height);
   }
   &__bottom-box {

@@ -21,6 +21,7 @@ export interface IMenuLink extends IRoute {
 }
 
 export type IInputhandler = (event: React.FormEvent<HTMLInputElement>) => void;
+export type IMouthhandler = (event: React.MouseEvent<HTMLButtonElement>) => void;
 
 export interface IUser {
   val: string;
@@ -139,6 +140,7 @@ export interface ICardApiData {
   isDiscounted: boolean;
   discPrice: string;
 }
+
 export enum language {
   en = 'en-US',
   ru = 'ru-BY',
