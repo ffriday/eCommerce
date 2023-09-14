@@ -26,7 +26,7 @@ export const Promocodes = () => {
   return (
     <>
       {promocodes.length > 0 ? (
-        <div>
+        <div className='promo'>
           <p className='promo__heading'>Промокоды:</p>
           <ul>
             {promocodes.map((code) => (
