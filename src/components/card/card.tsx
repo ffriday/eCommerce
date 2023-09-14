@@ -38,7 +38,7 @@ export default function ProductCard({
         await addItem(data.id, 1);
         setProdInBusket(!ProdInBusket);
       } catch (err) {
-        console.error(err);
+        throw new Error(`${err}`);
       } finally {
         setIsAddingToBasket(false);
       }
