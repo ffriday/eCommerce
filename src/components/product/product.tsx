@@ -49,6 +49,7 @@ export const Product = () => {
 
   const [inBusketVar1, setInBusketVar1] = useState(false);
   const [inBusketVar2, setInBusketVar2] = useState(false);
+  const [isAddingToBasket, setIsAddingToBasket] = useState(false);
 
   const getData = useCallback(async () => {
     let product1: ICardApiData | undefined;
@@ -86,11 +87,16 @@ export const Product = () => {
   };
   const addToBasketBtnHandler = async () => {
     if (productData) {
-      try {
-        await addItem(productData.id, isVariant ? variantOfProduct1 : variantOfProduct2);
-        isInBusket();
-      } catch (err) {
-        throw new Error(`${err}`);
+      if (!isAddingToBasket) {
+        setIsAddingToBasket(true);
+        try {
+          await addItem(productData.id, isVariant ? variantOfProduct1 : variantOfProduct2);
+          isInBusket();
+        } catch (err) {
+          throw new Error(`${err}`);
+        } finally {
+          setIsAddingToBasket(false);
+        }
       }
     }
   };
@@ -120,11 +126,16 @@ export const Product = () => {
   };
   const removeFromBasketBtnHandler = async () => {
     if (productData) {
-      try {
-        await removeItem();
-        isInBusket();
-      } catch (err) {
-        throw new Error(`${err}`);
+      if (!isAddingToBasket) {
+        setIsAddingToBasket(true);
+        try {
+          await removeItem();
+          isInBusket();
+        } catch (err) {
+          throw new Error(`${err}`);
+        } finally {
+          setIsAddingToBasket(false);
+        }
       }
     }
   };

@@ -19,6 +19,7 @@ export default function ProductCard({
   inBusket,
 }: IProductCard) {
   const [ProdInBusket, setProdInBusket] = useState(inBusket);
+  const [isAddingToBasket, setIsAddingToBasket] = useState(false);
   const api = useContext(apiContext);
   const addItem = async (id: string, variantId: number) => {
     try {
@@ -31,8 +32,17 @@ export default function ProductCard({
 
   const addToBasketBtnHandler = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    await addItem(data.id, 1);
-    setProdInBusket(!ProdInBusket);
+    if (!isAddingToBasket) {
+      setIsAddingToBasket(true);
+      try {
+        await addItem(data.id, 1);
+        setProdInBusket(!ProdInBusket);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsAddingToBasket(false);
+      }
+    }
   };
 
   const disableClassName = discounted ? 'card__price--disable' : '';
