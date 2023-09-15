@@ -207,6 +207,7 @@ export type BasketItemRemoveAllType = (lineItemId: string, quantity: number) => 
 
 export interface IBasketPromo {
   promocodeId: string;
+  state: boolean;
   removeHandler: (id: string) => void;
   errorHandler: (error: string) => void;
 }

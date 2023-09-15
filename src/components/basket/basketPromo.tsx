@@ -3,7 +3,7 @@ import { HTTPResponseCode, IBasketPromo } from '../../constants/types';
 import { apiContext } from '../App';
 import { SortParams } from '../../constants/apiClient/apiClientTypes';
 
-export const BasketPromo = ({ promocodeId, removeHandler, errorHandler }: IBasketPromo) => {
+export const BasketPromo = ({ promocodeId, state, removeHandler, errorHandler }: IBasketPromo) => {
   const api = useContext(apiContext);
 
   const [promo, setPromo] = useState({ id: '', name: '', description: '', code: '' });
@@ -33,7 +33,7 @@ export const BasketPromo = ({ promocodeId, removeHandler, errorHandler }: IBaske
 
   return (
     <div>
-      <p>Промокод активирован:</p>
+      {state ? <p>Промокод активирован:</p> : <p className='basket__badPromo'>Условия для активации промокода не выполнены</p>}
       <div className='basket__active-promo'>
         <p className='basket__promo-name'>{`${promo.code} - ${promo.description}`}</p>
         <button className='basket__remove-promo' onClick={() => removeHandler(promo.id)}></button>

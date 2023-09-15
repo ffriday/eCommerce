@@ -211,8 +211,8 @@ export const Basket = () => {
             </div>
           </div>
           {activePromoCodes.length > 0 &&
-            activePromoCodes.map(({ discountCode: { id } }) => (
-              <BasketPromo key={id} promocodeId={id} removeHandler={removePromo} errorHandler={setError} />
+            activePromoCodes.map(({ discountCode: { id }, state }) => (
+              <BasketPromo key={id} promocodeId={id} state={state === 'MatchesCart'} removeHandler={removePromo} errorHandler={setError} />
             ))}
           {promoError ? <span className='basket__errorMessage'>{promoError}</span> : null}
         </>
