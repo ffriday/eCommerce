@@ -7,7 +7,7 @@ import { IBasketProduct } from '../../constants/types';
 import { BasketProduct } from './basketProduct';
 import { Link } from 'react-router-dom';
 import InputForm from '../inputForm/inputForm';
-import { CartDiscount, DiscountCodeInfo } from '@commercetools/platform-sdk';
+import { DiscountCodeInfo } from '@commercetools/platform-sdk';
 import { BasketPromo } from './basketPromo';
 
 export const Basket = () => {
@@ -125,7 +125,20 @@ export const Basket = () => {
     }
   };
   const removePromo = async (id: string) => {
-    null;
+    try {
+      const {
+        statusCode,
+        body: { discountCodes },
+      } = await api.removePromoCode(id);
+      if (statusCode === HTTPResponseCode.ok) {
+        setActivePromoCodes(discountCodes);
+      }
+      await loadCart();
+    } catch (err) {
+      if (err instanceof Error) {
+        setPromoError(err.message);
+      }
+    }
   };
 
   const setError = (error: string) => setPromoError(error);
