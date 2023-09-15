@@ -88,8 +88,8 @@ export const BasketProduct = ({
           <button className='basket__add' onClick={addItemHandler}></button>
         </div>
         <div className='basket__price-box'>
-          <div className={priceClassName}>{viewPrice} $</div>
           {isDiscounted && <div className='basket__price basket__price--discounted'>{viewDiscountPrice} $</div>}
+          <div className={priceClassName}>{viewPrice} $</div>
         </div>
         <button className='basket__remove-all' onClick={removeAllItemHandler}></button>
       </div>
