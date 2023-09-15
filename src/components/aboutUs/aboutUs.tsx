@@ -14,6 +14,7 @@ const Aboutus = () => {
     <main className='container'>
       <section className='about-us'>
         <h2 className='about-us__heading'>Члены команды</h2>
+        <Bio mainInfo={mainDmitryInfo} info={infoDmitry} contribution={contributionDmitry} difficulties={difficultiesDmitry} />
         <Bio mainInfo={mainRomanInfo} info={infoRoman} contribution={contributionRoman} difficulties={difficultiesRoman} />
       </section>
       <section className='about-us'>
