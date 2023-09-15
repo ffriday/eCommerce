@@ -20,6 +20,7 @@ export const Basket = () => {
   const [promo, setPromo] = useState('');
   const [activePromoCodes, setActivePromoCodes] = useState<DiscountCodeInfo[]>([]);
   const [promoError, setPromoError] = useState('');
+  const [isPromoAdding, setIsPromoAdding] = useState(false);
 
   const [isAddingToBasket, setIsAddingToBasket] = useState(false);
   const loadCart = useCallback(async () => {
@@ -93,6 +94,7 @@ export const Basket = () => {
       }
     }
   };
+
   const recalculateHandler = async () => {
     if (!isAddingToBasket) {
       setIsAddingToBasket(true);
@@ -105,9 +107,11 @@ export const Basket = () => {
       }
     }
   };
+
   const addPromo = async () => {
     setPromoError('');
-    if (promo) {
+    if (promo && !isPromoAdding) {
+      setIsPromoAdding(true);
       try {
         const {
           statusCode,
@@ -116,14 +120,17 @@ export const Basket = () => {
         if (statusCode === HTTPResponseCode.ok) {
           setActivePromoCodes(discountCodes);
         }
+        setPromo('');
         await loadCart();
       } catch (err) {
         if (err instanceof Error) {
           setPromoError(err.message);
         }
       }
+      setIsPromoAdding(false);
     }
   };
+
   const removePromo = async (id: string) => {
     try {
       const {
@@ -195,6 +202,7 @@ export const Basket = () => {
                 type={'text'}
                 id={'promo'}
                 placeholder={'Промокод'}
+                value={promo}
                 handler={(event) => setPromo(event.currentTarget.value)}
               />
               <button className='basket__btn' onClick={addPromo}>
