@@ -22,7 +22,7 @@ const Bio = ({ mainInfo, info, contribution, difficulties }: IBio) => {
         </li>
         <li className='bio__main-item'>
           <div className='bio__main-key'>Контакты:</div>
-          <a className='bio__main-value' href={mainInfo.ghlink}>
+          <a className='bio__main-value bio__main-link' href={mainInfo.ghlink}>
             Ссылка на GitHub
           </a>
         </li>
