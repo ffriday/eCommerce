@@ -24,7 +24,8 @@ export const BasketPromo = ({ promocodeId, removeHandler, errorHandler }: IBaske
         errorHandler(err.message);
       }
     }
-  }, [api, errorHandler, promocodeId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     promoParams();
