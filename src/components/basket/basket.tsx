@@ -111,6 +111,8 @@ export const Basket = () => {
           <p>{`TOTAL: ${total}`}</p>
           <button onClick={async () => await clearCart()}>CLEAR CART</button>-
           <button onClick={async () => await api.recalculateCart()}>RECALCULATE</button>
+          <button onClick={async () => await api.addPromoCode('FUU')}>---PROMO---</button>
+          <button onClick={async () => await api.removePromoCode('f0fb0a4a-55b8-4711-ad39-8e2624da0382')}>---REMOVEPROMO---</button>
         </div>
       )}
     </div>
