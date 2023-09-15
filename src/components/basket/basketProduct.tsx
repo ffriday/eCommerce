@@ -81,7 +81,7 @@ export const BasketProduct = ({
 
           <button className='basket__add' onClick={addItemHandler}></button>
         </div>
-        <div className='basket__price'>{viewPrice} $/шт.</div>
+        <div className='basket__price'>{viewPrice} $</div>
         <button className='basket__remove-all' onClick={removeAllItemHandler}></button>
       </div>
     </li>

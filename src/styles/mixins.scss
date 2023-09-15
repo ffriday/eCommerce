@@ -142,6 +142,6 @@
   height: $height;
   background-image: url($url);
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: contain;
   background-color: transparent;
 }
