@@ -3,34 +3,30 @@ import './basket.scss';
 import { apiContext } from '../App';
 import { HTTPResponseCode, RoutePath } from '../../constants/types';
 import { SortParams } from '../../constants/apiClient/apiClientTypes';
-
-interface IProduct {
-  productId: string;
-  lineItemId: string;
-  name: string;
-  price: number;
-  quantity: number;
-  image: string | undefined;
-}
+import { IBasketProduct } from '../../constants/types';
+import { BasketProduct } from './basketProduct';
+import { Link } from 'react-router-dom';
 
 export const Basket = () => {
   const api = useContext(apiContext);
 
-  const [cart, setCart] = useState<IProduct[]>([]);
+  const [cart, setCart] = useState<IBasketProduct[]>([]);
   const [emptyCart, setEmptyCart] = useState(true);
   const [total, setTotal] = useState(0);
 
+  const [isAddingToBasket, setIsAddingToBasket] = useState(false);
   const loadCart = useCallback(async () => {
     const cart = await api.getCart();
     if (cart.statusCode === HTTPResponseCode.ok) {
       if (cart.body.lineItems.length > 0) {
-        const items: IProduct[] = cart.body.lineItems.map((lineItem) => ({
+        const items: IBasketProduct[] = cart.body.lineItems.map((lineItem) => ({
           productId: lineItem.productId,
           lineItemId: lineItem.id,
           name: lineItem.name[SortParams.searchRU],
           price: Number(lineItem.price.value.centAmount) / 100, // cents to USD
           quantity: Number(lineItem.quantity),
           image: lineItem.variant.images?.[0].url,
+          variantId: lineItem.variant.id,
         }));
         setCart(items);
         setTotal(cart.body.totalPrice.centAmount / 100); // cents to USD
@@ -42,9 +38,9 @@ export const Basket = () => {
   }, [api]);
 
   const addItem = useCallback(
-    async (id: string) => {
+    async (id: string, variantId: number) => {
       try {
-        await api.addProductToCart(id);
+        await api.addProductToCart(id, variantId);
         await loadCart();
       } catch (err) {
         throw new Error(`${err}`);
@@ -73,47 +69,72 @@ export const Basket = () => {
       throw new Error(`${err}`);
     }
   }, [api, loadCart]);
-
+  const clearCartHandler = async () => {
+    if (!isAddingToBasket) {
+      setIsAddingToBasket(true);
+      try {
+        await clearCart();
+      } catch (err) {
+        throw new Error(`${err}`);
+      } finally {
+        setIsAddingToBasket(false);
+      }
+    }
+  };
+  const recalculateHandler = async () => {
+    if (!isAddingToBasket) {
+      setIsAddingToBasket(true);
+      try {
+        await api.recalculateCart();
+      } catch (err) {
+        throw new Error(`${err}`);
+      } finally {
+        setIsAddingToBasket(false);
+      }
+    }
+  };
   useEffect(() => {
     loadCart();
   }, [loadCart]);
 
   return (
-    <div className='basket'>
-      <h1 className='basket__heading'>CART</h1>
-      <button onClick={() => addItem('693bd86c-6500-41c2-aa99-d169f4026976')}>ADD TEST ITEM</button>
+    <div className='basket container'>
       {emptyCart ? (
-        <div>
-          <h1 className='basket__heading'>CART IS EMPTY</h1>
-          <a href={`/${RoutePath.catalog}`}>GO TO CATALOG</a>
+        <div className='basket__empty'>
+          <h1 className='basket__heading'>Корзина пуста</h1>
+          <Link className={'basket__btn-back'} to={`/${RoutePath.catalog}`}>
+            Перейти в каталог
+          </Link>
         </div>
       ) : (
-        <div>
+        <>
           <ul>
-            {cart.map(({ productId, lineItemId, name, quantity, price, image }) => (
-              <li key={`li-${productId}`}>
-                {`Product: ${name}, amount: ${quantity}, price: ${price}`}
-                <img style={{ width: '60px', height: '60px' }} src={image} />
-                <button key={`buttonAdd-${productId}`} onClick={async () => await addItem(productId)}>
-                  ADD
-                </button>
-                -
-                <button key={`buttonRemove-${lineItemId}`} onClick={async () => await removeItem(lineItemId)}>
-                  REMOVE
-                </button>
-                -
-                <button key={`buttonRemoveAll-${lineItemId}`} onClick={async () => await removeItem(lineItemId, quantity)}>
-                  REMOVEALL
-                </button>
-              </li>
+            {cart.map(({ productId, lineItemId, name, quantity, price, image, variantId }) => (
+              <BasketProduct
+                key={lineItemId}
+                productId={productId}
+                lineItemId={lineItemId}
+                name={name}
+                quantity={quantity}
+                price={price}
+                image={image}
+                variantId={variantId}
+                addItem={addItem}
+                removeItem={removeItem}
+                removeAllItems={removeItem}
+              />
             ))}
           </ul>
-          <p>{`TOTAL: ${total}`}</p>
-          <button onClick={async () => await clearCart()}>CLEAR CART</button>-
-          <button onClick={async () => await api.recalculateCart()}>RECALCULATE</button>
-          <button onClick={async () => await api.addPromoCode('FUU')}>---PROMO---</button>
-          <button onClick={async () => await api.removePromoCode('f0fb0a4a-55b8-4711-ad39-8e2624da0382')}>---REMOVEPROMO---</button>
-        </div>
+          <div className='basket__bottom-box'>
+            <p>{`Стоимость товаров: ${total}$`}</p>
+            <button className='basket__btn' onClick={recalculateHandler}>
+              Пересчитать стоимость
+            </button>
+            <button className='basket__btn' onClick={clearCartHandler}>
+              Очистить корзину
+            </button>
+          </div>
+        </>
       )}
     </div>
   );
