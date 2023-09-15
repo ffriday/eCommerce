@@ -1,3 +1,5 @@
+import { CartDiscount } from '@commercetools/platform-sdk';
+
 export interface IRoute {
   title: string;
   href: string;
@@ -202,3 +204,9 @@ export interface IBasketProduct {
 export type BasketItemAddType = (productId: string, variantId: number) => Promise<void>;
 export type BasketItemRemoveType = (productId: string) => Promise<void>;
 export type BasketItemRemoveAllType = (lineItemId: string, quantity: number) => Promise<void>;
+
+export interface IBasketPromo {
+  promocodeId: string;
+  promocodes: CartDiscount[];
+  removeHandler: (id: string) => void;
+}

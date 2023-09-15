@@ -10,12 +10,16 @@ export const Promocodes = () => {
   const [promocodes, setPromcodes] = useState<CartDiscount[]>([]);
 
   const loadCartCodes = useCallback(async () => {
-    const {
-      statusCode,
-      body: { count, results },
-    } = await api.getCartDiscounts();
-    if (statusCode === HTTPResponseCode.ok && count > 0) {
-      setPromcodes(results.filter(({ isActive }) => isActive));
+    try {
+      const {
+        statusCode,
+        body: { count, results },
+      } = await api.getCartDiscounts();
+      if (statusCode === HTTPResponseCode.ok && count > 0) {
+        setPromcodes(results.filter(({ isActive }) => isActive));
+      }
+    } catch (err) {
+      null; //TODO - handle error
     }
   }, [api]);
 

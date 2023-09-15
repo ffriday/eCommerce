@@ -7,7 +7,8 @@ import { IBasketProduct } from '../../constants/types';
 import { BasketProduct } from './basketProduct';
 import { Link } from 'react-router-dom';
 import InputForm from '../inputForm/inputForm';
-import { DiscountCodeInfo } from '@commercetools/platform-sdk';
+import { CartDiscount, DiscountCodeInfo } from '@commercetools/platform-sdk';
+import { BasketPromo } from './basketPromo';
 
 export const Basket = () => {
   const api = useContext(apiContext);
@@ -15,8 +16,10 @@ export const Basket = () => {
   const [cart, setCart] = useState<IBasketProduct[]>([]);
   const [emptyCart, setEmptyCart] = useState(true);
   const [total, setTotal] = useState(0);
+  const [discountedTotal, setDiscountedTotal] = useState(0);
   const [promo, setPromo] = useState('');
-  const [promoCodes, setPromoCodes] = useState<DiscountCodeInfo[]>([]);
+  const [activePromoCodes, setActivePromoCodes] = useState<DiscountCodeInfo[]>([]);
+  const [promocodes, setPromcodes] = useState<CartDiscount[]>([]);
   const [promoError, setPromoError] = useState('');
 
   const [isAddingToBasket, setIsAddingToBasket] = useState(false);
@@ -34,7 +37,8 @@ export const Basket = () => {
           variantId: lineItem.variant.id,
         }));
         setCart(items);
-        setTotal(cart.body.totalPrice.centAmount / 100); // cents to USD
+        setDiscountedTotal(cart.body.totalPrice.centAmount / 100); // cents to USD
+        setTotal(items.reduce((acc, item) => acc + item.price * item.quantity, 0)); // Calculate total price
         setEmptyCart(false);
       } else {
         setEmptyCart(true);
@@ -107,7 +111,7 @@ export const Basket = () => {
           body: { discountCodes },
         } = await api.addPromoCode(promo);
         if (statusCode === HTTPResponseCode.ok) {
-          setPromoCodes(discountCodes);
+          setActivePromoCodes(discountCodes);
         }
         await loadCart();
       } catch (err) {
@@ -117,13 +121,27 @@ export const Basket = () => {
       }
     }
   };
-  const removePromo = async () => {
+  const removePromo = async (id: string) => {
     null;
   };
+
+  const loadCartCodes = useCallback(async () => {
+    const {
+      statusCode,
+      body: { count, results },
+    } = await api.getCartDiscounts();
+    if (statusCode === HTTPResponseCode.ok && count > 0) {
+      setPromcodes(results.filter(({ isActive }) => isActive));
+    }
+  }, [api]);
 
   useEffect(() => {
     loadCart();
   }, [loadCart]);
+
+  useEffect(() => {
+    loadCartCodes();
+  }, [loadCartCodes, activePromoCodes]);
 
   return (
     <div className='basket container'>
@@ -155,7 +173,11 @@ export const Basket = () => {
           </ul>
           <div className='basket__bottom-box'>
             <div className='basket__bottom-total'>
-              <p>{`Стоимость товаров: ${total}$`}</p>
+              <div className='basket__price'>
+                <p>Стоимость товаров: </p>
+                {discountedTotal < total && <p className='basket__price--discounted'>{discountedTotal}$ </p>}
+                <p className={discountedTotal < total ? 'basket__price--disable' : ''}>{`${total}$`}</p>
+              </div>
               <button className='basket__btn' onClick={recalculateHandler}>
                 Пересчитать стоимость
               </button>
@@ -176,6 +198,10 @@ export const Basket = () => {
               </button>
             </div>
           </div>
+          {activePromoCodes.length > 0 &&
+            activePromoCodes.map(({ discountCode: { id } }) => (
+              <BasketPromo key={id} promocodeId={id} promocodes={promocodes} removeHandler={removePromo} />
+            ))}
           {promoError ? <span className='basket__errorMessage'>{promoError}</span> : null}
         </>
       )}

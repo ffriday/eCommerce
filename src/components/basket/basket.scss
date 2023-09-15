@@ -128,7 +128,21 @@
   }
 
   .inputForm {
-    width: 200px;
+    width: 150px;
+  }
+
+  &__price {
+    p {
+      display: inline;
+    }
+    &--discounted {
+      color: $product-price-discounted-color;
+      font-weight: $product-price-discounted-font-weight;
+    }
+    &--disable {
+      text-decoration: line-through;
+      margin-bottom: 5px;
+    }
   }
 }
 
