@@ -1,5 +1,5 @@
 const Bio = () => {
-  return <div>bio</div>;
+  return;
 };
 
 export default Bio;

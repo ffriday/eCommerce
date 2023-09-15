@@ -3,6 +3,7 @@ import Notfound from '../404/404';
 import LoginForm from '../loginForm/loginForm';
 import RegisterForm from '../registerForm/registerForm';
 import Main from '../main/main';
+import Aboutus from '../aboutUs/aboutUs';
 
 import './styles.scss';
 import { createContext } from 'react';
@@ -29,6 +30,7 @@ export default function App() {
             <Route path={`/${RoutePath.register}`} element={<RegisterForm />} />
             <Route key='catalog' path={`/${RoutePath.catalog}`} element={<ProductCatalog />} />
             <Route path={`/${RoutePath.basket}`} element={<Basket />} />
+            <Route path={`/${RoutePath.about}`} element={<Aboutus />} />
             <Route
               path={`/${RoutePath.arrangmentcategory}`}
               element={<ProductCatalog key='catalog1' queryFilter={{ categoryId: '6537ef03-3ae8-4fad-a594-c1a5e2342131' }} />}
