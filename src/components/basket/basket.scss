@@ -118,6 +118,14 @@
       justify-content: center;
     }
   }
+  &__errorMessage {
+    color: red;
+    margin-bottom: $login-email-margin-bottom;
+    margin-top: $login-email-margin-bottom;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
 
   .inputForm {
     width: 200px;

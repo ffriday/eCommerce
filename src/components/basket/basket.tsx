@@ -14,6 +14,9 @@ export const Basket = () => {
   const [cart, setCart] = useState<IBasketProduct[]>([]);
   const [emptyCart, setEmptyCart] = useState(true);
   const [total, setTotal] = useState(0);
+  const [promo, setPromo] = useState('');
+  const [promoCodes, setPromoCodes] = useState([]);
+  const [promoError, setPromoError] = useState('');
 
   const [isAddingToBasket, setIsAddingToBasket] = useState(false);
   const loadCart = useCallback(async () => {
@@ -94,6 +97,21 @@ export const Basket = () => {
       }
     }
   };
+  const addPromo = async () => {
+    if (promo) {
+      try {
+        await api.addPromoCode(promo);
+      } catch (err) {
+        if (err instanceof Error) {
+          setPromoError(err.message);
+        }
+      }
+    }
+  };
+  const removePromo = async () => {
+    null;
+  };
+
   useEffect(() => {
     loadCart();
   }, [loadCart]);
@@ -137,12 +155,19 @@ export const Basket = () => {
               </button>
             </div>
             <div className='basket__bottom-promo'>
-              <InputForm name={'Промокод'} type={'text'} id={'promo'} placeholder={'Промокод'} />
-              <button className='basket__btn' onClick={clearCartHandler}>
+              <InputForm
+                name={'Промокод'}
+                type={'text'}
+                id={'promo'}
+                placeholder={'Промокод'}
+                handler={(event) => setPromo(event.currentTarget.value)}
+              />
+              <button className='basket__btn' onClick={addPromo}>
                 Применить промокод
               </button>
             </div>
           </div>
+          {promoError ? <span className='basket__errorMessage'>{promoError}</span> : null}
         </>
       )}
     </div>
