@@ -213,3 +213,17 @@ export interface IBasketPromo {
   removeHandler: (id: string) => void;
   errorHandler: (error: string) => void;
 }
+export interface IMainInfo {
+  image: string;
+  name: string;
+  role: string;
+  sex: string;
+  country: string;
+  ghlink: string;
+}
+export interface IBio {
+  mainInfo: IMainInfo;
+  info: string;
+  contribution: string;
+  difficulties: string;
+}
