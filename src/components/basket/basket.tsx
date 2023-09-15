@@ -7,6 +7,7 @@ import { IBasketProduct } from '../../constants/types';
 import { BasketProduct } from './basketProduct';
 import { Link } from 'react-router-dom';
 import InputForm from '../inputForm/inputForm';
+import { DiscountCodeInfo } from '@commercetools/platform-sdk';
 
 export const Basket = () => {
   const api = useContext(apiContext);
@@ -15,7 +16,7 @@ export const Basket = () => {
   const [emptyCart, setEmptyCart] = useState(true);
   const [total, setTotal] = useState(0);
   const [promo, setPromo] = useState('');
-  const [promoCodes, setPromoCodes] = useState([]);
+  const [promoCodes, setPromoCodes] = useState<DiscountCodeInfo[]>([]);
   const [promoError, setPromoError] = useState('');
 
   const [isAddingToBasket, setIsAddingToBasket] = useState(false);
@@ -98,9 +99,17 @@ export const Basket = () => {
     }
   };
   const addPromo = async () => {
+    setPromoError('');
     if (promo) {
       try {
-        await api.addPromoCode(promo);
+        const {
+          statusCode,
+          body: { discountCodes },
+        } = await api.addPromoCode(promo);
+        if (statusCode === HTTPResponseCode.ok) {
+          setPromoCodes(discountCodes);
+        }
+        await loadCart();
       } catch (err) {
         if (err instanceof Error) {
           setPromoError(err.message);
