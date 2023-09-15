@@ -19,7 +19,6 @@ export const Basket = () => {
   const [discountedTotal, setDiscountedTotal] = useState(0);
   const [promo, setPromo] = useState('');
   const [activePromoCodes, setActivePromoCodes] = useState<DiscountCodeInfo[]>([]);
-  const [promocodes, setPromcodes] = useState<CartDiscount[]>([]);
   const [promoError, setPromoError] = useState('');
 
   const [isAddingToBasket, setIsAddingToBasket] = useState(false);
@@ -42,6 +41,9 @@ export const Basket = () => {
         setEmptyCart(false);
       } else {
         setEmptyCart(true);
+      }
+      if (cart.body.discountCodes.length > 0) {
+        setActivePromoCodes(cart.body.discountCodes);
       }
     }
   }, [api]);
@@ -78,6 +80,7 @@ export const Basket = () => {
       throw new Error(`${err}`);
     }
   }, [api, loadCart]);
+
   const clearCartHandler = async () => {
     if (!isAddingToBasket) {
       setIsAddingToBasket(true);
@@ -125,23 +128,11 @@ export const Basket = () => {
     null;
   };
 
-  const loadCartCodes = useCallback(async () => {
-    const {
-      statusCode,
-      body: { count, results },
-    } = await api.getCartDiscounts();
-    if (statusCode === HTTPResponseCode.ok && count > 0) {
-      setPromcodes(results.filter(({ isActive }) => isActive));
-    }
-  }, [api]);
+  const setError = (error: string) => setPromoError(error);
 
   useEffect(() => {
     loadCart();
   }, [loadCart]);
-
-  useEffect(() => {
-    loadCartCodes();
-  }, [loadCartCodes, activePromoCodes]);
 
   return (
     <div className='basket container'>
@@ -200,7 +191,7 @@ export const Basket = () => {
           </div>
           {activePromoCodes.length > 0 &&
             activePromoCodes.map(({ discountCode: { id } }) => (
-              <BasketPromo key={id} promocodeId={id} promocodes={promocodes} removeHandler={removePromo} />
+              <BasketPromo key={id} promocodeId={id} removeHandler={removePromo} errorHandler={setError} />
             ))}
           {promoError ? <span className='basket__errorMessage'>{promoError}</span> : null}
         </>

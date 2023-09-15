@@ -65,6 +65,19 @@
     @include basket-btn($basket-item-btn-remove-all-width, $basket-item-btn-remove-all-height, $basket-item-btn-remove-all-url);
   }
 
+  &__remove-promo {
+    @include basket-btn($basket-item-btn-remove-all-width, $basket-item-btn-remove-all-height, $basket-item-btn-remove-all-url);
+    display: inline;
+  }
+
+  &__active-promo {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: solid 1.5px $gray2;
+  }
+
   &__count {
     padding: 6px 16px;
     background-color: $basket-item-count-color;
