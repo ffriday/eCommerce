@@ -6,6 +6,7 @@ import { SortParams } from '../../constants/apiClient/apiClientTypes';
 import { IBasketProduct } from '../../constants/types';
 import { BasketProduct } from './basketProduct';
 import { Link } from 'react-router-dom';
+import InputForm from '../inputForm/inputForm';
 
 export const Basket = () => {
   const api = useContext(apiContext);
@@ -126,13 +127,21 @@ export const Basket = () => {
             ))}
           </ul>
           <div className='basket__bottom-box'>
-            <p>{`Стоимость товаров: ${total}$`}</p>
-            <button className='basket__btn' onClick={recalculateHandler}>
-              Пересчитать стоимость
-            </button>
-            <button className='basket__btn' onClick={clearCartHandler}>
-              Очистить корзину
-            </button>
+            <div className='basket__bottom-total'>
+              <p>{`Стоимость товаров: ${total}$`}</p>
+              <button className='basket__btn' onClick={recalculateHandler}>
+                Пересчитать стоимость
+              </button>
+              <button className='basket__btn' onClick={clearCartHandler}>
+                Очистить корзину
+              </button>
+            </div>
+            <div className='basket__bottom-promo'>
+              <InputForm name={'Промокод'} type={'text'} id={'promo'} placeholder={'Промокод'} />
+              <button className='basket__btn' onClick={clearCartHandler}>
+                Применить промокод
+              </button>
+            </div>
           </div>
         </>
       )}
