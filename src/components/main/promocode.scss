@@ -1,0 +1,62 @@
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+
+#root {
+  height: calc(100% - #{$padding-top} * 2);
+}
+
+@media only screen and (max-width: 767px) {
+  #root {
+    height: calc(100% - #{$padding-top});
+  }
+}
+
+.main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background-image: url('../../assets/main/branch_left.png'), url('../../assets/main/branch_right.png');
+  background-position:
+    left bottom,
+    right top;
+  background-repeat: no-repeat;
+  background-size:
+    25% auto,
+    25% auto;
+}
+
+.promo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.5);
+
+  &__heading {
+    @include loginHeading($login-heading-size);
+    margin-bottom: $login-heading-margin-bottom;
+    font-size: 1em;
+    font-weight: bold;
+  }
+  &__item {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: solid 1.5px $gray2;
+  }
+  &__name {
+    @include loginSubtitle($login-subtitle-size);
+    font-weight: bold;
+  }
+  &__description {
+    @include loginSubtitle($login-subtitle-size);
+  }
+  &__key {
+    @include loginSubtitle($login-subtitle-size);
+    font-weight: bold;
+  }
+  &__key::before {
+    content: 'Используй промокод: ';
+    font-weight: normal;
+  }
+}

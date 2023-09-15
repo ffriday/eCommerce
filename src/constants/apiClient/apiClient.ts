@@ -5,8 +5,10 @@ import {
   Cart,
   ClientResponse,
   CustomerDraft,
+  MyCartAddDiscountCodeAction,
   MyCartAddLineItemAction,
   MyCartRecalculateAction,
+  MyCartRemoveDiscountCodeAction,
   MyCartRemoveLineItemAction,
   MyCartUpdateAction,
   MyCustomerSignin,
@@ -431,5 +433,36 @@ export default class ApiClient extends ApiBase {
       updateProductData: true,
     };
     return this.cartAction([action]);
+  };
+
+  public getCartDiscounts = async () => {
+    const api = this.api.getAvalibleApi();
+
+    return api.cartDiscounts().get().execute();
+  };
+
+  public addPromoCode = async (promo: string) => {
+    const action: MyCartAddDiscountCodeAction = {
+      action: 'addDiscountCode',
+      code: promo,
+    };
+    return this.cartAction([action]);
+  };
+
+  public removePromoCode = async (promoId: string) => {
+    const action: MyCartRemoveDiscountCodeAction = {
+      action: 'removeDiscountCode',
+      discountCode: {
+        typeId: 'discount-code',
+        id: promoId,
+      },
+    };
+    return this.cartAction([action]);
+  };
+
+  public getDiscount = async (id: string) => {
+    const api = this.api.getAvalibleApi();
+
+    return api.discountCodes().withId({ ID: id }).get().execute();
   };
 }

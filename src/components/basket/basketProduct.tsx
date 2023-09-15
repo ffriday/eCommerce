@@ -14,6 +14,8 @@ export const BasketProduct = ({
   lineItemId,
   name,
   price,
+  discountPrice,
+  isDiscounted,
   quantity,
   image,
   variantId,
@@ -23,12 +25,15 @@ export const BasketProduct = ({
 }: IBasketProductComponent) => {
   const [isAddingToBasket, setIsAddingToBasket] = useState(false);
   const [viewPrice, setViewPrice] = useState(price);
+  const [viewDiscountPrice, setViewDiscountPrice] = useState(discountPrice);
+  const priceClassName = isDiscounted ? 'basket__price basket__price--disable' : 'basket__price';
   const removeItemHandler = async () => {
     if (!isAddingToBasket) {
       setIsAddingToBasket(true);
       try {
         await removeItem(lineItemId);
         setViewPrice((viewPrice) => viewPrice - price);
+        isDiscounted && setViewDiscountPrice((viewDiscountPrice) => viewDiscountPrice - discountPrice);
       } catch (err) {
         throw new Error(`${err}`);
       } finally {
@@ -42,6 +47,7 @@ export const BasketProduct = ({
       try {
         await addItem(productId, variantId);
         setViewPrice((viewPrice) => viewPrice + price);
+        isDiscounted && setViewDiscountPrice((viewDiscountPrice) => viewDiscountPrice + discountPrice);
       } catch (err) {
         throw new Error(`${err}`);
       } finally {
@@ -81,7 +87,10 @@ export const BasketProduct = ({
 
           <button className='basket__add' onClick={addItemHandler}></button>
         </div>
-        <div className='basket__price'>{viewPrice} $</div>
+        <div className='basket__price-box'>
+          {isDiscounted && <div className='basket__price basket__price--discounted'>{viewDiscountPrice} $</div>}
+          <div className={priceClassName}>{viewPrice} $</div>
+        </div>
         <button className='basket__remove-all' onClick={removeAllItemHandler}></button>
       </div>
     </li>

@@ -1,3 +1,5 @@
+import { CartDiscount } from '@commercetools/platform-sdk';
+
 export interface IRoute {
   title: string;
   href: string;
@@ -194,6 +196,8 @@ export interface IBasketProduct {
   lineItemId: string;
   name: string;
   price: number;
+  isDiscounted: boolean;
+  discountPrice: number;
   quantity: number;
   image: string | undefined;
   variantId: number;
@@ -202,3 +206,10 @@ export interface IBasketProduct {
 export type BasketItemAddType = (productId: string, variantId: number) => Promise<void>;
 export type BasketItemRemoveType = (productId: string) => Promise<void>;
 export type BasketItemRemoveAllType = (lineItemId: string, quantity: number) => Promise<void>;
+
+export interface IBasketPromo {
+  promocodeId: string;
+  state: boolean;
+  removeHandler: (id: string) => void;
+  errorHandler: (error: string) => void;
+}
