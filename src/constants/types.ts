@@ -188,3 +188,17 @@ export interface ICheckbox {
 }
 
 export type IFilterEvent = (event: React.FormEvent) => void;
+
+export interface IBasketProduct {
+  productId: string;
+  lineItemId: string;
+  name: string;
+  price: number;
+  quantity: number;
+  image: string | undefined;
+  variantId: number;
+}
+
+export type BasketItemAddType = (productId: string, variantId: number) => Promise<void>;
+export type BasketItemRemoveType = (productId: string) => Promise<void>;
+export type BasketItemRemoveAllType = (lineItemId: string, quantity: number) => Promise<void>;
