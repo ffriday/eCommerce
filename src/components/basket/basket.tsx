@@ -32,6 +32,8 @@ export const Basket = () => {
           lineItemId: lineItem.id,
           name: lineItem.name[SortParams.searchRU],
           price: Number(lineItem.price.value.centAmount) / 100, // cents to USD
+          isDiscounted: Boolean(lineItem.price.discounted?.discount.id),
+          discountPrice: Number(lineItem.price.discounted?.value.centAmount) / 100,
           quantity: Number(lineItem.quantity),
           image: lineItem.variant.images?.[0].url,
           variantId: lineItem.variant.id,
@@ -166,7 +168,7 @@ export const Basket = () => {
       ) : (
         <>
           <ul>
-            {cart.map(({ productId, lineItemId, name, quantity, price, image, variantId }) => (
+            {cart.map(({ productId, lineItemId, name, quantity, price, image, variantId, discountPrice, isDiscounted }) => (
               <BasketProduct
                 key={lineItemId}
                 productId={productId}
@@ -174,6 +176,8 @@ export const Basket = () => {
                 name={name}
                 quantity={quantity}
                 price={price}
+                discountPrice={discountPrice}
+                isDiscounted={isDiscounted}
                 image={image}
                 variantId={variantId}
                 addItem={addItem}

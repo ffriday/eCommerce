@@ -143,7 +143,10 @@
   .inputForm {
     width: 150px;
   }
-
+  &__price-box {
+    display: flex;
+    gap: 10px;
+  }
   &__price {
     p {
       display: inline;
@@ -175,6 +178,9 @@
     &__left-block {
       flex-basis: auto;
       gap: 10px;
+    }
+    &__control-box {
+      margin-left: 10px;
     }
   }
 }

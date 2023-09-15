@@ -196,6 +196,8 @@ export interface IBasketProduct {
   lineItemId: string;
   name: string;
   price: number;
+  isDiscounted: boolean;
+  discountPrice: number;
   quantity: number;
   image: string | undefined;
   variantId: number;
