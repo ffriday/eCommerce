@@ -38,6 +38,7 @@ export interface IUserData {
   isLogged: boolean;
   id: string;
   token: string;
+  tokenExpires: number;
   refreshToken: string;
 }
 

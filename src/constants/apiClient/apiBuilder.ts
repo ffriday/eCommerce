@@ -25,6 +25,7 @@ export default class Api {
     isLogged: false,
     id: '',
     token: '',
+    tokenExpires: 0,
     refreshToken: '',
   };
 
@@ -149,7 +150,11 @@ export default class Api {
     if (this.passwordApi) {
       api = this.passwordApi;
     } else if (this.tokenApi) {
-      api = this.tokenApi;
+      if (this._userData.tokenExpires < Date.now()) {
+        api = this.tokenApi;
+      } else {
+        window.localStorage.clear(); // If token expired - clean local storage
+      }
     } else if (this.anonApi) {
       api = this.anonApi;
     }
