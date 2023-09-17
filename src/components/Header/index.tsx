@@ -25,7 +25,7 @@ const dropDownMenuClassNames: IRouteClasses = {
 const routes: IRoute[] = [
   { title: 'Каталог', href: `/${RoutePath.catalog}`, classNames: routeClassNames },
   { title: 'О нас', href: `/${RoutePath.about}`, classNames: routeClassNames },
-  // { title: 'Контакты', href: `/${RoutePath.contacts}`, classNames: routeClassNames },
+  { title: 'Контакты', href: `/${RoutePath.contacts}`, classNames: routeClassNames },
 ];
 
 const tabs: IRoute[] = [

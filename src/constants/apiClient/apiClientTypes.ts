@@ -7,6 +7,7 @@ import {
   AuthMiddlewareOptions,
   ExistingTokenMiddlewareOptions,
   PasswordAuthMiddlewareOptions,
+  RefreshAuthMiddlewareOptions,
 } from '@commercetools/sdk-client-v2';
 
 export enum LSKeys {
@@ -30,7 +31,7 @@ export interface IMiddleware {
   password: PasswordAuthMiddlewareOptions;
   anon: AnonymousAuthMiddlewareOptions;
   token: ExistingTokenMiddlewareOptions;
-  // token: RefreshAuthMiddlewareOptions;
+  refreshToken: RefreshAuthMiddlewareOptions;
   authorization?: string;
 }
 
