@@ -60,9 +60,12 @@
   column-gap: $header-links-gap;
   min-width: 228px;
 
-  &__item {
+  &__item:last-child a {
     @extend %buttonHover;
     @extend %buttonActive;
+    display: flex;
+    gap: 7px;
+    align-items: center;
   }
 }
 

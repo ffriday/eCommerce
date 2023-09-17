@@ -4,9 +4,11 @@ import Profile from '../../assets/header/profile.svg';
 import Market from '../../assets/header/makrket.svg';
 import { FC, Fragment } from 'react';
 import { IMenuLink, IRoute, IRouteClasses, IRouteDropDown } from '../../constants/types';
+import { HTTPResponseCode, RoutePath } from '../../constants/types';
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
-import { RoutePath } from '../../constants/types';
+import { useContext, useEffect, useState } from 'react';
+import { apiContext } from '../App';
+import { basketCounterContext } from '../App';
 const routeClassNames: IRouteClasses = {
   container: 'navigation__page',
   link: 'navigation__link',
@@ -33,16 +35,15 @@ const tabs: IRoute[] = [
   { title: 'подарочные наборы', href: `/${RoutePath.giftbasketcategory}`, classNames: tabsClassNames },
 ];
 
-const menuLinks: IMenuLink[] = [
-  { title: 'профиль', href: `/${RoutePath.login}`, alt: 'Profile icon', icon: Profile, classNames: { container: 'menu__item' } },
-  { title: 'корзина', href: `/${RoutePath.basket}`, alt: 'Market icon', icon: Market, classNames: { container: 'menu__item' } },
-];
 export const Header: FC = () => {
+  const api = useContext(apiContext);
+  const { basketCounter, setBasketCounter } = useContext(basketCounterContext);
   const [BurgerBtnActive, setBurgerBtnActive] = useState({ classname: '', isActive: false });
   const [DropDownMenuActive, setDropDownMenuActive] = useState({ classname: '', isActive: false });
   const [headerClassName, setHeaderClassName] = useState('');
   const [isWrapperActive, setIsWrapperActive] = useState(false);
   const [menuActive, setMenuActive] = useState(true);
+  const [productCounter, setProductCounter] = useState(0);
   const handle = () => {
     setIsWrapperActive(false);
     setMenuActive(!menuActive);
@@ -56,6 +57,27 @@ export const Header: FC = () => {
     }
   };
 
+  useEffect(() => {
+    const getCountOfProductInBasket = async () => {
+      const cart = await api.getCart();
+      if (cart.statusCode === HTTPResponseCode.ok) {
+        setProductCounter(cart.body.lineItems.length);
+      }
+    };
+
+    getCountOfProductInBasket();
+  }, [api, basketCounter, setBasketCounter]);
+  const menuLinks: IMenuLink[] = [
+    { title: 'профиль', href: `/${RoutePath.login}`, alt: 'Profile icon', icon: Profile, classNames: { container: 'menu__item' } },
+    {
+      title: 'корзина',
+      href: `/${RoutePath.basket}`,
+      alt: 'Market icon',
+      icon: Market,
+      classNames: { container: 'menu__item' },
+      productCounter,
+    },
+  ];
   const handleBurgerLink = () => {
     setIsWrapperActive(true);
     setHeaderClassName('navigation--rotate');
@@ -136,11 +158,12 @@ const RouteLink: FC<IRoute> = ({ title, href, classNames, onClickHandle }) => {
   );
 };
 
-const MenuLink: FC<IMenuLink> = ({ title, href, classNames, alt, icon }) => {
+const MenuLink: FC<IMenuLink> = ({ title, href, classNames, alt, icon, productCounter }) => {
   return (
     <li className={classNames.container} key={title}>
       <Link to={href}>
         <img src={icon} alt={alt} />
+        {productCounter !== 0 && <span>{productCounter}</span>}
       </Link>
     </li>
   );

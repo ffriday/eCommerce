@@ -1,6 +1,6 @@
 import { useCallback, useContext, useEffect, useState } from 'react';
 import './basket.scss';
-import { apiContext } from '../App';
+import { apiContext, basketCounterContext } from '../App';
 import { HTTPResponseCode, RoutePath } from '../../constants/types';
 import { SortParams } from '../../constants/apiClient/apiClientTypes';
 import { IBasketProduct } from '../../constants/types';
@@ -12,7 +12,7 @@ import { BasketPromo } from './basketPromo';
 
 export const Basket = () => {
   const api = useContext(apiContext);
-
+  const { setBasketCounter } = useContext(basketCounterContext);
   const [cart, setCart] = useState<IBasketProduct[]>([]);
   const [emptyCart, setEmptyCart] = useState(true);
   const [total, setTotal] = useState(0);
@@ -79,10 +79,11 @@ export const Basket = () => {
     try {
       await api.clearCart();
       await loadCart();
+      setBasketCounter(0);
     } catch (err) {
       throw new Error(`${err}`);
     }
-  }, [api, loadCart]);
+  }, [api, loadCart, setBasketCounter]);
 
   const clearCartHandler = async () => {
     if (!isAddingToBasket) {
