@@ -219,6 +219,9 @@ export const Basket = () => {
               <BasketPromo key={id} promocodeId={id} state={state === 'MatchesCart'} removeHandler={removePromo} errorHandler={setError} />
             ))}
           {promoError ? <span className='basket__errorMessage'>{promoError}</span> : null}
+          <button className='basket__btn basket__order ' onClick={addPromo}>
+            Заказать
+          </button>
         </>
       )}
     </div>
