@@ -1,0 +1,44 @@
+@import '../../styles/templates.scss';
+.footer {
+  background-color: #99b0a6;
+  position: relatives;
+  bottom: 0;
+  &__container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 70px 0;
+  }
+  &__rslogo {
+    max-width: 119px;
+    object-fit: contain;
+    @extend %buttonHover;
+    @extend %buttonActive;
+  }
+  &__logo {
+    @extend %buttonHover;
+    @extend %buttonActive;
+  }
+  &__list {
+    font-size: 16px;
+  }
+  &__item {
+    line-height: 25px;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+  &__item-title {
+    font-weight: bold;
+  }
+  &__item-link {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background-image: url('../../assets/footer/gh.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    @extend %buttonHover;
+    @extend %buttonActive;
+  }
+}

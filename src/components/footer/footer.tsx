@@ -1,5 +1,9 @@
 import FooterList from './footerList';
 import { IFooterList } from './footerList';
+import Logo from '../../assets/header/logo.svg';
+import RSLogo from '../../assets/aboutus/rs-logo.svg';
+import { Link } from 'react-router-dom';
+import './footer.scss';
 const authors: IFooterList = {
   title: 'Авторы проекта:',
   firstName: 'Dmitry Bulgakov',
@@ -18,11 +22,11 @@ const Footer = () => {
   return (
     <div className='footer'>
       <div className='container footer__container'>
-        <a className='footer__logo'>
-          <img className='footer_logo-img'></img>
-        </a>
-        <a className='footer__rslogo'>
-          <img className='footer_rslogo-img'></img>
+        <Link to='/' className='footer__logo'>
+          <img className='footer__logo-img' src={Logo}></img>
+        </Link>
+        <a className='footer__rslogo' href='https://rs.school/'>
+          <img className='footer__rslogo-img' src={RSLogo}></img>
         </a>
         <span className='footer__title'>© BLOSSOM 2023 by BugBusters</span>
         <FooterList {...authors} />

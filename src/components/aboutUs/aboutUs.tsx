@@ -43,10 +43,10 @@ const Aboutus = () => {
         </FadeInOnScroll>
         <FadeInOnScroll fromLeft={true}>
           <div className='about-us__rs'>
-            <a className='about-us__rs-logo-link' href=''>
+            <a className='about-us__rs-logo-link' href='https://rs.school/'>
               <img className='about-us__rs-logo' src={rsLogo} alt='RS-school' />
             </a>
-            <a className='about-us__rs-img-link' href=''>
+            <a className='about-us__rs-img-link' href='https://rollingscopes.com/'>
               <img className='about-us__rs-img' src={rsImg} alt='RS-school image' />
             </a>
           </div>
