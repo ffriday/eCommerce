@@ -11,12 +11,16 @@ const FooterList = (props: IFooterList) => {
     <ul className='footer__list'>
       <li className='footer__item footer__item-title'>{props.title}</li>
       <li className='footer__item'>
-        <span>{props.firstName}</span>
-        <a className='footer__item-link' href={props.firstNameLink}></a>
+        <a href={props.firstNameLink} className='footer__item-link'>
+          <span>{props.firstName}</span>
+          <span className='footer__item-icon'></span>
+        </a>
       </li>
       <li className='footer__item'>
-        <span>{props.secondName}</span>
-        <a className='footer__item-link' href={props.secondNameLink}></a>
+        <a href={props.secondNameLink} className='footer__item-link'>
+          <span>{props.secondName}</span>
+          <span className='footer__item-icon'></span>
+        </a>
       </li>
     </ul>
   );
