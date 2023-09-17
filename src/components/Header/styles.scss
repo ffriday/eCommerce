@@ -33,7 +33,8 @@
   }
   &__pages {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
+    gap: 34px;
     column-gap: $header-links-gap;
     min-width: 228px;
   }
