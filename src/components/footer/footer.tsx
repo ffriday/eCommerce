@@ -29,8 +29,10 @@ const Footer = () => {
           <img className='footer__rslogo-img' src={RSLogo}></img>
         </a>
         <span className='footer__title'>© BLOSSOM 2023 by BugBusters</span>
-        <FooterList {...authors} />
-        <FooterList {...mentors} />
+        <div className='footer__list-wrapper'>
+          <FooterList {...authors} />
+          <FooterList {...mentors} />
+        </div>
       </div>
     </div>
   );

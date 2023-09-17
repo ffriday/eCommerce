@@ -22,6 +22,10 @@
   &__list {
     font-size: 16px;
     line-height: 25px;
+    &-wrapper {
+      display: flex;
+      gap: 30px;
+    }
   }
 
   &__item-link {
@@ -44,5 +48,35 @@
     background-size: contain;
     @extend %buttonHover;
     @extend %buttonActive;
+  }
+}
+@media only screen and (max-width: 870px) {
+  .footer {
+    &__container {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 40px;
+    }
+  }
+}
+@media only screen and (max-width: 433px) {
+  .footer {
+    &__container {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 40px;
+    }
+    &__list {
+      justify-content: center;
+      text-align: center;
+      &-wrapper {
+        flex-wrap: wrap;
+        justify-content: center;
+        text-align: center;
+      }
+    }
+    &__item-link {
+      display: block;
+    }
   }
 }
