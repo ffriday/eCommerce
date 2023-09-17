@@ -2,6 +2,7 @@ import { useContext, useState } from 'react';
 import { ICardApiData } from '../../constants/types';
 import { Link } from 'react-router-dom';
 import { apiContext } from '../App';
+import { basketCounterContext } from '../App';
 
 import './card.scss';
 
@@ -18,12 +19,14 @@ export default function ProductCard({
   cardApiData = { image: '', name: '', description: '', price: '', id: '', key: '', isDiscounted: false, discPrice: '' },
   inBusket,
 }: IProductCard) {
+  const { basketCounter, setBasketCounter } = useContext(basketCounterContext);
   const [ProdInBusket, setProdInBusket] = useState(inBusket);
   const [isAddingToBasket, setIsAddingToBasket] = useState(false);
   const api = useContext(apiContext);
   const addItem = async (id: string, variantId: number) => {
     try {
       await api.addProductToCart(id, variantId);
+      setBasketCounter(basketCounter + 1);
     } catch (err) {
       throw new Error(`${err}`);
     }
