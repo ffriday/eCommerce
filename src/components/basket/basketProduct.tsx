@@ -2,7 +2,8 @@ import { IBasketProduct } from '../../constants/types';
 import { BasketItemAddType } from '../../constants/types';
 import { BasketItemRemoveType } from '../../constants/types';
 import { BasketItemRemoveAllType } from '../../constants/types';
-import { useState } from 'react';
+import { basketCounterContext } from '../App';
+import { useState, useContext } from 'react';
 
 interface IBasketProductComponent extends IBasketProduct {
   addItem: BasketItemAddType;
@@ -23,6 +24,7 @@ export const BasketProduct = ({
   removeItem,
   removeAllItems,
 }: IBasketProductComponent) => {
+  const { basketCounter, setBasketCounter } = useContext(basketCounterContext);
   const [isAddingToBasket, setIsAddingToBasket] = useState(false);
   const [viewPrice, setViewPrice] = useState(price);
   const [viewDiscountPrice, setViewDiscountPrice] = useState(discountPrice);
@@ -60,6 +62,7 @@ export const BasketProduct = ({
       setIsAddingToBasket(true);
       try {
         await removeAllItems(lineItemId, quantity);
+        setBasketCounter(basketCounter - 1);
       } catch (err) {
         throw new Error(`${err}`);
       } finally {

@@ -1,5 +1,3 @@
-import { CartDiscount } from '@commercetools/platform-sdk';
-
 export interface IRoute {
   title: string;
   href: string;
@@ -20,6 +18,7 @@ export interface IRouteClasses {
 export interface IMenuLink extends IRoute {
   alt: string;
   icon: string;
+  productCounter?: number;
 }
 
 export type IInputhandler = (event: React.FormEvent<HTMLInputElement>) => void;
@@ -212,4 +211,24 @@ export interface IBasketPromo {
   state: boolean;
   removeHandler: (id: string) => void;
   errorHandler: (error: string) => void;
+}
+export interface IMainInfo {
+  image: string;
+  name: string;
+  role: string;
+  sex: string;
+  country: string;
+  ghlink: string;
+}
+export interface IBio {
+  mainInfo: IMainInfo;
+  info: string;
+  contribution: string;
+  difficulties: string;
+}
+
+export type basketCounerType = (count: number) => void;
+export interface BasketContext {
+  basketCounter: number;
+  setBasketCounter: basketCounerType;
 }

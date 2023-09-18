@@ -6,6 +6,7 @@ import { HTTPResponseCode } from '../../constants/types';
 import ProductInfo from './productInfo';
 import Modal from 'react-modal';
 import { useMediaQuery } from '@react-hook/media-query';
+import { basketCounterContext } from '../App';
 
 import { ICardApiData } from '../../constants/types';
 import { Slider } from './productSlider';
@@ -14,6 +15,8 @@ const variantOfProduct1 = 1;
 const variantOfProduct2 = 2;
 
 export const Product = () => {
+  const [dataLoading, setDataLoading] = useState(false);
+  const { basketCounter, setBasketCounter } = useContext(basketCounterContext);
   const { key } = useParams();
   const isSmallDevice = useMediaQuery('only screen and (max-width : 670px)');
   const demension = isSmallDevice ? '300px' : '600px';
@@ -90,8 +93,11 @@ export const Product = () => {
       if (!isAddingToBasket) {
         setIsAddingToBasket(true);
         try {
+          setDataLoading(true);
           await addItem(productData.id, isVariant ? variantOfProduct1 : variantOfProduct2);
+
           isInBusket();
+          setBasketCounter(basketCounter + 1);
         } catch (err) {
           throw new Error(`${err}`);
         } finally {
@@ -129,8 +135,11 @@ export const Product = () => {
       if (!isAddingToBasket) {
         setIsAddingToBasket(true);
         try {
+          setDataLoading(true);
           await removeItem();
+
           isInBusket();
+          setBasketCounter(basketCounter - 1);
         } catch (err) {
           throw new Error(`${err}`);
         } finally {
@@ -141,6 +150,7 @@ export const Product = () => {
   };
   const isInBusket = useCallback(async () => {
     const cart = await api.getCart();
+    setDataLoading(false);
     if (cart.statusCode === HTTPResponseCode.ok) {
       let variantIdToCheck: number;
       if (isVariant) {
@@ -186,6 +196,7 @@ export const Product = () => {
           inBusket={isVariant ? inBusketVar1 : inBusketVar2}
           addToBasketBtnHandler={addToBasketBtnHandler}
           removeFromBasketBtnHandler={removeFromBasketBtnHandler}
+          dataLoading={dataLoading}
         />
       )}
       <Modal

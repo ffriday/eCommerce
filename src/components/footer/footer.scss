@@ -1,0 +1,82 @@
+@import '../../styles/templates.scss';
+.footer {
+  background-color: #99b0a6;
+  position: relatives;
+  bottom: 0;
+  &__container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 50px 0;
+  }
+  &__rslogo {
+    max-width: 119px;
+    object-fit: contain;
+    @extend %buttonHover;
+    @extend %buttonActive;
+  }
+  &__logo {
+    @extend %buttonHover;
+    @extend %buttonActive;
+  }
+  &__list {
+    font-size: 16px;
+    line-height: 25px;
+    &-wrapper {
+      display: flex;
+      gap: 30px;
+    }
+  }
+
+  &__item-link {
+    span {
+      line-height: 25px;
+    }
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+  &__item-title {
+    font-weight: bold;
+  }
+  &__item-icon {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background-image: url('../../assets/footer/gh.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    @extend %buttonHover;
+    @extend %buttonActive;
+  }
+}
+@media only screen and (max-width: 870px) {
+  .footer {
+    &__container {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 40px;
+    }
+  }
+}
+@media only screen and (max-width: 433px) {
+  .footer {
+    &__container {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 40px;
+    }
+    &__list {
+      justify-content: center;
+      text-align: center;
+      &-wrapper {
+        flex-wrap: wrap;
+        justify-content: center;
+        text-align: center;
+      }
+    }
+    &__item-link {
+      display: block;
+    }
+  }
+}

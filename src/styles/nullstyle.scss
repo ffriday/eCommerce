@@ -97,3 +97,13 @@ svg path {
 img {
   width: 100%;
 }
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  gap: 40px;
+}
+
+.header + div {
+  flex: 1;
+}

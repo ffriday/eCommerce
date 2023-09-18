@@ -8,6 +8,7 @@
   &__container {
     display: flex;
     justify-content: center;
+    padding: 30px 0;
     gap: 50px;
     flex-wrap: wrap;
   }
@@ -47,9 +48,10 @@
   }
   &__button {
     &--inbusket {
-      background-color: #6e857a;
+      background-color: #dd8e80;
     }
     @include submitButton($product-btn-width, $product-btn-height);
+    @extend %buttonLoading;
   }
   &__bottom-box {
     display: flex;
@@ -107,6 +109,10 @@
 .slider__box:hover .slider__tooltip {
   opacity: 1;
 }
+.loadAnimation::before {
+  right: 0;
+}
+
 @media only screen and (max-width: 870px) {
   .product {
     max-width: 350px;
