@@ -88,7 +88,6 @@
   &__btn-back {
     padding: 22px 15px;
     @include submitButton($basket-item-btn-back-width, $basket-item-btn-back-height);
-    @extend %buttonLoading;
   }
 
   &__empty {
@@ -107,7 +106,6 @@
 
   &__btn {
     @include submitButton($basket-btn-width, $basket-btn-height);
-    @extend %buttonLoading;
   }
 
   &__bottom-box {
