@@ -95,7 +95,7 @@ export const Product = () => {
         try {
           setDataLoading(true);
           await addItem(productData.id, isVariant ? variantOfProduct1 : variantOfProduct2);
-          setDataLoading(false);
+
           isInBusket();
           setBasketCounter(basketCounter + 1);
         } catch (err) {
@@ -137,7 +137,7 @@ export const Product = () => {
         try {
           setDataLoading(true);
           await removeItem();
-          setDataLoading(false);
+
           isInBusket();
           setBasketCounter(basketCounter - 1);
         } catch (err) {
@@ -150,6 +150,7 @@ export const Product = () => {
   };
   const isInBusket = useCallback(async () => {
     const cart = await api.getCart();
+    setDataLoading(false);
     if (cart.statusCode === HTTPResponseCode.ok) {
       let variantIdToCheck: number;
       if (isVariant) {
