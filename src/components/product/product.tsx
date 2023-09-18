@@ -15,6 +15,7 @@ const variantOfProduct1 = 1;
 const variantOfProduct2 = 2;
 
 export const Product = () => {
+  const [dataLoading, setDataLoading] = useState(false);
   const { basketCounter, setBasketCounter } = useContext(basketCounterContext);
   const { key } = useParams();
   const isSmallDevice = useMediaQuery('only screen and (max-width : 670px)');
@@ -92,7 +93,9 @@ export const Product = () => {
       if (!isAddingToBasket) {
         setIsAddingToBasket(true);
         try {
+          setDataLoading(true);
           await addItem(productData.id, isVariant ? variantOfProduct1 : variantOfProduct2);
+          setDataLoading(false);
           isInBusket();
           setBasketCounter(basketCounter + 1);
         } catch (err) {
@@ -132,7 +135,9 @@ export const Product = () => {
       if (!isAddingToBasket) {
         setIsAddingToBasket(true);
         try {
+          setDataLoading(true);
           await removeItem();
+          setDataLoading(false);
           isInBusket();
           setBasketCounter(basketCounter - 1);
         } catch (err) {
@@ -190,6 +195,7 @@ export const Product = () => {
           inBusket={isVariant ? inBusketVar1 : inBusketVar2}
           addToBasketBtnHandler={addToBasketBtnHandler}
           removeFromBasketBtnHandler={removeFromBasketBtnHandler}
+          dataLoading={dataLoading}
         />
       )}
       <Modal

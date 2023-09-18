@@ -23,8 +23,6 @@ export default function ProductCatalog({ queryFilter }: ICatalog) {
 
   const startPage = 1;
 
-  // const storedPage = localStorage.getItem('page');
-  // const startPage = storedPage ? Number(storedPage) : 1;
   const [catalogData, setCatalogData] = useState<ICatalogApiData>({ products: [], totalCount: 0 });
   const [page, setPage] = useState<number>(startPage);
   const [priceToValue, setPriceToValue] = useState('');
