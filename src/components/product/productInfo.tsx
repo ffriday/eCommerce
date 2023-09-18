@@ -9,11 +9,20 @@ interface ProductInfo {
   inBusket: boolean;
   addToBasketBtnHandler: IMouthhandler;
   removeFromBasketBtnHandler: IMouthhandler;
+  dataLoading?: boolean;
 }
 
-function ProductInfo({ discounted, cardApiData, isActiveLabelClass, addToBasketBtnHandler, removeFromBasketBtnHandler, inBusket }: ProductInfo) {
+function ProductInfo({
+  discounted,
+  cardApiData,
+  isActiveLabelClass,
+  addToBasketBtnHandler,
+  removeFromBasketBtnHandler,
+  inBusket,
+  dataLoading,
+}: ProductInfo) {
   const data = cardApiData;
-
+  const loadAnimation = dataLoading ? 'loadAnimation' : '';
   const disableClassName = discounted ? 'card__price--disable' : '';
   const activeLabelClass = 'product__variants-label--active';
   return (
@@ -37,12 +46,12 @@ function ProductInfo({ discounted, cardApiData, isActiveLabelClass, addToBasketB
           )}
         </div>
         {!inBusket ? (
-          <button className={'product__button'} onClick={addToBasketBtnHandler}>
-            {'В корзину'}
+          <button className={`product__button ${loadAnimation}`} onClick={addToBasketBtnHandler}>
+            {dataLoading ? '• • •' : 'В корзину'}
           </button>
         ) : (
-          <button className={'product__button product__button--inbusket'} onClick={removeFromBasketBtnHandler}>
-            {'Удалить из корзины'}
+          <button className={`product__button product__button--inbusket ${loadAnimation}`} onClick={removeFromBasketBtnHandler}>
+            {dataLoading ? '• • •' : 'Удалить из корзины'}
           </button>
         )}
       </div>

@@ -19,6 +19,8 @@ export default function ProductCard({
   cardApiData = { image: '', name: '', description: '', price: '', id: '', key: '', isDiscounted: false, discPrice: '' },
   inBusket,
 }: IProductCard) {
+  const [dataLoading, setDataLoading] = useState(false);
+  const loadAnimation = dataLoading ? 'loadAnimation' : '';
   const { basketCounter, setBasketCounter } = useContext(basketCounterContext);
   const [ProdInBusket, setProdInBusket] = useState(inBusket);
   const [isAddingToBasket, setIsAddingToBasket] = useState(false);
@@ -38,7 +40,9 @@ export default function ProductCard({
     if (!isAddingToBasket) {
       setIsAddingToBasket(true);
       try {
+        setDataLoading(true);
         await addItem(data.id, 1);
+        setDataLoading(false);
         setProdInBusket(!ProdInBusket);
       } catch (err) {
         throw new Error(`${err}`);
@@ -60,8 +64,8 @@ export default function ProductCard({
           <span className={disableClassName}> {`${data?.price} USD/шт. `}</span>
           {discounted && <span className={'card__price card__price--discounted'}>{`${data?.discPrice} USD/шт. `}</span>}
         </div>
-        <button disabled={ProdInBusket} className='card__button' onClick={addToBasketBtnHandler}>
-          В корзину
+        <button disabled={ProdInBusket} className={`card__button ${loadAnimation}`} onClick={addToBasketBtnHandler}>
+          {dataLoading ? '• • •' : 'В корзину'}
         </button>
       </div>
     </Link>
