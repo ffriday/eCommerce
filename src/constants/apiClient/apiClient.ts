@@ -80,6 +80,7 @@ export default class ApiClient extends ApiBase {
         isLogged: true,
         id: res.body.customer.id,
         token: this.api.token.myChache.token,
+        tokenExpires: this.api.token.myChache.expirationTime,
         refreshToken: this.api.token.myChache.refreshToken?.split(':')[1] || '',
       };
     }
@@ -105,7 +106,7 @@ export default class ApiClient extends ApiBase {
 
   public logOutCustomer = async () => {
     this.user = { username: '', password: '' };
-    this.api.userData = { isLogged: false, id: '', token: '', refreshToken: '' };
+    this.api.userData = { isLogged: false, id: '', token: '', tokenExpires: 0, refreshToken: '' };
     this.api.passwordMiddleware = null;
     this.api.passwordApi = null;
     this.api.token.myChache.token = '';

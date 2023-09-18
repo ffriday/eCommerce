@@ -34,8 +34,8 @@ export const BasketProduct = ({
       setIsAddingToBasket(true);
       try {
         await removeItem(lineItemId);
-        setViewPrice((viewPrice) => viewPrice - price);
-        isDiscounted && setViewDiscountPrice((viewDiscountPrice) => viewDiscountPrice - discountPrice);
+        setViewPrice(quantity * price);
+        isDiscounted && setViewDiscountPrice(quantity * discountPrice);
       } catch (err) {
         throw new Error(`${err}`);
       } finally {
@@ -48,8 +48,8 @@ export const BasketProduct = ({
       setIsAddingToBasket(true);
       try {
         await addItem(productId, variantId);
-        setViewPrice((viewPrice) => viewPrice + price);
-        isDiscounted && setViewDiscountPrice((viewDiscountPrice) => viewDiscountPrice + discountPrice);
+        setViewPrice(quantity * price);
+        isDiscounted && setViewDiscountPrice(quantity * discountPrice);
       } catch (err) {
         throw new Error(`${err}`);
       } finally {

@@ -197,9 +197,6 @@ export const Basket = () => {
               <button className='basket__btn' onClick={recalculateHandler}>
                 Пересчитать стоимость
               </button>
-              <button className='basket__btn' onClick={clearCartHandler}>
-                Очистить корзину
-              </button>
             </div>
             <div className='basket__bottom-promo'>
               <InputForm
@@ -220,9 +217,14 @@ export const Basket = () => {
               <BasketPromo key={id} promocodeId={id} state={state === 'MatchesCart'} removeHandler={removePromo} errorHandler={setError} />
             ))}
           {promoError ? <span className='basket__errorMessage'>{promoError}</span> : null}
-          <button className='basket__btn basket__order ' onClick={addPromo}>
-            Заказать
-          </button>
+          <div className='basket__order'>
+            <button className='basket__btn' onClick={addPromo}>
+              Заказать
+            </button>
+            <button className='basket__btn' onClick={clearCartHandler}>
+              Очистить корзину
+            </button>
+          </div>
         </>
       )}
     </div>

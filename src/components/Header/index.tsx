@@ -93,9 +93,9 @@ export const Header: FC = () => {
     { title: 'Личный кабинет', href: `/${RoutePath.login}`, classNames: dropDownMenuClassNames },
     { title: 'Каталог', href: `/${RoutePath.catalog}`, classNames: dropDownMenuClassNames },
     { title: 'О нас', href: `/${RoutePath.about}`, classNames: dropDownMenuClassNames },
-    { title: 'Aкции', href: `/${RoutePath.shares}`, classNames: dropDownMenuClassNames },
-    { title: 'Новинки', href: `/${RoutePath.novelties}`, classNames: dropDownMenuClassNames },
-    { title: 'Контакты', href: `/${RoutePath.contacts}`, classNames: dropDownMenuClassNames },
+    // { title: 'Aкции', href: `/${RoutePath.shares}`, classNames: dropDownMenuClassNames },
+    // { title: 'Новинки', href: `/${RoutePath.novelties}`, classNames: dropDownMenuClassNames },
+    // { title: 'Контакты', href: `/${RoutePath.contacts}`, classNames: dropDownMenuClassNames },
   ];
   return (
     <>

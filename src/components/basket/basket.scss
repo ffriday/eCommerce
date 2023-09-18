@@ -3,6 +3,7 @@
 @import '../../styles/templates.scss';
 .basket {
   padding: 30px 0;
+
   &__item {
     display: flex;
 
@@ -166,6 +167,13 @@
       text-decoration: line-through;
       margin-bottom: 5px;
     }
+  }
+
+  &__order {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 20px;
   }
 }
 
