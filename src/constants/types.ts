@@ -18,9 +18,11 @@ export interface IRouteClasses {
 export interface IMenuLink extends IRoute {
   alt: string;
   icon: string;
+  productCounter?: number;
 }
 
 export type IInputhandler = (event: React.FormEvent<HTMLInputElement>) => void;
+export type IMouthhandler = (event: React.MouseEvent<HTMLButtonElement>) => void;
 
 export interface IUser {
   val: string;
@@ -56,6 +58,11 @@ export enum RoutePath {
   login = 'login',
   register = 'registration',
   catalog = 'catalog',
+  basket = 'basket',
+  about = 'about',
+  contacts = 'contacts',
+  shares = 'shares',
+  novelties = 'novelties',
   product = 'catalog/:key',
   arrangmentcategory = 'catalog/flowerarrangements',
   bouquetscategory = 'catalog/bouquets',
@@ -131,7 +138,10 @@ export interface ICardApiData {
   name: string;
   description: string | undefined;
   price: string;
+  isDiscounted: boolean;
+  discPrice: string;
 }
+
 export enum language {
   en = 'en-US',
   ru = 'ru-BY',
@@ -179,3 +189,46 @@ export interface ICheckbox {
 }
 
 export type IFilterEvent = (event: React.FormEvent) => void;
+
+export interface IBasketProduct {
+  productId: string;
+  lineItemId: string;
+  name: string;
+  price: number;
+  isDiscounted: boolean;
+  discountPrice: number;
+  quantity: number;
+  image: string | undefined;
+  variantId: number;
+}
+
+export type BasketItemAddType = (productId: string, variantId: number) => Promise<void>;
+export type BasketItemRemoveType = (productId: string) => Promise<void>;
+export type BasketItemRemoveAllType = (lineItemId: string, quantity: number) => Promise<void>;
+
+export interface IBasketPromo {
+  promocodeId: string;
+  state: boolean;
+  removeHandler: (id: string) => void;
+  errorHandler: (error: string) => void;
+}
+export interface IMainInfo {
+  image: string;
+  name: string;
+  role: string;
+  sex: string;
+  country: string;
+  ghlink: string;
+}
+export interface IBio {
+  mainInfo: IMainInfo;
+  info: string;
+  contribution: string;
+  difficulties: string;
+}
+
+export type basketCounerType = (count: number) => void;
+export interface BasketContext {
+  basketCounter: number;
+  setBasketCounter: basketCounerType;
+}

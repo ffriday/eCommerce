@@ -1,14 +1,28 @@
 import { ICardApiData } from '../../constants/types';
+import { IMouthhandler } from '../../constants/types';
 import './product.scss';
 
 interface ProductInfo {
   isActiveLabelClass: boolean;
   cardApiData?: ICardApiData;
   discounted?: boolean;
+  inBusket: boolean;
+  addToBasketBtnHandler: IMouthhandler;
+  removeFromBasketBtnHandler: IMouthhandler;
+  dataLoading?: boolean;
 }
 
-function ProductInfo({ discounted, cardApiData, isActiveLabelClass }: ProductInfo) {
+function ProductInfo({
+  discounted,
+  cardApiData,
+  isActiveLabelClass,
+  addToBasketBtnHandler,
+  removeFromBasketBtnHandler,
+  inBusket,
+  dataLoading,
+}: ProductInfo) {
   const data = cardApiData;
+  const loadAnimation = dataLoading ? 'loadAnimation' : '';
   const disableClassName = discounted ? 'card__price--disable' : '';
   const activeLabelClass = 'product__variants-label--active';
   return (
@@ -27,9 +41,19 @@ function ProductInfo({ discounted, cardApiData, isActiveLabelClass }: ProductInf
         {' '}
         <div className='product__prices'>
           <span className={disableClassName}> {`${data?.price} USD/шт. `}</span>
-          {discounted && <span className={'product__price product__price--discounted'}>{`${data?.price} USD/шт. `}</span>}
+          {discounted && (
+            <span className={'product__price product__price--discounted'}>{`${discounted ? data?.discPrice : data?.price} USD/шт. `}</span>
+          )}
         </div>
-        <button className='product__button'>В корзину</button>
+        {!inBusket ? (
+          <button className={`product__button ${loadAnimation}`} onClick={addToBasketBtnHandler}>
+            {dataLoading ? '• • •' : 'В корзину'}
+          </button>
+        ) : (
+          <button className={`product__button product__button--inbusket ${loadAnimation}`} onClick={removeFromBasketBtnHandler}>
+            {dataLoading ? '• • •' : 'Удалить из корзины'}
+          </button>
+        )}
       </div>
     </div>
   );

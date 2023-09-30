@@ -4,3 +4,6 @@
 .submit__button {
   @include submitButton(320px, 57px);
 }
+.loadAnimation::before {
+  right: 0;
+}

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useContext } from 'react';
+import { useContext, useEffect, useState, useMemo } from 'react';
 import './catalog.scss';
 import ProductAdapter from '../../constants/productAadapter';
 import { apiContext } from '../App';
@@ -9,6 +9,7 @@ import { useMediaQuery } from '@react-hook/media-query';
 import { IProductFilter } from '../../constants/apiClient/apiClientTypes';
 import FilterAndSort from './filterAndSort';
 import { ICardApiData } from '../../constants/types';
+import { HTTPResponseCode } from '../../constants/types';
 interface ICatalog {
   queryFilter?: Partial<IProductFilter> | undefined;
 }
@@ -22,8 +23,6 @@ export default function ProductCatalog({ queryFilter }: ICatalog) {
 
   const startPage = 1;
 
-  // const storedPage = localStorage.getItem('page');
-  // const startPage = storedPage ? Number(storedPage) : 1;
   const [catalogData, setCatalogData] = useState<ICatalogApiData>({ products: [], totalCount: 0 });
   const [page, setPage] = useState<number>(startPage);
   const [priceToValue, setPriceToValue] = useState('');
@@ -31,6 +30,7 @@ export default function ProductCatalog({ queryFilter }: ICatalog) {
   const [priceToQuery, setPriceToQuery] = useState('100000000');
   const [priceFromQuery, setPriceFromQuery] = useState('0');
   const [filterPrice, setFilterPrice] = useState(false);
+  const [ids, setIds] = useState<string[]>([]);
   const api = useContext(apiContext);
   const productAdapter = useMemo(() => new ProductAdapter(api), [api]);
   const getTotalPageCount = (totalCount: number | undefined): number => Math.ceil(totalCount ? totalCount / limit : 1);
@@ -39,7 +39,6 @@ export default function ProductCatalog({ queryFilter }: ICatalog) {
     const nextPage: number = current + 1;
     const totalCount = catalogData.products ? getTotalPageCount(catalogData.totalCount) : 0;
     const newPage = nextPage <= totalCount ? nextPage : current;
-    // localStorage.setItem('page', `${newPage}`);
     setPage(newPage);
   };
   const filterPriceHandler = () => {
@@ -65,19 +64,44 @@ export default function ProductCatalog({ queryFilter }: ICatalog) {
   };
 
   useEffect(() => {
+    const isInBusket = async (catalogData: ICatalogApiData) => {
+      const cart = await api.getCart();
+      const lineItems = [...cart.body.lineItems];
+
+      if (cart.statusCode === HTTPResponseCode.ok) {
+        return catalogData.products.map((itemInBusket) => {
+          const filterLine = lineItems.filter((lineItem) => lineItem.productId === itemInBusket?.id);
+
+          if (filterLine.length > 0) {
+            return itemInBusket.id;
+          }
+          return '';
+        });
+      }
+      return [];
+    };
+    const setIdsFunc = async (catalogData: ICatalogApiData) => {
+      const ids = await isInBusket(catalogData);
+
+      setIds(ids);
+    };
     const getData = async () => {
       const offset: number = (page - 1) * limit;
       const catalogData: ICatalogApiData = await productAdapter.getCatalog(
         { limit: limit, offset: offset },
         { ...queryFilter, price: { from: Number(priceFromQuery) * 100, to: Number(priceToQuery) * 100 } },
       );
-      const priceFilterProducts: ICardApiData[] = catalogData.products.filter(
-        (el) => +el.price >= +priceFromQuery && +el.price <= +priceToQuery,
-      );
+      const priceFilterProducts: ICardApiData[] = catalogData.products.filter((el) => {
+        if (el.isDiscounted) {
+          return +el.discPrice >= +priceFromQuery && +el.discPrice <= +priceToQuery;
+        }
+        return +el.price >= +priceFromQuery && +el.price <= +priceToQuery;
+      });
       filterPrice ? setCatalogData({ products: priceFilterProducts, totalCount: catalogData.totalCount }) : setCatalogData(catalogData);
+      await setIdsFunc(catalogData);
     };
     getData();
-  }, [productAdapter, page, limit, queryFilter, priceFromQuery, priceToQuery, filterPrice]);
+  }, [api, productAdapter, page, limit, queryFilter, priceFromQuery, priceToQuery, filterPrice]);
 
   return (
     <section className='catalog__section'>
@@ -88,7 +112,7 @@ export default function ProductCatalog({ queryFilter }: ICatalog) {
           filterPriceHandler={filterPriceHandler}
           inputPriceFilterhandler={inputPriceFilterhandler}
         />
-        <CatalogList catalogData={catalogData} />
+        <CatalogList catalogData={catalogData} ids={ids} />
         {
           <CatalogNavigation
             catalogData={catalogData}
@@ -99,6 +123,7 @@ export default function ProductCatalog({ queryFilter }: ICatalog) {
           />
         }
       </div>
+      {/* <button onClick={async()=> await setIdsFunc(catalogData)}>fqfq</button> */}
     </section>
   );
 }

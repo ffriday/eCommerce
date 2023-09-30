@@ -25,6 +25,7 @@ export default class Api {
     isLogged: false,
     id: '',
     token: '',
+    tokenExpires: 0,
     refreshToken: '',
   };
 
@@ -128,6 +129,7 @@ export default class Api {
     client = middleware.password ? client.withPasswordFlow(middleware.password) : client;
     client = middleware.anon ? client.withAnonymousSessionFlow(middleware.anon) : client;
     client = middleware.token && middleware.authorization ? client.withExistingTokenFlow(middleware.authorization, middleware.token) : client;
+    client = middleware.refreshToken && middleware.refreshToken ? client.withRefreshTokenFlow(middleware.refreshToken) : client;
     return createApiBuilderFromCtpClient(client.build()).withProjectKey({ projectKey: this.ENV.CTP_PROJECT_KEY });
   };
 
@@ -149,7 +151,11 @@ export default class Api {
     if (this.passwordApi) {
       api = this.passwordApi;
     } else if (this.tokenApi) {
-      api = this.tokenApi;
+      if (this._userData.token && this._userData.tokenExpires < Date.now()) {
+        api = this.tokenApi;
+      } else {
+        window.localStorage.clear(); // If token expired - clean local storage
+      }
     } else if (this.anonApi) {
       api = this.anonApi;
     }
