@@ -10,8 +10,6 @@ interface ICustomerAddresses extends ICustomerReaction {
 }
 
 export const CustomerAddress = ({ customerAddress, update, showError, addressTypes }: ICustomerAddresses) => {
-  // const api = useContext(apiContext);
-
   return (
     <div className='account__addresses'>
       {customerAddress
