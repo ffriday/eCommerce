@@ -1,0 +1,89 @@
+@import '../../styles/variables.scss';
+@import '../../styles/templates.scss';
+@import '../../styles/mixins.scss';
+.catalog {
+  &__body {
+    padding-top: 40px;
+    padding-bottom: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
+  &__navigation {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 30px;
+  }
+  &__button {
+    width: 16px;
+    height: 16px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-color: $primary-white;
+    @extend %buttonHover;
+    &:disabled {
+      opacity: 0.3;
+      cursor: default;
+    }
+  }
+  &__label {
+    width: 16px;
+    height: 16px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-color: $primary-white;
+    background-image: url('../../assets/catalog/page-label-disable.svg');
+    &:not(:last-child) {
+      margin-right: 12px;
+    }
+
+    &--active {
+      background-image: url('../../assets/catalog/page-label-active.svg');
+    }
+  }
+}
+.nav-button {
+  &__left {
+    background-image: url('../../assets/catalog/leftButton.svg');
+    margin-right: 40px;
+  }
+  &__right {
+    background-image: url('../../assets/catalog/rightButton.svg');
+    margin-left: 40px;
+  }
+}
+.filter {
+  width: 100%;
+  padding-left: 30px;
+  padding-top: 13px;
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
+  font-size: 12px;
+  background-color: #e0ebe6;
+  &__btn {
+    cursor: pointer;
+    @extend %buttonHover;
+  }
+  &__inputs {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 10px;
+  }
+  &__price-from {
+    @include inputForm(90px, 15px);
+  }
+  &__price-to {
+    @include inputForm(90px, 15px);
+  }
+}
+
+@media only screen and (max-width: 1068px) {
+  .catalog {
+    &__body {
+      justify-content: center;
+    }
+  }
+}

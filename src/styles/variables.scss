@@ -1,0 +1,173 @@
+// Font
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat&family=Inter&display=swap');
+
+// input font
+$font-family-input: Inter;
+$font-size-input: 15px;
+$font-weight-input: 300;
+
+// input color
+$input-color: #fff;
+$input-border-color: #b7b7b7;
+$input-text-color: #222;
+$input-label-color: #686868;
+
+// input dimensions
+$inputFormPaddingTopBottom: 10px;
+$inputFormPaddingRightLeft: 20px;
+$input-border-size: 1px;
+$inputForm-width: 320px;
+
+// checkbox font
+$font-family-checkbox: Inter;
+$font-size-checkbox: 13px;
+
+// checkbox color
+$checkbox-label-color: #000;
+$checkbox-link-color: #5ca182;
+
+// checkbox dimensions
+$checkbox-width: 18px;
+$checkbox-height: 18px;
+$checkbox-margine-right: 6px;
+$checkbox-label-margine-right: 92px;
+
+$checkbox-default-img: url('../../assets/form/checkboxDefault.svg');
+$checkbox-hover-img: url('../../assets/form/checkboxHover.svg');
+$checkbox-checked-img: url('../../assets/form/checkboxselected.svg');
+
+// checkbox dimensions mobile adaptive
+$checkbox-label-margine-right-mobile: 70px;
+
+// Font
+$font-family-button: 'Inter', sans-serif;
+$font-size-button: 14px;
+
+// Color
+$primary-green: #5ca182;
+$primary-black: #030b08;
+$primary-white: #ffffff;
+$secondary-light-green: #e0ebe6;
+$secondary-gray: #cccccc;
+$gray: #4c4e4d;
+$gray2: #adadad;
+
+$button-enabled-color: $primary-green;
+$button-disabled-color: $secondary-gray;
+$button-enabled-text-color: $primary-white;
+$slider-button-background: $secondary-light-green;
+
+// Dimensions
+$submit-button-radius: 5px;
+$slider-button-width: 226px;
+$slider-button-height: 36px;
+$slider-button-delta: 3px;
+
+// Effects
+$transition: all 0.3s ease;
+$transform-button-pressed: scale(0.95);
+
+// Header
+$header-links-gap: 34px;
+$tabs-color: $gray;
+
+//login-form-heading font
+$font-family-login-heading: 'Inter';
+$login-heading-size: 45px;
+$font-weight-login-heading: 400;
+$font-color-login-heading: #030b08;
+
+//login-form-subtitle font
+$font-family-login-subtitle: 'Inter';
+$login-subtitle-size: 16px;
+$font-weight-login-subtitle: 300;
+$font-color-login-subtitle: #030b08;
+
+// login-dimensions
+$loging-padding-top-bottom: 60px;
+$loging-padding-rigt-left: 140px;
+$login-heading-margin-bottom: 15px;
+$login-subtitle-margin-bottom: 35px;
+$login-email-margin-bottom: 12px;
+$login-password-margin-bottom: 20px;
+$login-checkbox-margin-bottom: 40px;
+$login-link-margin-top: 20px;
+$login-link-margin-left: 9px;
+
+// register-dimensions
+$register-slider-margin-top: 10px;
+$input-form-margin-bottom: 12px;
+
+//login-form-subtitle font-mobile-adaptive
+$login-heading-size-mobile: 35px;
+$login-subtitle-size-mobile: 13px;
+// login-dimensions-mobile-adaptive
+$loging-padding-left-right-mobile: 5px;
+
+// card
+$card-width: 238px;
+$card-height: 402px;
+$card-background-color: rgba(255, 0, 0, 0);
+$card-font-size: 13px;
+$card-btn-width: 130px;
+$card-btn-height: 47px;
+$card-text-color: #5a5c5b;
+$card-text-hover-color: #030b08;
+$card-font-family: 'Inter';
+$card-heading-font-size: 13px;
+$card-price-discounted-color: rgb(145, 0, 0);
+$card-price-discounted-hover-color: rgb(206, 0, 0);
+$card-price-discounted-font-weight: 700;
+
+// product-info
+$product-width: 422px;
+$product-height: 302px;
+$product-background-color: rgba(255, 0, 0, 0);
+
+$product-btn-width: 130px;
+$product-btn-height: 47px;
+$product-text-color: #5a5c5b;
+$product-text-hover-color: #030b08;
+$product-font-family: 'Inter';
+$product-heading-font-size: 34px;
+$product-description-font-size: 13px;
+$product-variants-font-size: 14px;
+$product-price-font-size: 18px;
+$product-price-discounted-color: rgb(145, 0, 0);
+$product-price-discounted-hover-color: rgb(206, 0, 0);
+$product-price-discounted-font-weight: 700;
+
+// basket
+$basket-item-height: 150px;
+$basket-item-padding-top: 26px;
+$basket-item-padding-bottom: 26px;
+$basket-item-img-width: 100px;
+$basket-item-img-height: 100px;
+$basket-item-variants-height: 37px;
+$basket-item-variants-color: #5ca182;
+$basket-item-btn-remove-width: 10px;
+$basket-item-btn-remove-height: 10px;
+$basket-item-btn-remove-url: '../../assets/basket/-.svg';
+$basket-item-btn-add-width: 12px;
+$basket-item-btn-add-height: 12px;
+$basket-item-btn-add-url: '../../assets/basket/+.svg';
+$basket-item-btn-remove-all-width: 24px;
+$basket-item-btn-remove-all-height: 24px;
+$basket-item-btn-remove-all-url: '../../assets/basket/remove-all.svg';
+$basket-item-count-color: #ccc;
+$basket-item-btn-back-width: 160px;
+$basket-item-btn-back-height: 60px;
+$basket-btn-width: 120px;
+$basket-btn-height: 50px;
+
+//main-promo
+$padding-top: 120px;
+
+// about us
+$info-border-color: #addebf;
+$contribution-border-color: #dcdcf3;
+$difficulties-border-color: #ffc7c9;
+$info-heading-color: #207a41;
+$contribution-heading-color: #6933dc;
+$difficulties-heading-color: #af0007;

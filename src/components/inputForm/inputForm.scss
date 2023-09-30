@@ -1,0 +1,24 @@
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+
+.inputForm {
+  @include inputForm($inputForm-width, 60px);
+  &:disabled {
+    color: gray;
+    &::placeholder {
+      color: gray;
+    }
+  }
+}
+.invailid {
+  &::placeholder {
+    color: red;
+  }
+}
+
+.invailid-label {
+  color: red;
+}
+.vailid-label {
+  color: green;
+}

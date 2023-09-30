@@ -1,0 +1,63 @@
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.caption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  &__btn-catalog {
+    @include submitButton(234px, 57px);
+    margin: 15px 0px 15px 0px;
+  }
+  h2 {
+    color: #030b08;
+    font-family: Caveat, cursive;
+    font-size: 26px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    padding-bottom: 15px;
+    @media only screen and (max-width: 450px) {
+      font-size: 20px;
+    }
+  }
+  h3 {
+    color: #030b08;
+    font-family: Century;
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    @media only screen and (max-width: 450px) {
+      font-size: 30px;
+    }
+  }
+}
+
+.disable {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .main {
+    &__info {
+      padding-left: 30px;
+      padding-right: 30px;
+    }
+    &__btn-box {
+      flex-direction: column;
+    }
+    &__btn-login {
+      margin-right: 0;
+      margin-bottom: 30px;
+    }
+  }
+}

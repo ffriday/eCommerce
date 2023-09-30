@@ -1,0 +1,147 @@
+@import './variables.scss';
+
+@mixin inputForm($width, $height) {
+  &__wrapper {
+    position: relative;
+  }
+  &__label {
+    position: absolute;
+    font-size: 10px;
+    top: 10px;
+    left: 20px;
+    color: $input-label-color;
+  }
+  &::placeholder {
+    color: $input-text-color;
+  }
+  width: $width;
+  height: $height;
+  padding: $inputFormPaddingTopBottom $inputFormPaddingRightLeft;
+  align-items: center;
+  background: $input-color;
+  border-bottom: $input-border-size solid $input-border-color;
+  font-family: $font-family-input;
+  font-size: $font-size-input;
+  font-style: normal;
+  font-weight: 300;
+  color: $input-text-color;
+  &__show-password {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    background: url(../assets/form/hidePassword.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 24px;
+    height: 24px;
+  }
+  &__show-password:hover {
+    cursor: pointer;
+    background: url(../assets/form/hidePasswordHover.svg);
+  }
+  &__hide-password {
+    background: url(../assets/form/showPaasword.svg);
+  }
+  &__hide-password:hover {
+    cursor: pointer;
+    background: url(../assets/form/showPasswordHover.svg);
+  }
+}
+
+@mixin submitButton($width, $height) {
+  background: $button-enabled-color;
+  width: $width;
+  height: $height;
+  border-radius: $submit-button-radius;
+  color: $button-enabled-text-color;
+  font-family: $font-family-button;
+  font-size: $font-size-button;
+  font-weight: 400;
+  &:disabled {
+    background: $button-disabled-color;
+  }
+  @include hoverEffect();
+}
+
+@mixin hoverEffect() {
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+@mixin checkboxBackground($checkbox-image) {
+  background-image: $checkbox-image;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+@mixin labelLinkFont($checkbox-font-color) {
+  color: $checkbox-font-color;
+  font-family: $font-family-checkbox;
+  font-size: $font-size-checkbox;
+  font-style: normal;
+  font-weight: $font-weight-input;
+}
+
+@mixin labelLinkTextFont($font-color) {
+  color: $font-color;
+  font-family: $font-family-checkbox;
+  font-size: $font-size-checkbox;
+  font-style: normal;
+  font-weight: $font-weight-input;
+}
+
+@mixin loginHeading($login-heading-size) {
+  color: $font-color-login-heading;
+  font-family: $font-family-login-heading;
+  font-size: $login-heading-size;
+  font-style: normal;
+  text-align: center;
+  font-weight: $font-weight-login-heading;
+  line-height: normal;
+}
+
+@mixin loginSubtitle($login-subtitle-size) {
+  color: $font-color-login-subtitle;
+  font-family: $font-family-login-subtitle;
+  font-size: $login-subtitle-size;
+  font-style: normal;
+  text-align: center;
+  font-weight: $font-weight-login-subtitle;
+  line-height: normal;
+}
+
+@mixin card($width, $height) {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: $card-background-color;
+  width: $width;
+  height: $height;
+  font-family: $card-font-family;
+  color: $card-text-color;
+  font-size: $card-font-size;
+  &:hover {
+    color: $card-text-hover-color;
+    cursor: pointer;
+  }
+}
+
+@mixin product-info($width, $height) {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: $product-background-color;
+  width: $width;
+  height: $height;
+  font-family: $product-font-family;
+  color: $product-text-color;
+}
+
+@mixin basket-btn($width, $height, $url) {
+  width: $width;
+  height: $height;
+  background-image: url($url);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-color: transparent;
+}
