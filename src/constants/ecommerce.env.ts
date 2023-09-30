@@ -8,10 +8,10 @@ export interface IeCommerceEnv {
 }
 
 export const eCommerceEnv: IeCommerceEnv = {
-  CTP_PROJECT_KEY: 'ecommerce-finaltask',
-  CTP_CLIENT_SECRET: '1o0NUqz7udbH9z0JonsglScks49B1GiG',
-  CTP_CLIENT_ID: '5Sat6yVrcoZRuyCZBPlBC-nd',
+  CTP_PROJECT_KEY: 'bugbusters',
+  CTP_CLIENT_SECRET: '2VPI-ncmimrZ9Xr-eY5OUf9Z5E-oWSUo',
+  CTP_CLIENT_ID: 'HLPfCeH7ERnXcu4Hyhsm6P4g',
   CTP_AUTH_URL: 'https://auth.europe-west1.gcp.commercetools.com',
   CTP_API_URL: 'https://api.europe-west1.gcp.commercetools.com',
-  CTP_SCOPES: 'manage_project:ecommerce-finaltask',
+  CTP_SCOPES: 'manage_project:bugbusters',
 };
